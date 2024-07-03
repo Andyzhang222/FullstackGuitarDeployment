@@ -1,4 +1,6 @@
-import App from './app'
+import App from './app';
+import dotenv from 'dotenv';
+dotenv.config();
 
 import * as bodyParser from 'body-parser'
 

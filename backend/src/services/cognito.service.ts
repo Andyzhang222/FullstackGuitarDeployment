@@ -3,11 +3,12 @@ import crypto from 'crypto'
 
 export default class Cognito {
   private config = {
-    apiVersion: '2016-04-18',
-    region: 'us-east-1',
+    apiVersion: '2024-06-03',
+    region: process.env.AWS_REGION
   }
-  private secretHash = '1krefi3pef5ql2c4hhaok1i91frmvjvuld00cmamjq1ocu6kc5f3'
-  private clientId = '7lrlbrc1kg57qjljmf0uv7463p';
+
+  private secretHash = process.env.SECRET_HASH;
+  private clientId = process.env.CLIENT_ID;
 
   private cognitoIdentity;
 

@@ -6,8 +6,8 @@ import fetch from 'node-fetch';
 let pems: { [key: string]: any }  = {}
 
 class AuthMiddleware {
-  private poolRegion: string = 'us-east-1';
-  private userPoolId: string = 'us-east-1_3nmztS9FU';
+  private poolRegion = process.env.POOL_REGION;
+  private userPoolId = process.env.USER_POOL_ID;
 
   constructor() {
     this.setUp()
