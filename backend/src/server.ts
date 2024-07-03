@@ -1,7 +1,24 @@
-import app from './app';
+import App from './app'
 
-const port = process.env.PORT || 3001;
+import * as bodyParser from 'body-parser'
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+import HomeController from './controllers/home.controller'
+import AuthController from './controllers/auth.controller'
+import ProtectedController from './controllers/protected.controller';
+
+const app = new App({
+    port: 5001,
+    controllers: [
+        new HomeController(),
+        new AuthController(),
+        new ProtectedController()
+    ],
+    middleWares: [
+      // parse application/json
+      // parse application/x-www-form-urlencoded
+        bodyParser.json(),
+        bodyParser.urlencoded({ extended: true }),
+    ]
+})
+
+app.listen()
