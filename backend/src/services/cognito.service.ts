@@ -1,12 +1,13 @@
 import AWS from 'aws-sdk';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 dotenv.config();
 
 
 export default class Cognito {
   private config = {
-    apiVersion: '2016-04-18',
+    apiVersion: '2024-06-03',
     region: process.env.AWS_REGION,
   }
   
@@ -55,6 +56,18 @@ export default class Cognito {
     try {
       let data = await this.cognitoIdentity.initiateAuth(params).promise();
       console.log(data); 
+
+    // Decode the tokens
+    if (data.AuthenticationResult) {
+      const decodedAccessToken = jwt.decode(data.AuthenticationResult.AccessToken);
+      const decodedIdToken = jwt.decode(data.AuthenticationResult.IdToken);
+      const decodedRefreshToken = jwt.decode(data.AuthenticationResult.RefreshToken);
+
+      console.log("Decoded Access Token: ", decodedAccessToken);
+      console.log("Decoded ID Token: ", decodedIdToken);
+      console.log("Decoded Refresh Token: ", decodedRefreshToken);
+    }
+
       return true;
     } catch (error) {
       console.log(error)

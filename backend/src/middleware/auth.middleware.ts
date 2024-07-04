@@ -5,8 +5,6 @@ import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 dotenv.config();
 
-console.log('POOL_REGION:', process.env.POOL_REGION);
-console.log('USER_POOL_ID:', process.env.USER_POOL_ID);
 
 let pems: { [key: string]: any }  = {}
 
@@ -21,7 +19,7 @@ class AuthMiddleware {
 
   private verifyToken(req: Request, resp: Response, next): void {
     const { token } = req.body;
-    console.log(token)
+    console.log("Original Token:", token);
     if (!token) return resp.status(401).end();
 
     let decodedJwt: any = jwt.decode(token, { complete: true });
@@ -29,7 +27,7 @@ class AuthMiddleware {
       resp.status(401).end()
       return
     }
-    console.log(decodedJwt)
+    console.log("Decoded Token:", decodedJwt);
     let kid = decodedJwt.header.kid;
     let pem = pems[kid];
     console.log(pem)

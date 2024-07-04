@@ -50,7 +50,7 @@ class AuthController {
       if (!result.isEmpty()) {
         return res.status(422).json({ errors: result.array() });
       }
-      console.log(req.body);
+     console.log(req.body);
 
 
       const { username, password } = req.body;
