@@ -1,3 +1,14 @@
+# ExpressTSCognito
+  A backend server configured to point to cognito for authentication
+  
+ Please follow this video for more information: https://www.youtube.com/watch?v=AQfA7OQEMqg
+
+
+# Getting started
+ 1. npm install
+ 2. modify cognito variables in `src/services/cognito.service.ts`
+ 3. modify cognito variables in `src/middleware/auth.middleware.ts`
+
 
 ## Available endpoints
 

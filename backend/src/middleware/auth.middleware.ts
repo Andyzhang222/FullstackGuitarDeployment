@@ -2,12 +2,18 @@ import { Request, Response } from 'express';
 import jwkToPem from 'jwk-to-pem';
 import jwt from 'jsonwebtoken';
 import fetch from 'node-fetch';
+import dotenv from 'dotenv';
+dotenv.config();
+
+console.log('POOL_REGION:', process.env.POOL_REGION);
+console.log('USER_POOL_ID:', process.env.USER_POOL_ID);
 
 let pems: { [key: string]: any }  = {}
 
 class AuthMiddleware {
-  private poolRegion = process.env.POOL_REGION;
-  private userPoolId = process.env.USER_POOL_ID;
+
+  private poolRegion: string = process.env.POOL_REGION;
+  private userPoolId: string = process.env.USER_POOL_ID;
 
   constructor() {
     this.setUp()

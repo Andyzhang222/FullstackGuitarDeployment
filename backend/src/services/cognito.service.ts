@@ -1,14 +1,19 @@
 import AWS from 'aws-sdk';
-import crypto from 'crypto'
+import crypto from 'crypto';
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 export default class Cognito {
   private config = {
-    apiVersion: '2024-06-03',
-    region: process.env.AWS_REGION
+    apiVersion: '2016-04-18',
+    region: process.env.AWS_REGION,
   }
+  
+   private secretHash = process.env.SECRET_HASH;
+   private clientId = process.env.CLIENT_ID;
 
-  private secretHash = process.env.SECRET_HASH;
-  private clientId = process.env.CLIENT_ID;
+
 
   private cognitoIdentity;
 
