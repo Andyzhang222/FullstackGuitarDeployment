@@ -19,7 +19,8 @@
     "express-validator": "^6.6.0",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.4",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "sequelize-cli": "^6.6.2"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
