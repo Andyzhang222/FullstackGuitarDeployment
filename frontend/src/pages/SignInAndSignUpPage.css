@@ -1,10 +1,14 @@
 .container {
     display: flex;
     height: 100vh;
+    background-color: #f5f5f5;
   }
   
   .image-section {
     flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #f5f5f5;
   }
   
@@ -20,7 +24,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 40px;
+    background-color: #fff;
   }
   
   .form-section form {
@@ -30,5 +35,21 @@
   
   .form-section p {
     text-align: center;
+    margin-top: 20px;
+  }
+  
+  .form-section h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .form-section h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: gray;
+  }
+  
+  .form-section .MuiButton-root {
+    width: 100%;
     margin-top: 20px;
   }

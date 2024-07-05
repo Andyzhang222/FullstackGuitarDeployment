@@ -3,6 +3,8 @@ import { Request, Response } from 'express'
 import { body, validationResult } from 'express-validator';
 import Cognito from '../services/cognito.service';
 import { UserService } from '../services/user.service';
+import cors from 'cors';
+
 
 
 class AuthController {
@@ -14,6 +16,8 @@ class AuthController {
     }
 
     public initRoutes() {
+      this.router.use(cors());  // 添加CORS中间件
+
         this.router.post('/signup', this.validateBody('signUp'), this.signUp)
         this.router.post('/signin', this.validateBody('signIn'), this.signIn)
         this.router.post('/verify', this.validateBody('verify'), this.verify)
@@ -23,29 +27,46 @@ class AuthController {
 
 
     // Signup new user
-    signUp = (req: Request, res: Response) => {
-      const result = validationResult(req);
-      if (!result.isEmpty()) {
-        return res.status(422).json({ errors: result.array() });
+// Signup new user
+signUp = (req: Request, res: Response) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(422).json({ errors: result.array() });
+  }
+
+  if (!req.body || Object.keys(req.body).length === 0) {
+    console.log('没有收到任何数据');
+    return res.status(400).json({ message: '没有收到任何数据' });
+  }
+
+  console.log('Received request body:', req.body);
+
+  const { email, password } = req.body;
+
+  let userAttr = [
+    { Name: 'email', Value: email },
+    { Name: 'gender', Value: '' },
+    { Name: 'birthdate', Value: '' },
+    { Name: 'name', Value: '' },
+    { Name: 'family_name', Value: '' }
+  ];
+
+  let cognitoService = new Cognito();
+  cognitoService.signUpUser(email, password, userAttr)
+    .then(success => {
+      if (success) {
+        console.log('User registration successful');
+        res.status(200).end();
+      } else {
+        console.log('User registration failed');
+        res.status(400).end();
       }
-      console.log(req.body)
-      const { email, password } = req.body;
-    
-      // 其他属性默认为空
-      const userAttr = [
-        { Name: 'email', Value: email },
-        { Name: 'gender', Value: '' },
-        { Name: 'birthdate', Value: '' },
-        { Name: 'name', Value: '' },
-        { Name: 'family_name', Value: '' }
-      ];
-    
-      let cognitoService = new Cognito();
-      cognitoService.signUpUser(email, password, userAttr)
-        .then(success => {
-          success ? res.status(200).end() : res.status(400).end()
-        })
-    }
+    })
+    .catch(err => {
+      console.error('Error during user registration:', err);
+      res.status(500).end();
+    });
+}
 
 
     // Use username and password to authenticate user
@@ -146,13 +167,13 @@ signIn = (req: Request, res: Response) => {
       switch (type) {
         case 'signUp':
           return [
-            body('username').notEmpty().isLength({min: 5}),
+            // body('username').notEmpty().isLength({min: 5}),
             body('email').notEmpty().normalizeEmail().isEmail(),
             body('password').isString().isLength({ min: 8}),
-            body('birthdate').exists().isISO8601(),
-            body('gender').notEmpty().isString(),
-            body('name').notEmpty().isString(),
-            body('family_name').notEmpty().isString()
+            // body('birthdate').exists().isISO8601(),
+            // body('gender').notEmpty().isString(),
+            // body('name').notEmpty().isString(),
+            // body('family_name').notEmpty().isString()
           ]
         case 'signIn':
           return [

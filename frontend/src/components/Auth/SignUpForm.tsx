@@ -4,18 +4,29 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@material-ui/core';
 
-const SignUpForm = () => {
+const SignUpForm = ({
+  onRegistrationSuccess,
+}: {
+  onRegistrationSuccess: () => void;
+}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [remember, setRemember] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      setErrorMessage('Passwords do not match');
       return;
     }
 
@@ -25,19 +36,28 @@ const SignUpForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: email, password, email }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log('User registered successfully:', data);
-        // 这里可以添加成功后的处理逻辑，比如跳转到登录页面
+        console.log('Registration successful');
+        setErrorMessage(''); // 清除之前的错误信息
+        setOpen(true); // 显示成功弹窗
       } else {
-        console.error('Failed to register');
+        const errorData: { errors?: { msg: string }[] } = await response.json();
+        setErrorMessage(
+          `Failed to register: ${errorData.errors ? errorData.errors.map((error) => error.msg).join(', ') : 'Unknown error'}`
+        );
       }
     } catch (error) {
       console.error('Error:', error);
+      setErrorMessage('Failed to connect to the server');
     }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    onRegistrationSuccess(); // 通知父组件切换回登录组件
   };
 
   return (
@@ -69,18 +89,28 @@ const SignUpForm = () => {
         onChange={(e) => setConfirmPassword(e.target.value)}
       />
       <FormControlLabel
-        control={
-          <Checkbox
-            name="remember"
-            checked={remember}
-            onChange={(e) => setRemember(e.target.checked)}
-          />
-        }
+        control={<Checkbox name="remember" />}
         label="Remember me"
       />
+      {errorMessage && <Typography color="error">{errorMessage}</Typography>}
       <Button type="submit" variant="contained" color="primary" fullWidth>
         Sign Up
       </Button>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Registration Successful</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Your account has been created successfully. Please sign in to
+            continue.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </form>
   );
 };
