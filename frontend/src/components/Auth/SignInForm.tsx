@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 const SignInForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // 添加错误状态
+  const [error, setError] = useState<string>(''); // 添加错误状态
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -26,37 +26,43 @@ const SignInForm = () => {
         body: JSON.stringify({ username, password }),
       });
 
-      const contentType = response.headers.get('content-type');
-      let data;
-      if (contentType && contentType.indexOf('application/json') !== -1) {
-        data = await response.json();
-      } else {
-        data = await response.text(); // 如果不是JSON格式，则以文本格式解析
-      }
+      console.log('Response status:', response.status); // 打印响应状态码
+      console.log('Response headers:', response.headers); // 打印响应头
 
-      console.log('Response data:', data); // 添加调试信息
       if (response.ok) {
+        const data = await response.json();
         console.log('Tokens:', data);
-        // 存储 tokens
-        localStorage.setItem('accessToken', data.AccessToken);
-        localStorage.setItem('idToken', data.IdToken);
-        localStorage.setItem('refreshToken', data.RefreshToken);
-        // 跳转到主页
-        navigate('/home');
+        // 确保我们确实收到了所需的三个 token
+        if (data.AccessToken && data.IdToken && data.RefreshToken) {
+          // 存储 tokens
+          localStorage.setItem('accessToken', data.AccessToken);
+          localStorage.setItem('idToken', data.IdToken);
+          localStorage.setItem('refreshToken', data.RefreshToken);
+          // 跳转到主页
+          navigate('/home');
+        } else {
+          console.error('Missing tokens in response:', data);
+          setError('Failed to receive tokens. Please try again.');
+        }
       } else {
-        setError(data.message || data); // 设置错误信息
-        console.error('Failed to sign in:', data.message || data);
+        console.log('Parsing error response'); // 添加日志
+        const errorData = await response.json();
+        console.log('Received error data:', errorData); // 打印接收到的错误数据
+        const errorMessage =
+          errorData.message || 'An error occurred while signing in';
+        setError(errorMessage); // 设置错误信息
+        console.error('Failed to sign in:', errorMessage);
       }
     } catch (error) {
+      console.error('An error occurred in catch block:', error); // 更详细的错误日志
       setError('An unknown error occurred. Please try again.'); // 设置未知错误信息
-      console.error('Error:', error);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <TextField
-        label="Email"
+        label="Username"
         fullWidth
         margin="normal"
         required

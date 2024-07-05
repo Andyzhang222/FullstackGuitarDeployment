@@ -132,6 +132,8 @@ signIn = (req: Request, res: Response) => {
       } else {
         errorMessage = 'An unknown error occurred';
       }
+      console.error(errorMessage,"the final decesion made that need send to front end"); // 打印详细错误信息
+
       res.status(400).json({ message: errorMessage });
     });
 };
@@ -187,7 +189,7 @@ signIn = (req: Request, res: Response) => {
           return [
             // body('username').notEmpty().isLength({min: 5}),
             body('email').notEmpty().normalizeEmail().isEmail(),
-            body('password').isString().isLength({ min: 8}),
+            body('password').isString().isLength({ min: 0}),
             // body('birthdate').exists().isISO8601(),
             // body('gender').notEmpty().isString(),
             // body('name').notEmpty().isString(),
@@ -195,8 +197,8 @@ signIn = (req: Request, res: Response) => {
           ]
         case 'signIn':
           return [
-            body('username').notEmpty().isLength({min: 5}),
-            body('password').isString().isLength({ min: 8}),
+            body('username').notEmpty().isLength({min: 0}),
+            body('password').isString().isLength({ min: 0}),
           ]
         case 'verify':
           return [
