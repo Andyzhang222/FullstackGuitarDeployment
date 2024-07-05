@@ -117,7 +117,8 @@ export default class Cognito {
       return data; // 返回包含 AuthenticationResult 的对象
     } catch (error) {
       console.log(error)
-      return null;
+      console.log(error.code,"         test error code ")
+      throw error;
     }
   }
 

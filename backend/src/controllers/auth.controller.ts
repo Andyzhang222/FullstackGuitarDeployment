@@ -91,31 +91,49 @@ signUp = (req: Request, res: Response) => {
 signIn = (req: Request, res: Response) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
-      return res.status(422).json({ errors: result.array() });
+    return res.status(422).json({ errors: result.array() });
   }
   console.log(req.body);
 
   const { username, password } = req.body;
   let cognitoService = new Cognito();
   cognitoService.signInUser(username, password)
-      .then(async (tokens) => {
-          if (tokens) {
-              // 从ID Token中获取用户信息
-              const userInfo = cognitoService.getUserInfoFromToken(tokens.AuthenticationResult.IdToken);
-              const userService = new UserService();
-              // 检查并创建用户
-              await userService.createUserIfNotExists(userInfo.sub, userInfo.email);
-              
-              // 将 token 发送给前端
-              res.status(200).json(tokens.AuthenticationResult);
-          } else {
-              res.status(400).end();
-          }
-      })
-      .catch(err => {
-          console.error(err);
-          res.status(500).end();
-      });
+    .then(async (tokens) => {
+      if (tokens) {
+        // 从ID Token中获取用户信息
+        const userInfo = cognitoService.getUserInfoFromToken(tokens.AuthenticationResult.IdToken);
+        const userService = new UserService();
+        // 检查并创建用户
+        await userService.createUserIfNotExists(userInfo.sub, userInfo.email);
+
+        // 将 token 发送给前端
+        res.status(200).json(tokens.AuthenticationResult);
+      } else {
+        // 如果 tokens 为空，抛出一个错误，以便在 catch 块中处理
+        throw new Error('InvalidToken');
+      }
+    })
+    .catch(err => {
+      console.error('Error object:', err,"           1111111end"); // 打印错误对象
+      // 处理 Cognito 错误信息
+      console.error("test 111111111111111111111" + err.code); // 打印详细错误信息
+      console.error("test messege111111111111111111111" + err.messege); // 打印详细错误信息
+
+
+      let errorMessage = 'Login failed';
+      if (err.code === 'UserNotConfirmedException') {
+        errorMessage = 'User is not confirmed';
+      } else if (err.code === 'NotAuthorizedException') {
+        errorMessage = 'Incorrect username or password';
+      } else if (err.code === 'UserNotFoundException') {
+        errorMessage = 'User does not exist';
+      } else if (err.message === 'InvalidToken') {
+        errorMessage = 'Login failed. Please try again.'; // 这个信息可以自定义或省略
+      } else {
+        errorMessage = 'An unknown error occurred';
+      }
+      res.status(400).json({ message: errorMessage });
+    });
 };
 
 
