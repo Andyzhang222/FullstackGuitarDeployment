@@ -79,7 +79,7 @@ export default class Cognito {
 
 
 
-  public async signInUser(username: string, password: string): Promise<boolean> {
+  public async signInUser(username: string, password: string): Promise<any> {
     var params = {
       AuthFlow: 'USER_PASSWORD_AUTH', /* required */
       ClientId: this.clientId, /* required */
@@ -89,35 +89,35 @@ export default class Cognito {
         'SECRET_HASH': this.hashSecret(username)
       },
     }
-
+  
     try {
       let data = await this.cognitoIdentity.initiateAuth(params).promise();
       console.log(data); 
-
+  
       // Decode the tokens
       if (data.AuthenticationResult) {
         const decodedAccessToken = jwt.decode(data.AuthenticationResult.AccessToken);
         const decodedIdToken = jwt.decode(data.AuthenticationResult.IdToken);
         const decodedRefreshToken = jwt.decode(data.AuthenticationResult.RefreshToken);
-
+  
         console.log("Decoded Access Token: ", decodedAccessToken);
         console.log("Decoded ID Token: ", decodedIdToken);
         console.log("Decoded Refresh Token: ", decodedRefreshToken);
-
-         // 从ID Token中获取用户信息
-         const userInfo = this.getUserInfoFromToken(data.AuthenticationResult.IdToken!);
-
-         // 创建 UserService 实例
-         const userService = new UserService();
-
+  
+        // // 从ID Token中获取用户信息
+        // const userInfo = this.getUserInfoFromToken(data.AuthenticationResult.IdToken!);
+  
+        // // 创建 UserService 实例
+        // const userService = new UserService();
+  
         // // 检查并创建用户
-         await userService.createUserIfNotExists(userInfo.sub, userInfo.email);
+        // await userService.createUserIfNotExists(userInfo.sub, userInfo.email);
       }
-
-      return true;
+  
+      return data; // 返回包含 AuthenticationResult 的对象
     } catch (error) {
       console.log(error)
-      return false;
+      return null;
     }
   }
 

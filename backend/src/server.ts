@@ -1,12 +1,11 @@
-import App from './app'
-
-import * as bodyParser from 'body-parser'
-
-import HomeController from './controllers/home.controller'
-import AuthController from './controllers/auth.controller'
+import App from './app';
+import * as bodyParser from 'body-parser';
+import HomeController from './controllers/home.controller';
+import AuthController from './controllers/auth.controller';
 import ProtectedController from './controllers/protected.controller';
-
 import dotenv from 'dotenv';
+import cors from 'cors'; // 导入cors中间件
+
 dotenv.config();
 
 const app = new App({
@@ -17,11 +16,10 @@ const app = new App({
         new ProtectedController()
     ],
     middleWares: [
-      // parse application/json
-      // parse application/x-www-form-urlencoded
+        cors(), // 添加cors中间件
         bodyParser.json(),
         bodyParser.urlencoded({ extended: true }),
     ]
-})
+});
 
-app.listen()
+app.listen();

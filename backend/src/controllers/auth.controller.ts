@@ -2,6 +2,8 @@ import * as express from 'express'
 import { Request, Response } from 'express'
 import { body, validationResult } from 'express-validator';
 import Cognito from '../services/cognito.service';
+import { UserService } from '../services/user.service';
+
 
 class AuthController {
     public path = '/auth'
@@ -27,17 +29,19 @@ class AuthController {
         return res.status(422).json({ errors: result.array() });
       }
       console.log(req.body)
-      const { username, password, email, gender, birthdate, name, family_name } = req.body;
-      let userAttr = [];
-      userAttr.push({ Name: 'email', Value: email});
-      userAttr.push({ Name: 'gender', Value: gender});
-      userAttr.push({ Name: 'birthdate', Value: birthdate.toString()});
-      userAttr.push({ Name: 'name', Value: name});
-      userAttr.push({ Name: 'family_name', Value: family_name});
-
-
+      const { email, password } = req.body;
+    
+      // 其他属性默认为空
+      const userAttr = [
+        { Name: 'email', Value: email },
+        { Name: 'gender', Value: '' },
+        { Name: 'birthdate', Value: '' },
+        { Name: 'name', Value: '' },
+        { Name: 'family_name', Value: '' }
+      ];
+    
       let cognitoService = new Cognito();
-      cognitoService.signUpUser(username, password, userAttr)
+      cognitoService.signUpUser(email, password, userAttr)
         .then(success => {
           success ? res.status(200).end() : res.status(400).end()
         })
@@ -45,21 +49,53 @@ class AuthController {
 
 
     // Use username and password to authenticate user
-    signIn = (req: Request, res: Response) => {
-      const result = validationResult(req);
-      if (!result.isEmpty()) {
-        return res.status(422).json({ errors: result.array() });
-      }
-     console.log(req.body);
+    // signIn = (req: Request, res: Response) => {
+    //   const result = validationResult(req);
+    //   if (!result.isEmpty()) {
+    //     return res.status(422).json({ errors: result.array() });
+    //   }
+    //  console.log(req.body);
 
 
-      const { username, password } = req.body;
-      let cognitoService = new Cognito();
-      cognitoService.signInUser(username, password)
-        .then(success => {
-          success ? res.status(200).end() : res.status(400).end()
-        })
-    }
+    //   const { username, password } = req.body;
+    //   let cognitoService = new Cognito();
+    //   cognitoService.signInUser(username, password)
+    //     .then(success => {
+    //       success ? res.status(200).end() : res.status(400).end()
+    //     })
+    // }
+
+    // Use username and password to authenticate user
+// Use username and password to authenticate user
+signIn = (req: Request, res: Response) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+      return res.status(422).json({ errors: result.array() });
+  }
+  console.log(req.body);
+
+  const { username, password } = req.body;
+  let cognitoService = new Cognito();
+  cognitoService.signInUser(username, password)
+      .then(async (tokens) => {
+          if (tokens) {
+              // 从ID Token中获取用户信息
+              const userInfo = cognitoService.getUserInfoFromToken(tokens.AuthenticationResult.IdToken);
+              const userService = new UserService();
+              // 检查并创建用户
+              await userService.createUserIfNotExists(userInfo.sub, userInfo.email);
+              
+              // 将 token 发送给前端
+              res.status(200).json(tokens.AuthenticationResult);
+          } else {
+              res.status(400).end();
+          }
+      })
+      .catch(err => {
+          console.error(err);
+          res.status(500).end();
+      });
+};
 
 
     // confirm signup account with code sent to email
