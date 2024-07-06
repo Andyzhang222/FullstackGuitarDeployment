@@ -24,7 +24,7 @@ export default class Cognito {
     this.cognitoIdentity = new AWS.CognitoIdentityServiceProvider(this.config)
   }
 
-  public async signUpUser(username: string, password: string, userAttr: Array<any>): Promise<boolean> {
+  public async signUpUser(username: string, password: string, userAttr: Array<any>): Promise<any> {
     
     var params = {
       ClientId: this.clientId, /* required */
@@ -40,7 +40,7 @@ export default class Cognito {
       return true
     } catch (error) {
       console.log(error)
-      return false
+      throw error
     }
   }
 

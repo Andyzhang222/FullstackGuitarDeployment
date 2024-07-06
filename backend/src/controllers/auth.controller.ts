@@ -64,9 +64,35 @@ signUp = (req: Request, res: Response) => {
     })
     .catch(err => {
       console.error('Error during user registration:', err);
-      res.status(500).end();
+      console.error('Error code:', err.code);  // 输出错误代码
+      console.error('Error message:', err.message);  // 输出错误信息
+
+      let errorMessage = 'Internal server error';
+      let statusCode = 500;
+
+      // 根据 AWS Cognito 返回的错误代码确定返回的错误信息
+      if (err.code === 'UsernameExistsException') {
+        errorMessage = 'User already exists';
+        statusCode = 400;
+      } else if (err.code === 'InvalidPasswordException') {
+        errorMessage = 'Password must be at least 8 characters long and contain at least one number, one special character, one uppercase letter, and one lowercase letter.';
+        statusCode = 400;
+      } else if (err.code === 'InvalidParameterException') {
+        errorMessage = 'Invalid parameter';
+        statusCode = 400;
+      } else if (err.code === 'NotAuthorizedException') {
+        errorMessage = 'Not authorized';
+        statusCode = 400;
+      } else if (err.code === 'TooManyRequestsException') {
+        errorMessage = 'Too many requests, please try again later';
+        statusCode = 429;
+      }
+
+      // 打印即将发送的错误信息
+      console.log("Sending error response:", { statusCode, errorMessage });
+      res.status(statusCode).json({ message: errorMessage });
     });
-}
+};
 
 
     // Use username and password to authenticate user

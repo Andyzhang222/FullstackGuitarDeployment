@@ -44,9 +44,9 @@ const SignUpForm = ({
         setErrorMessage(''); // 清除之前的错误信息
         setOpen(true); // 显示成功弹窗
       } else {
-        const errorData: { errors?: { msg: string }[] } = await response.json();
+        const errorData = await response.json();
         setErrorMessage(
-          `Failed to register: ${errorData.errors ? errorData.errors.map((error) => error.msg).join(', ') : 'Unknown error'}`
+          `Failed to register: ${errorData.message || 'Unknown error'}`
         );
       }
     } catch (error) {
