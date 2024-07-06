@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
 import signupPicture from '../assets/images/signinupPicture.jpg';
 import SignUpForm from '../components/Auth/SignUpForm';
 import SignInForm from '../components/Auth/SignInForm';
 import './SignInAndSignUpPage.css';
 
-const SignInAndSignUpPage = () => {
+const SignInAndSignUpPage: React.FC = () => {
   const [isSignIn, setIsSignIn] = useState(true);
 
   const toggleForm = () => {
@@ -22,27 +22,25 @@ const SignInAndSignUpPage = () => {
         <img src={signupPicture} alt="Sign in and Sign up" />
       </div>
       <div className="form-section">
-        <h1>Welcome to Fantasy</h1>
-        <h2>Welcome Back! Please enter your details.</h2>
         {isSignIn ? (
           <>
             <SignInForm />
-            <p>
-              Don&apos;t have an account?{' '}
-              <Button color="primary" onClick={toggleForm}>
+            <div className="link-container">
+              <span>Don&apos;t have an account?</span>
+              <Link to="#" onClick={toggleForm} className="link">
                 Sign up
-              </Button>
-            </p>
+              </Link>
+            </div>
           </>
         ) : (
           <>
             <SignUpForm onRegistrationSuccess={handleRegistrationSuccess} />
-            <p>
-              Already have an account?{' '}
-              <Button color="primary" onClick={toggleForm}>
+            <div className="link-container">
+              <span>Already have an account?</span>
+              <Link to="#" onClick={toggleForm} className="link">
                 Sign in
-              </Button>
-            </p>
+              </Link>
+            </div>
           </>
         )}
       </div>

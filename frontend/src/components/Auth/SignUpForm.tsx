@@ -11,11 +11,10 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
+import './SignUpForm.css'; // 导入自定义的CSS文件
 
-const SignUpForm = ({
+const SignUpForm: React.FC<{ onRegistrationSuccess: () => void }> = ({
   onRegistrationSuccess,
-}: {
-  onRegistrationSuccess: () => void;
 }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,9 +39,8 @@ const SignUpForm = ({
       });
 
       if (response.ok) {
-        console.log('Registration successful');
-        setErrorMessage(''); // 清除之前的错误信息
-        setOpen(true); // 显示成功弹窗
+        setErrorMessage('');
+        setOpen(true);
       } else {
         const errorData = await response.json();
         setErrorMessage(
@@ -50,51 +48,88 @@ const SignUpForm = ({
         );
       }
     } catch (error) {
-      console.error('Error:', error);
       setErrorMessage('Failed to connect to the server');
     }
   };
 
   const handleClose = () => {
     setOpen(false);
-    onRegistrationSuccess(); // 通知父组件切换回登录组件
+    onRegistrationSuccess();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="signup-form">
+      <Typography variant="h4" component="h1" gutterBottom className="title">
+        Welcome to Fantasy
+      </Typography>
+      <Typography variant="subtitle1" gutterBottom className="subtitle">
+        Register your account
+      </Typography>
       <TextField
         label="Email"
+        variant="outlined"
         fullWidth
         margin="normal"
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        placeholder="Enter your email address..."
+        className="input-field"
       />
       <TextField
         label="Password"
         type="password"
+        variant="outlined"
         fullWidth
         margin="normal"
         required
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        placeholder="Enter your password..."
+        className="input-field"
       />
       <TextField
         label="Confirm Password"
         type="password"
+        variant="outlined"
         fullWidth
         margin="normal"
         required
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        placeholder="Confirm your password..."
+        className="input-field"
       />
       <FormControlLabel
         control={<Checkbox name="remember" />}
         label="Remember me"
       />
       {errorMessage && <Typography color="error">{errorMessage}</Typography>}
-      <Button type="submit" variant="contained" color="primary" fullWidth>
-        Sign Up
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        fullWidth
+        className="signup-button"
+      >
+        Sign up
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        fullWidth
+        className="guest-button"
+      >
+        Continue as a guest
       </Button>
 
       <Dialog open={open} onClose={handleClose}>
