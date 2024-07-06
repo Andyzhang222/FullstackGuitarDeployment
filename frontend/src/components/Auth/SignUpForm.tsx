@@ -10,7 +10,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
+  InputAdornment,
 } from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import './SignUpForm.css'; // 导入自定义的CSS文件
 
 const SignUpForm: React.FC<{ onRegistrationSuccess: () => void }> = ({
@@ -20,6 +23,8 @@ const SignUpForm: React.FC<{ onRegistrationSuccess: () => void }> = ({
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -57,6 +62,14 @@ const SignUpForm: React.FC<{ onRegistrationSuccess: () => void }> = ({
     onRegistrationSuccess();
   };
 
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleClickShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="signup-form">
       <Typography variant="h4" component="h1" gutterBottom className="title">
@@ -81,7 +94,7 @@ const SignUpForm: React.FC<{ onRegistrationSuccess: () => void }> = ({
       />
       <TextField
         label="Password"
-        type="password"
+        type={showPassword ? 'text' : 'password'}
         variant="outlined"
         fullWidth
         margin="normal"
@@ -93,10 +106,23 @@ const SignUpForm: React.FC<{ onRegistrationSuccess: () => void }> = ({
         }}
         placeholder="Enter your password..."
         className="input-field"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                edge="end"
+              >
+                {showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
       />
       <TextField
         label="Confirm Password"
-        type="password"
+        type={showConfirmPassword ? 'text' : 'password'}
         variant="outlined"
         fullWidth
         margin="normal"
@@ -108,6 +134,19 @@ const SignUpForm: React.FC<{ onRegistrationSuccess: () => void }> = ({
         }}
         placeholder="Confirm your password..."
         className="input-field"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle confirm password visibility"
+                onClick={handleClickShowConfirmPassword}
+                edge="end"
+              >
+                {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
       />
       <FormControlLabel
         control={<Checkbox name="remember" />}
