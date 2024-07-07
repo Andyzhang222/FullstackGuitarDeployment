@@ -14,7 +14,6 @@ import {
   InputAdornment,
 } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import './SignUpForm.css'; // 导入自定义的CSS文件
 
 const SignUpForm: React.FC<{ onRegistrationSuccess: () => void }> = ({
   onRegistrationSuccess,
