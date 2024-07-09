@@ -12,10 +12,18 @@ import {
   DialogTitle,
   IconButton,
   InputAdornment,
+  Link,
+  Box,
 } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
-const SignUpForm: React.FC<{ onRegistrationSuccess: () => void }> = ({
+interface SignUpFormProps {
+  onSwitch: () => void;
+  onRegistrationSuccess: () => void;
+}
+
+const SignUpForm: React.FC<SignUpFormProps> = ({
+  onSwitch,
   onRegistrationSuccess,
 }) => {
   const [email, setEmail] = useState('');
@@ -169,6 +177,15 @@ const SignUpForm: React.FC<{ onRegistrationSuccess: () => void }> = ({
       >
         Continue as a guest
       </Button>
+
+      <Box display="flex" justifyContent="center" mt={2}>
+        <Typography variant="body2">
+          {'Already have an account? '}
+          <Link href="#" onClick={onSwitch}>
+            Sign in
+          </Link>
+        </Typography>
+      </Box>
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Registration Successful</DialogTitle>

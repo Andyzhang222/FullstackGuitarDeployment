@@ -11,7 +11,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import ellipseImage from '../../assets/images/Ellipse.svg';
 
-const SignInForm: React.FC = () => {
+interface SignInFormProps {
+  onSwitch: () => void;
+}
+
+const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>(''); // 添加错误状态
@@ -220,6 +224,19 @@ const SignInForm: React.FC = () => {
         >
           Continue as a guest
         </Button>
+        <Typography
+          variant="body2"
+          align="center"
+          style={{
+            marginTop: '16px',
+            width: '432px',
+          }}
+        >
+          {"Don't have an account? "}
+          <Link href="#" onClick={onSwitch}>
+            Sign up
+          </Link>
+        </Typography>
       </Box>
     </form>
   );
