@@ -6,8 +6,10 @@ import {
   FormControlLabel,
   Typography,
   Link,
-} from '@material-ui/core';
+  Box,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import ellipseImage from '../../assets/images/Ellipse.svg';
 
 const SignInForm: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -49,71 +51,176 @@ const SignInForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="signin-form">
-      <Typography variant="h5" component="h1" gutterBottom>
+    <form
+      onSubmit={handleSubmit}
+      className="signin-form"
+      style={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        maxHeight: '100vh',
+        backgroundColor: '#f0f0f0', // 这里添加背景颜色
+      }}
+    >
+      <Box display="flex" flexDirection="column" alignItems="flex-start" mb={2}>
+        <img
+          src={ellipseImage}
+          alt="Ellipse"
+          style={{
+            width: '32px',
+            height: '32px',
+            marginBottom: '20px',
+            marginLeft: '30px', // 向左移动以对齐
+          }}
+        />
+      </Box>
+      <Typography
+        variant="h5"
+        component="h1"
+        gutterBottom
+        style={{
+          marginBottom: '10px',
+          textAlign: 'left',
+          width: '432px',
+        }}
+      >
         Welcome to Fantasy
       </Typography>
-      <Typography variant="subtitle1" gutterBottom>
+      <Typography
+        variant="subtitle1"
+        gutterBottom
+        style={{
+          marginBottom: '30px',
+          textAlign: 'left',
+          width: '432px',
+        }}
+      >
         Welcome Back! Please enter your details.
       </Typography>
-      <TextField
-        label="Email"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        required
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        placeholder="Enter your email address..."
-      />
-      <TextField
-        label="Password"
-        type="password"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        required
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        placeholder="Enter your password..."
-      />
-      <div className="form-options">
-        <FormControlLabel
-          control={<Checkbox name="remember" />}
-          label="Remember me"
-        />
-        <Link href="#" className="forgot-password">
-          Forgot password?
-        </Link>
-      </div>
-      {error && (
-        <Typography color="error" variant="body2">
-          {error}
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        width="100%"
+      >
+        <Typography
+          variant="body2"
+          align="left"
+          style={{
+            marginBottom: '8px',
+            width: '432px',
+          }}
+        >
+          Email
         </Typography>
-      )}
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        fullWidth
-        className="signin-button"
-      >
-        Sign in
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        fullWidth
-        className="guest-button"
-      >
-        Continue as a guest
-      </Button>
+        <TextField
+          variant="outlined"
+          fullWidth
+          required
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          placeholder="Enter your email address..."
+          style={{
+            marginBottom: '16px',
+            width: '432px',
+            height: '32px',
+            border: '1px solid #E5E6EB',
+          }}
+          inputProps={{
+            style: {
+              height: '32px',
+              padding: '0 14px',
+            },
+          }}
+        />
+        <Typography
+          variant="body2"
+          align="left"
+          style={{
+            marginBottom: '8px',
+            width: '432px',
+          }}
+        >
+          Password
+        </Typography>
+        <TextField
+          type="password"
+          variant="outlined"
+          fullWidth
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          placeholder="Enter your password..."
+          style={{
+            marginBottom: '16px',
+            width: '432px',
+            height: '32px',
+            border: '1px solid #E5E6EB',
+          }}
+          inputProps={{
+            style: {
+              height: '32px',
+              padding: '0 14px',
+            },
+          }}
+        />
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          width="100%"
+          maxWidth={432}
+          mb={2}
+        >
+          <FormControlLabel
+            control={<Checkbox name="remember" />}
+            label="Remember me"
+          />
+          <Link href="#" className="forgot-password">
+            Forgot password?
+          </Link>
+        </Box>
+        {error && (
+          <Typography
+            color="error"
+            variant="body2"
+            style={{ marginBottom: '16px' }}
+          >
+            {error}
+          </Typography>
+        )}
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          style={{
+            marginBottom: '16px',
+            width: '432px',
+            height: '40px',
+            backgroundColor: '#0057FE',
+            color: 'white',
+          }}
+        >
+          Sign in
+        </Button>
+        <Button
+          variant="outlined"
+          fullWidth
+          style={{
+            marginBottom: '16px',
+            width: '432px',
+            height: '40px',
+          }}
+        >
+          Continue as a guest
+        </Button>
+      </Box>
     </form>
   );
 };
