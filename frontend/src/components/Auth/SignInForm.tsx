@@ -48,15 +48,18 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           navigate('/home');
         } else {
           setError('Failed to receive tokens. Please try again.');
+          setPassword(''); // 清空密码字段
         }
       } else {
         const errorData = await response.json();
         const errorMessage =
           errorData.message || 'An error occurred while signing in';
         setError(errorMessage);
+        setPassword(''); // 清空密码字段
       }
     } catch (error) {
       setError('An unknown error occurred. Please try again.');
+      setPassword(''); // 清空密码字段
     }
   };
 
@@ -136,6 +139,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
             marginBottom: '8px',
             width: '432px',
             fontWeight: '700',
+            color: '#4E5969',
           }}
         >
           Email
@@ -189,6 +193,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
             marginBottom: '8px',
             width: '432px',
             fontWeight: '700',
+            color: '#4E5969',
           }}
         >
           Password
@@ -269,15 +274,15 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
             Forgot password?
           </Link>
         </Box>
-        {error && (
-          <Typography
-            color="error"
-            variant="body2"
-            style={{ marginBottom: '16px' }}
-          >
-            {error}
-          </Typography>
-        )}
+        <Box
+          style={{ height: '24px', marginBottom: '2px', marginTop: '-10px' }}
+        >
+          {error && (
+            <Typography color="error" variant="body2">
+              {error}
+            </Typography>
+          )}
+        </Box>
         <Button
           type="submit"
           variant="contained"
@@ -286,6 +291,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
             marginBottom: '22px',
             width: '432px',
             height: '32px',
+            fontWeight: '700',
             backgroundColor: '#0057FE', // 设置按钮背景颜色为蓝色
             color: 'white', // 设置按钮字体颜色为白色
             textTransform: 'none', // 确保没有强制转换文本
