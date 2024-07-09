@@ -7,8 +7,12 @@ import {
   Typography,
   Link,
   Box,
+  IconButton,
+  InputAdornment,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import ellipseImage from '../../assets/images/Ellipse.svg';
 
 interface SignInFormProps {
@@ -19,6 +23,8 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>(''); // 添加错误状态
+  const [showPassword, setShowPassword] = useState(false); // 管理密码可见状态
+  const [showUsername, setShowUsername] = useState(true); // 管理用户名可见状态
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -54,17 +60,25 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
     }
   };
 
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleClickShowUsername = () => {
+    setShowUsername(!showUsername);
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
       className="signin-form"
       style={{
-        width: '100%',
+        width: '432px',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'flex-start', // 向左对齐
         maxHeight: '100vh',
-        backgroundColor: '#f0f0f0', // 这里添加背景颜色
+        fontFamily: 'Helvetica',
       }}
     >
       <Box display="flex" flexDirection="column" alignItems="flex-start" mb={2}>
@@ -75,7 +89,6 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
             width: '32px',
             height: '32px',
             marginBottom: '20px',
-            marginLeft: '30px', // 向左移动以对齐
           }}
         />
       </Box>
@@ -87,6 +100,8 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           marginBottom: '10px',
           textAlign: 'left',
           width: '432px',
+          fontSize: '28px',
+          fontWeight: '700',
         }}
       >
         Welcome to Fantasy
@@ -98,6 +113,10 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           marginBottom: '30px',
           textAlign: 'left',
           width: '432px',
+          fontFamily: 'PingFang SC',
+          fontWeight: '400',
+          fontSize: '16px',
+          color: '#4E5969',
         }}
       >
         Welcome Back! Please enter your details.
@@ -107,6 +126,8 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
         flexDirection="column"
         alignItems="center"
         width="100%"
+        fontWeight="700"
+        fontSize="14px"
       >
         <Typography
           variant="body2"
@@ -114,11 +135,13 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           style={{
             marginBottom: '8px',
             width: '432px',
+            fontWeight: '700',
           }}
         >
           Email
         </Typography>
         <TextField
+          type={showUsername ? 'text' : 'password'}
           variant="outlined"
           fullWidth
           required
@@ -132,13 +155,31 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
             marginBottom: '16px',
             width: '432px',
             height: '32px',
-            border: '1px solid #E5E6EB',
           }}
           inputProps={{
             style: {
               height: '32px',
               padding: '0 14px',
             },
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle username visibility"
+                  onClick={handleClickShowUsername}
+                  edge="end"
+                  size="small"
+                  style={{ fontSize: '20px' }}
+                >
+                  {showUsername ? (
+                    <VisibilityOutlinedIcon style={{ fontSize: '20px' }} />
+                  ) : (
+                    <VisibilityOffOutlinedIcon style={{ fontSize: '20px' }} />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            ),
           }}
         />
         <Typography
@@ -147,12 +188,13 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           style={{
             marginBottom: '8px',
             width: '432px',
+            fontWeight: '700',
           }}
         >
           Password
         </Typography>
         <TextField
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           variant="outlined"
           fullWidth
           required
@@ -166,7 +208,6 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
             marginBottom: '16px',
             width: '432px',
             height: '32px',
-            border: '1px solid #E5E6EB',
           }}
           inputProps={{
             style: {
@@ -174,19 +215,57 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
               padding: '0 14px',
             },
           }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                  size="small"
+                  style={{ fontSize: '20px' }}
+                >
+                  {showPassword ? (
+                    <VisibilityOutlinedIcon style={{ fontSize: '20px' }} />
+                  ) : (
+                    <VisibilityOffOutlinedIcon style={{ fontSize: '20px' }} />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <Box
           display="flex"
+          flexDirection="row"
           justifyContent="space-between"
+          alignItems="center" // 这里添加 alignItems 属性
           width="100%"
           maxWidth={432}
           mb={2}
+          sx={{
+            marginTop: '-15px',
+          }}
         >
           <FormControlLabel
             control={<Checkbox name="remember" />}
             label="Remember me"
+            sx={{
+              '& .MuiFormControlLabel-label': {
+                fontSize: '14px',
+                color: '#4E5969',
+              },
+            }}
           />
-          <Link href="#" className="forgot-password">
+          <Link
+            href="#"
+            className="forgot-password"
+            sx={{
+              fontSize: '14px',
+              color: '#4E5969',
+              fontWeight: '400',
+            }}
+          >
             Forgot password?
           </Link>
         </Box>
@@ -204,11 +283,12 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           variant="contained"
           fullWidth
           style={{
-            marginBottom: '16px',
+            marginBottom: '22px',
             width: '432px',
-            height: '40px',
-            backgroundColor: '#0057FE',
-            color: 'white',
+            height: '32px',
+            backgroundColor: '#0057FE', // 设置按钮背景颜色为蓝色
+            color: 'white', // 设置按钮字体颜色为白色
+            textTransform: 'none', // 确保没有强制转换文本
           }}
         >
           Sign in
@@ -219,21 +299,33 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           style={{
             marginBottom: '16px',
             width: '432px',
-            height: '40px',
+            height: '32px',
+            textTransform: 'none', // 确保没有强制转换文本
+            color: '#4E5969', // 设置按钮背景颜色为蓝色
+            borderColor: 'rgba(0, 0, 0, 0.23)', // 设置边框颜色为默认的灰黑色
           }}
         >
           Continue as a guest
         </Button>
         <Typography
           variant="body2"
-          align="center"
+          align="left"
           style={{
             marginTop: '16px',
             width: '432px',
           }}
         >
           {"Don't have an account? "}
-          <Link href="#" onClick={onSwitch}>
+          <Link
+            href="#"
+            onClick={onSwitch}
+            style={{
+              marginLeft: '10px',
+              color: '#0057FE', // 设置按钮背景颜色为蓝色
+              fontWeight: '400',
+              textDecoration: 'none', // 去掉下划线
+            }}
+          >
             Sign up
           </Link>
         </Typography>
