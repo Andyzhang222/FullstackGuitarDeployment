@@ -18,9 +18,13 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 
 interface SignInFormProps {
   onSwitch: () => void;
+  onSwitchToForgotPassword: () => void;
 }
 
-const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
+const SignInForm: React.FC<SignInFormProps> = ({
+  onSwitch,
+  onSwitchToForgotPassword,
+}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>(''); // 添加错误状态
@@ -317,6 +321,10 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
               fontSize: '14px',
               color: '#4E5969',
               fontWeight: '400',
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              onSwitchToForgotPassword(); // 调用传递过来的 handleForgotPassword 函数
             }}
           >
             Forgot password?

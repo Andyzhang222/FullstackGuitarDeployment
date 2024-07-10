@@ -3,23 +3,26 @@ import { Box, Container } from '@mui/material';
 import signupPicture from '../assets/images/signinupPicture.jpg';
 import SignUpForm from '../components/Auth/SignUpForm';
 import SignInForm from '../components/Auth/SignInForm';
+import ForgotPasswordForm from '../components/Auth/ForgotPasswordForm'; // 添加这个导入
 
 const SignInAndSignUpPage: React.FC = () => {
-  const [isSignIn, setIsSignIn] = useState(true);
+  const [currentForm, setCurrentForm] = useState<
+    'signIn' | 'signUp' | 'forgotPassword'
+  >('signIn');
 
-  const toggleForm = () => {
-    setIsSignIn(!isSignIn);
-  };
+  const switchToSignUp = () => setCurrentForm('signUp');
+  const switchToSignIn = () => setCurrentForm('signIn');
+  const switchToForgotPassword = () => setCurrentForm('forgotPassword');
 
   const handleRegistrationSuccess = () => {
-    setIsSignIn(true);
+    setCurrentForm('signIn');
   };
 
   return (
     <Box display="flex" height="100vh">
       <Box
         sx={{
-          width: '42%', // 固定宽度为45%
+          width: '42%', // 固定宽度为42%
           display: 'flex',
           justifyContent: 'flex-start', // 确保图片靠左对齐
           alignItems: 'center',
@@ -57,13 +60,20 @@ const SignInAndSignUpPage: React.FC = () => {
               my: 12,
             }}
           >
-            {isSignIn ? (
-              <SignInForm onSwitch={toggleForm} />
-            ) : (
+            {currentForm === 'signIn' && (
+              <SignInForm
+                onSwitch={switchToSignUp}
+                onSwitchToForgotPassword={switchToForgotPassword}
+              />
+            )}
+            {currentForm === 'signUp' && (
               <SignUpForm
-                onSwitch={toggleForm}
+                onSwitch={switchToSignIn}
                 onRegistrationSuccess={handleRegistrationSuccess}
               />
+            )}
+            {currentForm === 'forgotPassword' && (
+              <ForgotPasswordForm onSwitchToSignIn={switchToSignIn} />
             )}
           </Box>
         </Container>
