@@ -253,12 +253,21 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           }}
         >
           <FormControlLabel
-            control={<Checkbox name="remember" />}
+            control={
+              <Checkbox
+                name="remember"
+                sx={{
+                  transform: 'scale(0.7)', // 缩小复选框的大小
+                  borderColor: 'rgba(0, 0, 0, 0.23)',
+                }}
+              />
+            }
             label="Remember me"
             sx={{
               '& .MuiFormControlLabel-label': {
                 fontSize: '14px',
                 color: '#4E5969',
+                marginLeft: '-10px',
               },
             }}
           />
@@ -319,6 +328,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           style={{
             marginTop: '16px',
             width: '432px',
+            color: '#86909C',
           }}
         >
           {"Don't have an account? "}
@@ -326,7 +336,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
             href="#"
             onClick={onSwitch}
             style={{
-              marginLeft: '10px',
+              marginLeft: '3px',
               color: '#0057FE', // 设置按钮背景颜色为蓝色
               fontWeight: '400',
               textDecoration: 'none', // 去掉下划线

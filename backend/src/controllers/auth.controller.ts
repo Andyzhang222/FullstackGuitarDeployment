@@ -75,7 +75,7 @@ signUp = (req: Request, res: Response) => {
         errorMessage = 'User already exists';
         statusCode = 400;
       } else if (err.code === 'InvalidPasswordException') {
-        errorMessage = 'Password must be at least 8 characters long and contain at least one number, one special character, one uppercase letter, and one lowercase letter.';
+        errorMessage = 'Password must be at least 8 characters, with one number, one special character, one uppercase, and one lowercase letter.';
         statusCode = 400;
       } else if (err.code === 'InvalidParameterException') {
         errorMessage = 'Invalid parameter';
