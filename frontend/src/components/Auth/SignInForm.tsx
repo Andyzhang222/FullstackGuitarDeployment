@@ -338,11 +338,12 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           style={{
             marginBottom: '22px',
             width: '432px',
-            height: '32px',
+            height: '40px',
             fontWeight: '700',
             backgroundColor: '#0057FE', // 设置按钮背景颜色为蓝色
             color: 'white', // 设置按钮字体颜色为白色
             textTransform: 'none', // 确保没有强制转换文本
+            borderRadius: '4px',
           }}
         >
           Sign in
@@ -353,10 +354,11 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           style={{
             marginBottom: '16px',
             width: '432px',
-            height: '32px',
+            height: '40px',
             textTransform: 'none', // 确保没有强制转换文本
             color: '#4E5969', // 设置按钮背景颜色为蓝色
             borderColor: 'rgba(0, 0, 0, 0.23)', // 设置边框颜色为默认的灰黑色
+            borderRadius: '4px',
           }}
         >
           Continue as a guest

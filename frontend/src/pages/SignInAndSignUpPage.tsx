@@ -19,7 +19,7 @@ const SignInAndSignUpPage: React.FC = () => {
     <Box display="flex" height="100vh">
       <Box
         sx={{
-          width: '45%', // 固定宽度为45%
+          width: '42%', // 固定宽度为45%
           display: 'flex',
           justifyContent: 'flex-start', // 确保图片靠左对齐
           alignItems: 'center',
