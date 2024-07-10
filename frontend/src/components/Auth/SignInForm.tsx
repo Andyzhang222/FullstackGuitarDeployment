@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import ellipseImage from '../../assets/images/Ellipse.svg';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 
 interface SignInFormProps {
   onSwitch: () => void;
@@ -169,12 +170,31 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
+                {username && (
+                  <IconButton
+                    aria-label="clear email"
+                    onClick={() => setUsername('')}
+                    edge="end"
+                    size="small"
+                    style={{ fontSize: '20px' }}
+                    sx={{
+                      fontSize: '20px',
+                      transform: 'scale(0.7)', // 缩小图标的大小
+                    }}
+                  >
+                    <ClearOutlinedIcon style={{ fontSize: '20px' }} />
+                  </IconButton>
+                )}
                 <IconButton
                   aria-label="toggle username visibility"
                   onClick={handleClickShowUsername}
                   edge="end"
                   size="small"
                   style={{ fontSize: '20px' }}
+                  sx={{
+                    fontSize: '20px',
+                    transform: 'scale(0.7)', // 缩小图标的大小
+                  }}
                 >
                   {showUsername ? (
                     <VisibilityOutlinedIcon style={{ fontSize: '20px' }} />
@@ -223,12 +243,31 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
+                {password && (
+                  <IconButton
+                    aria-label="clear password"
+                    onClick={() => setPassword('')}
+                    edge="end"
+                    size="small"
+                    style={{ fontSize: '20px' }}
+                    sx={{
+                      fontSize: '20px',
+                      transform: 'scale(0.7)', // 缩小图标的大小
+                    }}
+                  >
+                    <ClearOutlinedIcon style={{ fontSize: '20px' }} />
+                  </IconButton>
+                )}
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={handleClickShowPassword}
                   edge="end"
                   size="small"
                   style={{ fontSize: '20px' }}
+                  sx={{
+                    fontSize: '20px',
+                    transform: 'scale(0.7)', // 缩小图标的大小
+                  }}
                 >
                   {showPassword ? (
                     <VisibilityOutlinedIcon style={{ fontSize: '20px' }} />

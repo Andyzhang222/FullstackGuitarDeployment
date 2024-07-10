@@ -18,6 +18,7 @@ import {
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import ellipseImage from '../../assets/images/Ellipse.svg';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 
 interface SignUpFormProps {
   onSwitch: () => void;
@@ -174,12 +175,31 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
+              {email && (
+                <IconButton
+                  aria-label="clear email"
+                  onClick={() => setEmail('')}
+                  edge="end"
+                  size="small"
+                  style={{ fontSize: '20px' }}
+                  sx={{
+                    fontSize: '20px',
+                    transform: 'scale(0.7)', // 缩小图标的大小
+                  }}
+                >
+                  <ClearOutlinedIcon style={{ fontSize: '20px' }} />
+                </IconButton>
+              )}
               <IconButton
                 aria-label="toggle email visibility"
                 onClick={handleClickShowUsername}
                 edge="end"
                 size="small"
                 style={{ fontSize: '20px' }}
+                sx={{
+                  fontSize: '20px',
+                  transform: 'scale(0.7)', // 缩小图标的大小
+                }}
               >
                 {showUsername ? (
                   <VisibilityOutlinedIcon style={{ fontSize: '20px' }} />
@@ -228,12 +248,31 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
+              {password && (
+                <IconButton
+                  aria-label="clear password"
+                  onClick={() => setPassword('')}
+                  edge="end"
+                  size="small"
+                  style={{ fontSize: '20px' }}
+                  sx={{
+                    fontSize: '20px',
+                    transform: 'scale(0.7)', // 缩小图标的大小
+                  }}
+                >
+                  <ClearOutlinedIcon style={{ fontSize: '20px' }} />
+                </IconButton>
+              )}
               <IconButton
                 aria-label="toggle password visibility"
                 onClick={handleClickShowPassword}
                 edge="end"
                 size="small"
                 style={{ fontSize: '20px' }}
+                sx={{
+                  fontSize: '20px',
+                  transform: 'scale(0.7)', // 缩小图标的大小
+                }}
               >
                 {showPassword ? (
                   <VisibilityOutlinedIcon style={{ fontSize: '20px' }} />
@@ -282,12 +321,31 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
+              {confirmPassword && (
+                <IconButton
+                  aria-label="clear confirmPassword"
+                  onClick={() => setConfirmPassword('')}
+                  edge="end"
+                  size="small"
+                  style={{ fontSize: '20px' }}
+                  sx={{
+                    fontSize: '20px',
+                    transform: 'scale(0.7)', // 缩小图标的大小
+                  }}
+                >
+                  <ClearOutlinedIcon style={{ fontSize: '20px' }} />
+                </IconButton>
+              )}
               <IconButton
                 aria-label="toggle confirm password visibility"
                 onClick={handleClickShowConfirmPassword}
                 edge="end"
                 size="small"
                 style={{ fontSize: '20px' }}
+                sx={{
+                  fontSize: '20px',
+                  transform: 'scale(0.7)', // 缩小图标的大小
+                }}
               >
                 {showConfirmPassword ? (
                   <VisibilityOutlinedIcon style={{ fontSize: '20px' }} />
