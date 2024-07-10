@@ -92,7 +92,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
           style={{
             width: '32px',
             height: '32px',
-            marginBottom: '20px',
+            marginBottom: '10px',
           }}
         />
       </Box>
@@ -101,7 +101,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
         component="h1"
         gutterBottom
         style={{
-          marginBottom: '10px',
+          marginBottom: '5px',
           textAlign: 'left',
           width: '432px',
           fontSize: '28px',
@@ -355,6 +355,8 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSwitch }) => {
             marginBottom: '16px',
             width: '432px',
             height: '40px',
+            fontWeight: '700',
+            fontFamily: 'PingFang SC',
             textTransform: 'none', // 确保没有强制转换文本
             color: '#4E5969', // 设置按钮背景颜色为蓝色
             borderColor: 'rgba(0, 0, 0, 0.23)', // 设置边框颜色为默认的灰黑色
