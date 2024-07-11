@@ -22,4 +22,6 @@ const app = new App({
     ]
 });
 
+// 使用 authRoutes
+// app.app.use('/auth', authRoutes);
 app.listen();

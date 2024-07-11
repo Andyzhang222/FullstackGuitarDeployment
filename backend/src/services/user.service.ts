@@ -12,6 +12,10 @@ class UserService {
       throw err;
     }
   }
+  public async checkEmailExists(email: string): Promise<boolean> {
+    const user = await User.findOne({ where: { email } });
+    return !!user;
+  }
 }
 
 export { UserService };

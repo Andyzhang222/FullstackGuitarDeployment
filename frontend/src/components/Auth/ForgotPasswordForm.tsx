@@ -32,10 +32,41 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   const [step, setStep] = useState<'email' | 'reset'>('email');
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
-  const handleSendCode = async (event: React.FormEvent) => {
+  const handleNext = async (event: React.FormEvent) => {
     event.preventDefault();
-    setStep('reset');
+
+    try {
+      const response = await fetch('http://localhost:5001/auth/check-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.exists) {
+          setStep('reset');
+          setMessage('');
+        } else {
+          setMessage(
+            'User does not exist. Please enter a valid email address.'
+          );
+        }
+      } else {
+        const errorData = await response.json();
+        setMessage(`Error: ${errorData.message}`);
+      }
+    } catch (error) {
+      setMessage('Failed to connect to the server');
+    }
   };
+
+  // const handleSendCode = async (event: React.FormEvent) => {
+  //   event.preventDefault();
+  //   setStep('reset');
+  // };
 
   const handleResendCode = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -234,7 +265,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             }}
           />
           <Button
-            onClick={handleSendCode}
+            onClick={handleNext} // 添加的部分：调用 handleNext 方法
             variant="contained"
             color="primary"
             fullWidth
@@ -251,6 +282,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           >
             Next
           </Button>
+          
           <Link
             component="button"
             variant="body2"

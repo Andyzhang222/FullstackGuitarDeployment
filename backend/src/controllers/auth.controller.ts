@@ -29,12 +29,26 @@ class AuthController {
       this.validateBody("confirmPassword"),
       this.confirmPassword
     );
-    // this.router.post(
-    //   "/verify-code",
-    //   this.validateBody("verifyCode"),
-    //   this.verifyCode
-    // );
+     // 新增的检查邮箱是否存在的路由
+     this.router.post("/check-email", this.checkEmail); // 新增的路由
   }
+  
+  // 新增的检查邮箱是否存在的方法
+  checkEmail = async (req: Request, res: Response) => { // 新增的方法
+    const { email } = req.body;
+
+    try {
+      const userService = new UserService();
+      const userExists = await userService.checkEmailExists(email);
+      if (userExists) {
+        res.status(200).json({ exists: true });
+      } else {
+        res.status(404).json({ exists: false });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
 
   // Signup new user
   // Signup new user
