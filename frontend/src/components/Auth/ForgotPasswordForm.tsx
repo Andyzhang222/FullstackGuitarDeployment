@@ -31,9 +31,24 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   const [timer, setTimer] = useState(0);
   const [step, setStep] = useState<'email' | 'reset'>('email');
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [countdown, setCountdown] = useState(10);
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
 
   const handleNext = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsButtonDisabled(true);
+    setCountdown(10);
+
+    const countdownInterval = setInterval(() => {
+      setCountdown((prevCountdown) => prevCountdown - 1);
+    }, 1000);
+
+    setTimeout(() => {
+      setIsButtonDisabled(false);
+      clearInterval(countdownInterval);
+    }, 10000);
 
     try {
       const response = await fetch('http://localhost:5001/auth/check-email', {
@@ -44,22 +59,24 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         body: JSON.stringify({ email }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.exists) {
-          setStep('reset');
-          setMessage('');
-        } else {
-          setMessage(
-            'User does not exist. Please enter a valid email address.'
-          );
-        }
+      const data = await response.json();
+      if (response.ok && data.exists) {
+        setStep('reset');
+        setEmailError('');
+      } else if (response.status === 404) {
+        setEmailError(
+          'Email does not exist. Please enter a registered email address.'
+        );
+        setTimeout(() => {
+          setEmailError('');
+        }, 10000); // 30秒后清除错误信息
+        setIsInputDisabled(true);
+        setTimeout(() => setIsInputDisabled(false), 10000); // 禁用输入框30秒
       } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
+        setEmailError(`Error: ${data.message || 'Unknown error'}`);
       }
     } catch (error) {
-      setMessage('Failed to connect to the server');
+      setEmailError('Failed to connect to the server');
     }
   };
 
@@ -263,32 +280,58 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                 </InputAdornment>
               ),
             }}
+            disabled={isInputDisabled} // 禁用输入框
           />
+          <Box
+            style={{
+              height: '48px', // 预留空间
+              marginBottom: '2px',
+              marginTop: '',
+              width: '100%',
+              fontSize: '14px',
+            }}
+          >
+            {emailError && (
+              <Typography
+                color="error"
+                style={{
+                  height: '100%', // 错误信息占满预留空间
+                  fontSize: '14px',
+                }}
+              >
+                {emailError}
+              </Typography>
+            )}
+          </Box>
           <Button
-            onClick={handleNext} // 添加的部分：调用 handleNext 方法
+            onClick={handleNext}
             variant="contained"
             color="primary"
             fullWidth
+            disabled={isButtonDisabled}
             style={{
-              marginBottom: '22px',
+              marginBottom: '28px',
+              marginTop: '-28px',
               width: '432px',
               height: '40px',
               fontWeight: '700',
-              backgroundColor: '#0057FE', // 设置按钮背景颜色为蓝色
-              color: 'white', // 设置按钮字体颜色为白色
-              textTransform: 'none', // 确保没有强制转换文本
+              backgroundColor: isButtonDisabled ? '#A9A9A9' : '#0057FE',
+              color: 'white',
+              textTransform: 'none',
               borderRadius: '4px',
             }}
           >
-            Next
+            {isButtonDisabled
+              ? `Please wait... (${countdown})`
+              : 'Verify your Email'}
           </Button>
-          
+
           <Link
             component="button"
             variant="body2"
             onClick={onSwitchToSignIn}
             style={{
-              marginTop: '16px',
+              marginTop: '-10px',
               display: 'block',
               textAlign: 'center',
               color: '#0057FE', // 设置按钮背景颜色为蓝色
@@ -301,12 +344,21 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
 
       {step === 'reset' && (
         <>
-          <Typography variant="h5" component="h1" gutterBottom>
-            Reset Password
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            Email: {email}
-          </Typography>
+          <Box
+            style={{
+              width: '100%',
+              backgroundColor: '#f0f0f0',
+              padding: '10px',
+              borderRadius: '4px',
+              marginBottom: '16px',
+            }}
+          >
+            <Typography variant="body1" gutterBottom style={{ color: '#333' }}>
+              To reset your password for the email: <strong>{email}</strong>,
+              please click the button below to send a verification code. Enter
+              the code received to proceed.
+            </Typography>
+          </Box>
           <Typography variant="body1" gutterBottom>
             New Password
           </Typography>
