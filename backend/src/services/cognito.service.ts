@@ -25,56 +25,25 @@ export default class Cognito {
     password: string,
     userAttr: Array<any>
   ): Promise<any> {
-    var params = {
+    const params = {
       ClientId: this.clientId /* required */,
       Password: password /* required */,
       Username: username /* required */,
       SecretHash: this.hashSecret(username),
       UserAttributes: userAttr,
     };
-
+  
     try {
       const data = await this.cognitoIdentity.signUp(params).promise();
       console.log(data);
-      return true;
+      // 返回注册信息，包括 UserSub
+      return data;
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
 
-  // public async signInUser(username: string, password: string): Promise<boolean> {
-  //   var params = {
-  //     AuthFlow: 'USER_PASSWORD_AUTH', /* required */
-  //     ClientId: this.clientId, /* required */
-  //     AuthParameters: {
-  //       'USERNAME': username,
-  //       'PASSWORD': password,
-  //       'SECRET_HASH': this.hashSecret(username)
-  //     },
-  //   }
-
-  //   try {
-  //     let data = await this.cognitoIdentity.initiateAuth(params).promise();
-  //     console.log(data);
-
-  //   // Decode the tokens
-  //   if (data.AuthenticationResult) {
-  //     const decodedAccessToken = jwt.decode(data.AuthenticationResult.AccessToken);
-  //     const decodedIdToken = jwt.decode(data.AuthenticationResult.IdToken);
-  //     const decodedRefreshToken = jwt.decode(data.AuthenticationResult.RefreshToken);
-
-  //     console.log("Decoded Access Token: ", decodedAccessToken);
-  //     console.log("Decoded ID Token: ", decodedIdToken);
-  //     console.log("Decoded Refresh Token: ", decodedRefreshToken);
-  //   }
-
-  //     return true;
-  //   } catch (error) {
-  //     console.log(error)
-  //     return false;
-  //   }
-  // }
 
   public async signInUser(username: string, password: string): Promise<any> {
     var params = {

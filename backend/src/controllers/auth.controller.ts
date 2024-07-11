@@ -64,10 +64,31 @@ class AuthController {
     let cognitoService = new Cognito();
     cognitoService
       .signUpUser(email, password, userAttr)
-      .then((success) => {
-        if (success) {
+      .then(async (result) => {
+        if (result) {
           console.log("User registration successful");
-          res.status(200).end();
+
+          const userSub = result.UserSub;
+          console.log("UserSub:", userSub); // 添加日志确认 userSub 是否正确获取
+
+          try {
+            const userService = new UserService();
+
+            // 创建用户
+            await userService.createUserIfNotExists(userSub, email);
+
+            res
+              .status(200)
+              .json({ message: "User registration and storage successful" });
+          } catch (err) {
+            console.error("Error storing user information:", err);
+            res
+              .status(500)
+              .json({
+                message:
+                  "User registration successful, but failed to store user information",
+              });
+          }
         } else {
           console.log("User registration failed");
           res.status(400).end();
@@ -98,6 +119,12 @@ class AuthController {
         } else if (err.code === "TooManyRequestsException") {
           errorMessage = "Too many requests, please try again later";
           statusCode = 429;
+        } else if (
+          err.code === "InvalidLambdaResponseException" ||
+          err.code === "InvalidEmailRoleAccessPolicyException"
+        ) {
+          errorMessage = "Invalid email format";
+          statusCode = 400;
         }
 
         // 打印即将发送的错误信息
@@ -105,22 +132,6 @@ class AuthController {
         res.status(statusCode).json({ message: errorMessage });
       });
   };
-
-  // Use username and password to authenticate user
-  // signIn = (req: Request, res: Response) => {
-  //   const result = validationResult(req);
-  //   if (!result.isEmpty()) {
-  //     return res.status(422).json({ errors: result.array() });
-  //   }
-  //  console.log(req.body);
-
-  //   const { username, password } = req.body;
-  //   let cognitoService = new Cognito();
-  //   cognitoService.signInUser(username, password)
-  //     .then(success => {
-  //       success ? res.status(200).end() : res.status(400).end()
-  //     })
-  // }
 
   // Use username and password to authenticate user
   // Use username and password to authenticate user
@@ -137,13 +148,13 @@ class AuthController {
       .signInUser(username, password)
       .then(async (tokens) => {
         if (tokens) {
-          // 从ID Token中获取用户信息
-          const userInfo = cognitoService.getUserInfoFromToken(
-            tokens.AuthenticationResult.IdToken
-          );
-          const userService = new UserService();
-          // 检查并创建用户
-          await userService.createUserIfNotExists(userInfo.sub, userInfo.email);
+          // // 从ID Token中获取用户信息
+          // const userInfo = cognitoService.getUserInfoFromToken(
+          //   tokens.AuthenticationResult.IdToken
+          // );
+          // const userService = new UserService();
+          // // 检查并创建用户
+          // await userService.createUserIfNotExists(userInfo.sub, userInfo.email);
 
           // 将 token 发送给前端
           res.status(200).json(tokens.AuthenticationResult);
@@ -204,7 +215,7 @@ class AuthController {
     console.log("Received Username:", username);
     console.log("Received New Password:", newPassword);
     console.log("Received Code:", code);
-  
+
     let cognitoService = new Cognito();
     cognitoService
       .confirmNewPassword(username, newPassword, code) // 修改此处为 newPassword
@@ -264,39 +275,42 @@ class AuthController {
 
   // 添加 verifyCode 方法
   // 在 auth.controller.ts 中
-// verifyCode = (req: Request, res: Response) => {
-//   const result = validationResult(req);
-//   if (!result.isEmpty()) {
-//     return res.status(422).json({ errors: result.array() });
-//   }
-//   const { username, code } = req.body;
+  // verifyCode = (req: Request, res: Response) => {
+  //   const result = validationResult(req);
+  //   if (!result.isEmpty()) {
+  //     return res.status(422).json({ errors: result.array() });
+  //   }
+  //   const { username, code } = req.body;
 
-//   let cognitoService = new Cognito();
-//   cognitoService.verifyCode(username, code)
-//     .then(success => {
-//       if (success) {
-//         res.status(200).end();
-//       } else {
-//         res.status(400).json({ message: 'Invalid or expired code' });
-//       }
-//     })
-//     .catch(error => {
-//       console.error('Error in verifyCode:', error);
-//       res.status(500).json({ message: 'Internal server error' });
-//     });
-// };
+  //   let cognitoService = new Cognito();
+  //   cognitoService.verifyCode(username, code)
+  //     .then(success => {
+  //       if (success) {
+  //         res.status(200).end();
+  //       } else {
+  //         res.status(400).json({ message: 'Invalid or expired code' });
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error('Error in verifyCode:', error);
+  //       res.status(500).json({ message: 'Internal server error' });
+  //     });
+  // };
 
   private validateBody(type: string) {
     switch (type) {
       case "signUp":
         return [
-          // body('username').notEmpty().isLength({min: 5}),
-          body("email").notEmpty().normalizeEmail().isEmail(),
-          body("password").isString().isLength({ min: 0 }),
-          // body('birthdate').exists().isISO8601(),
-          // body('gender').notEmpty().isString(),
-          // body('name').notEmpty().isString(),
-          // body('family_name').notEmpty().isString()
+          body("email")
+            .notEmpty()
+            .withMessage("Email is required")
+            .normalizeEmail()
+            .isEmail()
+            .withMessage("Invalid email format"),
+          body("password")
+            .isString()
+            .isLength({ min: 8 })
+            .withMessage("Password must be at least 8 characters long"),
         ];
       case "signIn":
         return [
