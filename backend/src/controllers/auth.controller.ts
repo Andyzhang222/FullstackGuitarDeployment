@@ -41,7 +41,7 @@ class AuthController {
   signUp = (req: Request, res: Response) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
-      return res.status(422).json({ errors: result.array() });
+      console.log(result);
     }
 
     if (!req.body || Object.keys(req.body).length === 0) {
@@ -102,30 +102,30 @@ class AuthController {
         let errorMessage = "Internal server error";
         let statusCode = 500;
 
-        // 根据 AWS Cognito 返回的错误代码确定返回的错误信息
-        if (err.code === "UsernameExistsException") {
-          errorMessage = "User already exists";
-          statusCode = 400;
-        } else if (err.code === "InvalidPasswordException") {
-          errorMessage =
-            "Password must be at least 8 characters, with one number, one special character, one uppercase, and one lowercase letter.";
-          statusCode = 400;
-        } else if (err.code === "InvalidParameterException") {
-          errorMessage = "Invalid parameter";
-          statusCode = 400;
-        } else if (err.code === "NotAuthorizedException") {
-          errorMessage = "Not authorized";
-          statusCode = 400;
-        } else if (err.code === "TooManyRequestsException") {
-          errorMessage = "Too many requests, please try again later";
-          statusCode = 429;
-        } else if (
-          err.code === "InvalidLambdaResponseException" ||
-          err.code === "InvalidEmailRoleAccessPolicyException"
-        ) {
-          errorMessage = "Invalid email format";
-          statusCode = 400;
-        }
+      // 根据 AWS Cognito 返回的错误代码确定返回的错误信息
+      if (err.code === "UsernameExistsException") {
+        errorMessage = "User already exists";
+        statusCode = 400;
+      } else if (err.code === "InvalidPasswordException") {
+        errorMessage =
+          "Password must be at least 8 characters, with one number, 1 special character, 1 uppercase, and 1 lowercase letter.";
+        statusCode = 400;
+      } else if (err.code === "InvalidParameterException") {
+        errorMessage = "invalid email format";
+        statusCode = 400;
+      } else if (err.code === "NotAuthorizedException") {
+        errorMessage = "Not authorized";
+        statusCode = 400;
+      } else if (err.code === "TooManyRequestsException") {
+        errorMessage = "Too many requests, please try again later";
+        statusCode = 429;
+      } else if (
+        err.code === "InvalidLambdaResponseException" ||
+        err.code === "InvalidEmailRoleAccessPolicyException"
+      ) {
+        errorMessage = "Invalid email format";
+        statusCode = 400;
+      }
 
         // 打印即将发送的错误信息
         console.log("Sending error response:", { statusCode, errorMessage });
