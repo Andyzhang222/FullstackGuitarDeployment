@@ -36,6 +36,12 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   const [countdown, setCountdown] = useState(10);
   const [isInputDisabled, setIsInputDisabled] = useState(false);
 
+  const validatePassword = (password: string): boolean => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
+
   const handleNext = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsButtonDisabled(true);
@@ -87,6 +93,23 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
 
   const handleResendCode = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (newPassword !== confirmPassword) {
+      setMessage("Passwords don't match");
+      setNewPassword(''); // 清空密码输入框
+      setConfirmPassword(''); // 清空确认密码输入框
+      return;
+    }
+
+    if (!validatePassword(newPassword)) {
+      setMessage(
+        'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+      );
+      setNewPassword(''); // 清空密码输入框
+      setConfirmPassword(''); // 清空确认密码输入框
+      return;
+    }
+
     try {
       const response = await fetch(
         'http://localhost:5001/auth/forgot-password',
