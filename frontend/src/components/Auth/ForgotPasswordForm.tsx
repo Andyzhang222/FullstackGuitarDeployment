@@ -14,6 +14,7 @@ import {
   Link,
 } from '@material-ui/core';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import ellipseImage from '../../assets/images/Ellipse.svg';
 
 interface ForgotPasswordFormProps {
   onSwitchToSignIn: () => void;
@@ -126,14 +127,72 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   };
 
   return (
-    <form className="forgot-password-form">
+    <form
+      className="forgot-password-form"
+      style={{
+        width: '432px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start', // 向左对齐
+        maxHeight: '100vh',
+        fontFamily: 'Helvetica',
+      }}
+    >
+      <Box display="flex" flexDirection="column" alignItems="flex-start" mb={2}>
+        <img
+          src={ellipseImage}
+          alt="Ellipse"
+          style={{
+            width: '32px',
+            height: '32px',
+            marginBottom: '10px',
+          }}
+        />
+      </Box>
+      <Typography
+        variant="h5"
+        component="h1"
+        gutterBottom
+        style={{
+          marginBottom: '5px',
+          textAlign: 'left',
+          width: '432px',
+          fontSize: '28px',
+          fontWeight: '700',
+        }}
+      >
+        Reset Password
+      </Typography>
+      <Typography
+        variant="subtitle1"
+        gutterBottom
+        style={{
+          marginBottom: '30px',
+          textAlign: 'left',
+          width: '432px',
+          fontFamily: 'PingFang SC',
+          fontWeight: '400',
+          fontSize: '16px',
+          color: '#4E5969',
+        }}
+      >
+        Welcome Back! Please enter your email.
+      </Typography>
       {step === 'email' && (
         <>
-          <Typography variant="h5" component="h1" gutterBottom>
-            Reset Password
+          <Typography
+            variant="body2"
+            align="left"
+            style={{
+              marginBottom: '8px',
+              width: '432px',
+              fontWeight: '700',
+              color: '#4E5969',
+            }}
+          >
+            Email
           </Typography>
           <TextField
-            label="Email"
             variant="outlined"
             fullWidth
             margin="normal"
@@ -148,6 +207,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               marginBottom: '16px',
               width: '432px',
               height: '32px',
+              marginTop: '0px',
             }}
             inputProps={{
               style: {
@@ -178,6 +238,16 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             variant="contained"
             color="primary"
             fullWidth
+            style={{
+              marginBottom: '22px',
+              width: '432px',
+              height: '40px',
+              fontWeight: '700',
+              backgroundColor: '#0057FE', // 设置按钮背景颜色为蓝色
+              color: 'white', // 设置按钮字体颜色为白色
+              textTransform: 'none', // 确保没有强制转换文本
+              borderRadius: '4px',
+            }}
           >
             Next
           </Button>
@@ -189,6 +259,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               marginTop: '16px',
               display: 'block',
               textAlign: 'center',
+              color: '#0057FE', // 设置按钮背景颜色为蓝色
             }}
           >
             Back to Sign In
@@ -333,6 +404,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             marginTop: '16px',
             display: 'block',
             textAlign: 'center',
+            color: '#0057FE', // 设置按钮背景颜色为蓝色
           }}
         >
           Back to Email Step

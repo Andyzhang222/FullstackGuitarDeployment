@@ -42,10 +42,29 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     setShowUsername(!showUsername);
   };
 
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (!validateEmail(email)) {
+      console.log(email + '111111111111111');
+      setErrorMessage(
+        'Invalid email format. Please enter a correct email address.'
+      );
+      setEmail(''); // 清空邮箱输入框
+      return;
+    }
+
     if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match');
+      setErrorMessage(
+        'Passwords do not match. Please make sure both passwords are the same.'
+      );
+      setPassword(''); // 清空密码输入框
+      setConfirmPassword(''); // 清空确认密码输入框
       return;
     }
 
@@ -64,6 +83,16 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       } else {
         const errorData = await response.json();
         setErrorMessage(` ${errorData.message || 'Unknown error'}`);
+        // 根据错误信息清空相应的输入框
+
+        if (
+          errorData.message.includes(
+            'Password must be at least 8 characters, with one number, 1 special character, 1 uppercase, and 1 lowercase letter.'
+          )
+        ) {
+          setPassword(''); // 清空密码输入框
+          setConfirmPassword('');
+        }
       }
     } catch (error) {
       setErrorMessage('Failed to connect to the server');

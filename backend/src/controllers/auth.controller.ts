@@ -106,12 +106,9 @@ class AuthController {
       if (err.code === "UsernameExistsException") {
         errorMessage = "User already exists";
         statusCode = 400;
-      } else if (err.code === "InvalidPasswordException") {
+      } else if (err.code === "InvalidPasswordException" || "InvalidParameterException") {
         errorMessage =
           "Password must be at least 8 characters, with one number, 1 special character, 1 uppercase, and 1 lowercase letter.";
-        statusCode = 400;
-      } else if (err.code === "InvalidParameterException") {
-        errorMessage = "invalid email format";
         statusCode = 400;
       } else if (err.code === "NotAuthorizedException") {
         errorMessage = "Not authorized";
@@ -122,10 +119,7 @@ class AuthController {
       } else if (
         err.code === "InvalidLambdaResponseException" ||
         err.code === "InvalidEmailRoleAccessPolicyException"
-      ) {
-        errorMessage = "Invalid email format";
-        statusCode = 400;
-      }
+      ) 
 
         // 打印即将发送的错误信息
         console.log("Sending error response:", { statusCode, errorMessage });
@@ -171,9 +165,9 @@ class AuthController {
 
         let errorMessage = "Login failed";
         if (err.code === "UserNotConfirmedException") {
-          errorMessage = "User is not confirmed";
+          errorMessage = "User is not confirmed, Please confirm your email";
         } else if (err.code === "NotAuthorizedException") {
-          errorMessage = "Incorrect username or password";
+          errorMessage = "Incorrect username or password, Please try again";
         } else if (err.code === "UserNotFoundException") {
           errorMessage = "User does not exist";
         } else if (err.message === "InvalidToken") {
@@ -185,6 +179,8 @@ class AuthController {
           errorMessage,
           "the final decesion made that need send to front end"
         ); // 打印详细错误信息
+
+        console.log(err.code + "check the err code ")
 
         res.status(400).json({ message: errorMessage });
       });
