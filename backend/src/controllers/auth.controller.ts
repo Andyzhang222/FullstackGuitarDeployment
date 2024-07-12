@@ -29,12 +29,13 @@ class AuthController {
       this.validateBody("confirmPassword"),
       this.confirmPassword
     );
-     // 新增的检查邮箱是否存在的路由
-     this.router.post("/check-email", this.checkEmail); // 新增的路由
+    // 新增的检查邮箱是否存在的路由
+    this.router.post("/check-email", this.checkEmail); // 新增的路由
   }
-  
+
   // 新增的检查邮箱是否存在的方法
-  checkEmail = async (req: Request, res: Response) => { // 新增的方法
+  checkEmail = async (req: Request, res: Response) => {
+    // 新增的方法
     const { email } = req.body;
 
     try {
@@ -46,7 +47,7 @@ class AuthController {
         res.status(404).json({ exists: false });
       }
     } catch (error) {
-      res.status(500).json({ message: 'Internal server error' });
+      res.status(500).json({ message: "Internal server error" });
     }
   };
 
@@ -96,12 +97,10 @@ class AuthController {
               .json({ message: "User registration and storage successful" });
           } catch (err) {
             console.error("Error storing user information:", err);
-            res
-              .status(500)
-              .json({
-                message:
-                  "User registration successful, but failed to store user information",
-              });
+            res.status(500).json({
+              message:
+                "User registration successful, but failed to store user information",
+            });
           }
         } else {
           console.log("User registration failed");
@@ -116,27 +115,29 @@ class AuthController {
         let errorMessage = "Internal server error";
         let statusCode = 500;
 
-      // 根据 AWS Cognito 返回的错误代码确定返回的错误信息
-      if (err.code === "UsernameExistsException") {
-        errorMessage = "User already exists";
-        statusCode = 400;
-      } else if (err.code === "InvalidPasswordException" || "InvalidParameterException") {
-        errorMessage =
-          "Password must be at least 8 characters, with one number, 1 special character, 1 uppercase, and 1 lowercase letter.";
-        statusCode = 400;
-      } else if (err.code === "NotAuthorizedException") {
-        errorMessage = "Not authorized";
-        statusCode = 400;
-      } else if (err.code === "TooManyRequestsException") {
-        errorMessage = "Too many requests, please try again later";
-        statusCode = 429;
-      } else if (
-        err.code === "InvalidLambdaResponseException" ||
-        err.code === "InvalidEmailRoleAccessPolicyException"
-      ) 
-
-        // 打印即将发送的错误信息
-        console.log("Sending error response:", { statusCode, errorMessage });
+        // 根据 AWS Cognito 返回的错误代码确定返回的错误信息
+        if (err.code === "UsernameExistsException") {
+          errorMessage = "User already exists";
+          statusCode = 400;
+        } else if (
+          err.code === "InvalidPasswordException" ||
+          "InvalidParameterException"
+        ) {
+          errorMessage =
+            "Password must be at least 8 characters, with one number, 1 special character, 1 uppercase, and 1 lowercase letter.";
+          statusCode = 400;
+        } else if (err.code === "NotAuthorizedException") {
+          errorMessage = "Not authorized";
+          statusCode = 400;
+        } else if (err.code === "TooManyRequestsException") {
+          errorMessage = "Too many requests, please try again later";
+          statusCode = 429;
+        } else if (
+          err.code === "InvalidLambdaResponseException" ||
+          err.code === "InvalidEmailRoleAccessPolicyException"
+        )
+          // 打印即将发送的错误信息
+          console.log("Sending error response:", { statusCode, errorMessage });
         res.status(statusCode).json({ message: errorMessage });
       });
   };
@@ -194,7 +195,7 @@ class AuthController {
           "the final decesion made that need send to front end"
         ); // 打印详细错误信息
 
-        console.log(err.code + "check the err code ")
+        console.log(err.code + "check the err code ");
 
         res.status(400).json({ message: errorMessage });
       });
@@ -229,13 +230,36 @@ class AuthController {
     let cognitoService = new Cognito();
     cognitoService
       .confirmNewPassword(username, newPassword, code) // 修改此处为 newPassword
-      .then((success) => {
-        if (success) {
+      .then((response) => {
+        if (response.success) {
           console.log("Password reset successful");
-          res.status(200).end();
+          res.status(200).json({ message: "Password reset successful" });
         } else {
           console.log("Password reset failed");
-          res.status(400).end();
+          let statusCode = 500;
+          let errorMessage = "Internal server error";
+
+          if (response.code === "CodeMismatchException") {
+            errorMessage =
+              "Invalid verification code provided, please try again.";
+            statusCode = 400;
+          } else if (response.code === "LimitExceededException") {
+            errorMessage =
+              "Attempt limit exceeded, please try after some time.";
+            statusCode = 429;
+          } else if (response.code === "ExpiredCodeException") {
+            errorMessage =
+              "The verification code has expired. Please request a new code.";
+            statusCode = 400;
+          } else if (response.code === "UserNotFoundException") {
+            errorMessage = "User does not exist.";
+            statusCode = 404;
+          } else if (response.message) {
+            errorMessage = response.message;
+            statusCode = 400;
+          }
+
+          res.status(statusCode).json({ message: errorMessage });
         }
       })
       .catch((error) => {
@@ -245,67 +269,64 @@ class AuthController {
   };
 
   forgotPassword = (req: Request, res: Response) => {
-    // 记录收到的请求体数据
     console.log("Received request body:", req.body);
 
     const result = validationResult(req);
-    // 记录验证结果
     console.log("Validation result:", result);
 
     if (!result.isEmpty()) {
-      // 记录验证失败时的错误信息
       console.log("Validation failed:", result.array());
       return res.status(422).json({ errors: result.array() });
     }
 
     const { username } = req.body;
-    // 记录提取的用户名
     console.log("Extracted username:", username);
 
     let cognitoService = new Cognito();
     cognitoService
       .forgotPassword(username)
-      .then((success) => {
-        if (success) {
-          // 记录成功发送验证码
+      .then((response) => {
+        if (response.success) {
           console.log("Verification code sent successfully");
-          res.status(200).end();
+          res
+            .status(200)
+            .json({
+              message:
+                "Verification code sent to your email. Please check your inbox.",
+            });
         } else {
-          // 记录发送验证码失败
           console.log("Failed to send verification code");
-          res.status(400).end();
+          res
+            .status(400)
+            .json({
+              message: response.message || "Failed to send verification code",
+            });
         }
       })
       .catch((error) => {
-        // 记录发生的错误
         console.error("Error in forgotPassword:", error);
-        res.status(500).json({ message: "Internal server error" });
+
+        let errorMessage = "Internal server error";
+        let statusCode = 500;
+
+        if (error.code === "LimitExceededException") {
+          errorMessage = "Attempt limit exceeded, please try after some time.";
+          statusCode = 429;
+        } else if (error.code === "CodeMismatchException") {
+          errorMessage =
+            "Invalid verification code provided, please try again.";
+          statusCode = 400;
+        } else if (error.code === "UserNotFoundException") {
+          errorMessage = "User does not exist.";
+          statusCode = 404;
+        } else if (error.code) {
+          errorMessage = error.message;
+          statusCode = 400;
+        }
+
+        res.status(statusCode).json({ message: errorMessage });
       });
   };
-
-  // 添加 verifyCode 方法
-  // 在 auth.controller.ts 中
-  // verifyCode = (req: Request, res: Response) => {
-  //   const result = validationResult(req);
-  //   if (!result.isEmpty()) {
-  //     return res.status(422).json({ errors: result.array() });
-  //   }
-  //   const { username, code } = req.body;
-
-  //   let cognitoService = new Cognito();
-  //   cognitoService.verifyCode(username, code)
-  //     .then(success => {
-  //       if (success) {
-  //         res.status(200).end();
-  //       } else {
-  //         res.status(400).json({ message: 'Invalid or expired code' });
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error('Error in verifyCode:', error);
-  //       res.status(500).json({ message: 'Internal server error' });
-  //     });
-  // };
 
   private validateBody(type: string) {
     switch (type) {

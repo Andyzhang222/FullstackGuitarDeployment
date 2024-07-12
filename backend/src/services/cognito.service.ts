@@ -112,20 +112,20 @@ export default class Cognito {
     }
   }
 
-  public async forgotPassword(username): Promise<boolean> {
+  public async forgotPassword(username): Promise<{ success: boolean, message?: string }> {
     var params = {
       ClientId: this.clientId /* required */,
       Username: username /* required */,
       SecretHash: this.hashSecret(username),
     };
-
+  
     try {
       const data = await this.cognitoIdentity.forgotPassword(params).promise();
       console.log(data);
-      return true;
+      return { success: true };
     } catch (error) {
       console.log(error);
-      return false;
+      return { success: false, message: error.message };
     }
   }
 
@@ -133,7 +133,7 @@ export default class Cognito {
     username: string,
     password: string,
     code: string
-  ): Promise<boolean> {
+  ): Promise<{ success: boolean, message?: string, code?: string }> {
     var params = {
       ClientId: this.clientId /* required */,
       ConfirmationCode: code /* required */,
@@ -141,16 +141,16 @@ export default class Cognito {
       Username: username /* required */,
       SecretHash: this.hashSecret(username),
     };
-
+  
     try {
       const data = await this.cognitoIdentity
         .confirmForgotPassword(params)
         .promise();
       console.log(data);
-      return true;
+      return { success: true };
     } catch (error) {
       console.log(error);
-      return false;
+      return { success: false, message: error.message, code: error.code };
     }
   }
 

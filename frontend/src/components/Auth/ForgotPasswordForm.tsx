@@ -35,6 +35,10 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [countdown, setCountdown] = useState(10);
   const [isInputDisabled, setIsInputDisabled] = useState(false);
+  const [isPasswordDisabled, setIsPasswordDisabled] = useState(false); // 新增状态
+  const [isResetButtonEnabled, setIsResetButtonEnabled] = useState(false); // 新增状态
+  const [showMessageDialog, setShowMessageDialog] = useState(false); // 新增状态
+  const [messageDialogContent, setMessageDialogContent] = useState(''); // 新增状态
 
   const validatePassword = (password: string): boolean => {
     const regex =
@@ -77,7 +81,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           setEmailError('');
         }, 10000); // 30秒后清除错误信息
         setIsInputDisabled(true);
-        setTimeout(() => setIsInputDisabled(false), 10000); // 禁用输入框30秒
+        setTimeout(() => setIsInputDisabled(false));
       } else {
         setEmailError(`Error: ${data.message || 'Unknown error'}`);
       }
@@ -122,14 +126,23 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         }
       );
 
+      const data = await response.json();
       if (response.ok) {
         setMessage(
           'Verification code sent to your email. Please check your inbox.'
         );
-        setTimer(60); // 设置 60 秒倒计时
+        setTimer(30); // 设置 30 秒倒计时
+        setIsPasswordDisabled(true); // 禁用密码输入框
+        setIsResetButtonEnabled(true); // 启用“Reset Password”按钮
+
+        setShowMessageDialog(true); // 显示弹窗
+        setMessageDialogContent(
+          'Verification code sent to your email. Please check your inbox.'
+        ); // 设置弹窗内容
       } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
+        setMessage(`${data.message}`);
+        setShowMessageDialog(true); // 显示弹窗
+        setMessageDialogContent(`${data.message}`); //
       }
     } catch (error) {
       setMessage('Failed to connect to the server');
@@ -140,8 +153,11 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
     event.preventDefault();
     if (newPassword !== confirmPassword) {
       setMessage("Passwords don't match");
+      setNewPassword(''); // 清空密码输入框
+      setConfirmPassword(''); // 清空确认密码输入框
       return;
     }
+
     try {
       const verificationCode = code.join('');
       const response = await fetch(
@@ -159,12 +175,14 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         }
       );
 
+      const data = await response.json();
+
       if (response.ok) {
         setMessage('Password reset successful. You can now sign in.');
         setShowSuccessDialog(true);
       } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.message}`);
+        console.log(data.message + '22222222222');
+        setMessage(data.message || 'Unknown error occurred');
       }
     } catch (error) {
       setMessage('Failed to connect to the server');
@@ -408,6 +426,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                 padding: '0 14px',
               },
             }}
+            disabled={isPasswordDisabled} // 禁用密码输入框
           />
           <Typography variant="body1" gutterBottom>
             Confirm New Password
@@ -435,6 +454,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                 padding: '0 14px',
               },
             }}
+            disabled={isPasswordDisabled} // 禁用密码输入框
           />
           <Typography variant="body1" gutterBottom>
             Verification Code
@@ -479,9 +499,10 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                 marginBottom: '16px',
                 marginLeft: '20px',
                 backgroundColor: '#0057FE',
+                minWidth: '150px', // 固定最小宽度
               }}
             >
-              {timer > 0 ? `Resend Code in ${timer}s` : 'Send Code'}
+              {timer > 0 ? `Resend Code ${timer}s` : 'Send Verify Code'}
             </Button>
           </Box>
 
@@ -491,6 +512,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             color="primary"
             fullWidth
             style={{ marginTop: '16px', backgroundColor: '#0057FE' }}
+            disabled={!isResetButtonEnabled}
           >
             Reset Password
           </Button>
@@ -498,25 +520,43 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
       )}
 
       {message && (
-        <Typography variant="body2" color="textSecondary">
-          {message}
-        </Typography>
+        <Box style={{ height: '40px', display: 'flex', alignItems: 'center' }}>
+          <Typography variant="body2" color="textSecondary">
+            {message}
+          </Typography>
+        </Box>
       )}
+
       {step === 'reset' && (
         <Link
           component="button"
           variant="body2"
-          onClick={() => setStep('email')}
+          onClick={onSwitchToSignIn}
           style={{
-            marginTop: '16px',
+            marginTop: '10px',
             display: 'block',
             textAlign: 'center',
             color: '#0057FE', // 设置按钮背景颜色为蓝色
           }}
         >
-          Back to Email Step
+          Back to Sign In
         </Link>
       )}
+
+      <Dialog
+        open={showMessageDialog}
+        onClose={() => setShowMessageDialog(false)}
+      >
+        <DialogTitle>Notification</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{messageDialogContent}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowMessageDialog(false)} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog
         open={showSuccessDialog}
