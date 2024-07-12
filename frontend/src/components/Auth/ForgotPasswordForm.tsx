@@ -29,8 +29,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [timer, setTimer] = useState(0);
-  const [step, setStep] = useState<'email' | 'reset'>('email');
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [step, setStep] = useState<'email' | 'reset' | 'success'>('email'); // 添加 'success' 步骤  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [countdown, setCountdown] = useState(10);
@@ -39,12 +38,29 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   const [isResetButtonEnabled, setIsResetButtonEnabled] = useState(false); // 新增状态
   const [showMessageDialog, setShowMessageDialog] = useState(false); // 新增状态
   const [messageDialogContent, setMessageDialogContent] = useState(''); // 新增状态
+  const [redirectCountdown, setRedirectCountdown] = useState(3); // 新增倒计时状态
 
   const validatePassword = (password: string): boolean => {
     const regex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
+
+  useEffect(() => {
+    if (step === 'success') {
+      const timer = setInterval(() => {
+        setRedirectCountdown((prevCountdown) => {
+          if (prevCountdown === 1) {
+            onSwitchToSignIn();
+            return 0;
+          }
+          return prevCountdown - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer); // 清除定时器
+    }
+  }, [step, onSwitchToSignIn]);
 
   const handleNext = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -179,7 +195,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
 
       if (response.ok) {
         setMessage('Password reset successful. You can now sign in.');
-        setShowSuccessDialog(true);
+        setStep('success'); // 更新步骤为 'success'
       } else {
         console.log(data.message + '22222222222');
         setMessage(data.message || 'Unknown error occurred');
@@ -543,6 +559,24 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         </Link>
       )}
 
+      {step === 'success' && (
+        <Box
+          style={{
+            width: '100%',
+            textAlign: 'center',
+            padding: '20px',
+          }}
+        >
+          <Typography variant="body1" gutterBottom>
+            Your password has been reset successfully.
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            You will be redirected to the sign-in page in {redirectCountdown}{' '}
+            seconds...
+          </Typography>
+        </Box>
+      )}
+
       <Dialog
         open={showMessageDialog}
         onClose={() => setShowMessageDialog(false)}
@@ -558,7 +592,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         </DialogActions>
       </Dialog>
 
-      <Dialog
+      {/* <Dialog
         open={showSuccessDialog}
         onClose={() => setShowSuccessDialog(false)}
       >
@@ -580,7 +614,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             OK
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </form>
   );
 };
