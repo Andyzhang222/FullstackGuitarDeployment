@@ -15,6 +15,8 @@ import {
 } from '@material-ui/core';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import ellipseImage from '../../assets/images/Ellipse.svg';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
 interface ForgotPasswordFormProps {
   onSwitchToSignIn: () => void;
@@ -39,6 +41,8 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   const [showMessageDialog, setShowMessageDialog] = useState(false); // 新增状态
   const [messageDialogContent, setMessageDialogContent] = useState(''); // 新增状态
   const [redirectCountdown, setRedirectCountdown] = useState(3); // 新增倒计时状态
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const validatePassword = (password: string): boolean => {
     const regex =
@@ -144,9 +148,6 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
 
       const data = await response.json();
       if (response.ok) {
-        setMessage(
-          'Verification code sent to your email. Please check your inbox.'
-        );
         setTimer(30); // 设置 30 秒倒计时
         setIsPasswordDisabled(true); // 禁用密码输入框
         setIsResetButtonEnabled(true); // 启用“Reset Password”按钮
@@ -194,7 +195,6 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Password reset successful. You can now sign in.');
         setStep('success'); // 更新步骤为 'success'
       } else {
         console.log(data.message + '22222222222');
@@ -281,7 +281,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           color: '#4E5969',
         }}
       >
-        Welcome Back! Please enter your email.
+        Welcome Back! Please enter your detail.
       </Typography>
       {step === 'email' && (
         <>
@@ -416,7 +416,17 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               the code received to proceed.
             </Typography>
           </Box>
-          <Typography variant="body1" gutterBottom>
+          <Typography
+            variant="body1"
+            gutterBottom
+            style={{
+              marginBottom: '-8px',
+              width: '432px',
+              fontWeight: '700',
+              color: '#4E5969',
+              fontSize: '14px',
+            }}
+          >
             New Password
           </Typography>
           <TextField
@@ -430,7 +440,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               shrink: true,
             }}
             placeholder="Enter your new password"
-            type="password"
+            type={showNewPassword ? 'text' : 'password'} // 根据状态切换输入类型
             style={{
               marginBottom: '16px',
               width: '432px',
@@ -443,8 +453,45 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               },
             }}
             disabled={isPasswordDisabled} // 禁用密码输入框
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    edge="end"
+                  >
+                    {showNewPassword ? (
+                      <VisibilityOffOutlinedIcon
+                        sx={{
+                          fontSize: '20px',
+                          transform: 'scale(0.7)', // 缩小图标的大小
+                        }}
+                      />
+                    ) : (
+                      <VisibilityOutlinedIcon
+                        sx={{
+                          fontSize: '20px',
+                          transform: 'scale(0.7)', // 缩小图标的大小
+                        }}
+                      />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
-          <Typography variant="body1" gutterBottom>
+          <Typography
+            variant="body1"
+            gutterBottom
+            style={{
+              marginBottom: '-8px',
+              width: '432px',
+              fontWeight: '700',
+              color: '#4E5969',
+              fontSize: '14px',
+            }}
+          >
             Confirm New Password
           </Typography>
           <TextField
@@ -458,7 +505,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               shrink: true,
             }}
             placeholder="Confirm your new password"
-            type="password"
+            type={showConfirmPassword ? 'text' : 'password'} // 根据状态切换输入类型
             style={{
               marginBottom: '16px',
               width: '432px',
@@ -471,8 +518,45 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               },
             }}
             disabled={isPasswordDisabled} // 禁用密码输入框
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    edge="end"
+                  >
+                    {showConfirmPassword ? (
+                      <VisibilityOffOutlinedIcon
+                        sx={{
+                          fontSize: '20px',
+                          transform: 'scale(0.7)', // 缩小图标的大小
+                        }}
+                      />
+                    ) : (
+                      <VisibilityOutlinedIcon
+                        sx={{
+                          fontSize: '20px',
+                          transform: 'scale(0.7)', // 缩小图标的大小
+                        }}
+                      />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
-          <Typography variant="body1" gutterBottom>
+          <Typography
+            variant="body1"
+            gutterBottom
+            style={{
+              marginBottom: '6px',
+              width: '432px',
+              fontWeight: '700',
+              color: '#4E5969',
+              fontSize: '14px',
+            }}
+          >
             Verification Code
           </Typography>
           <Box
@@ -536,8 +620,15 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
       )}
 
       {message && (
-        <Box style={{ height: '40px', display: 'flex', alignItems: 'center' }}>
-          <Typography variant="body2" color="textSecondary">
+        <Box
+          style={{
+            height: '60px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography variant="body2" style={{ color: 'red' }}>
             {message}
           </Typography>
         </Box>
@@ -564,11 +655,19 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           style={{
             width: '100%',
             textAlign: 'center',
-            padding: '20px',
+            padding: '40px',
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            marginTop: '20px',
           }}
         >
+          <Typography variant="h5" gutterBottom>
+            Password Reset Successful
+          </Typography>
           <Typography variant="body1" gutterBottom>
-            Your password has been reset successfully.
+            Your password for <strong>{email}</strong> has been reset
+            successfully.
           </Typography>
           <Typography variant="body2" color="textSecondary">
             You will be redirected to the sign-in page in {redirectCountdown}{' '}
@@ -592,29 +691,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         </DialogActions>
       </Dialog>
 
-      {/* <Dialog
-        open={showSuccessDialog}
-        onClose={() => setShowSuccessDialog(false)}
-      >
-        <DialogTitle>Password Reset Successful</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Your password has been successfully reset. You can now sign in with
-            your new password.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setShowSuccessDialog(false);
-              onSwitchToSignIn();
-            }}
-            color="primary"
-          >
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog> */}
+      {}
     </form>
   );
 };
