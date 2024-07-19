@@ -370,6 +370,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             borderColor: 'rgba(0, 0, 0, 0.23)', // 设置边框颜色为默认的灰黑色
             borderRadius: '4px',
           }}
+          onClick={() => navigate('/home')} // 添加这个onClick事件处理程序
         >
           Continue as a guest
         </Button>

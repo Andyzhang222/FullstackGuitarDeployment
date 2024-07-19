@@ -9,11 +9,13 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<SignInAndSignUpPage />} />
+        <Route path="/home" element={<Home />} />
+        {/* 其他需要认证的页面 */}
         <Route
-          path="/home"
+          path="/private"
           element={
             <PrivateRoute>
-              <Home />
+              <Home /> {/* 示例组件 */}
             </PrivateRoute>
           }
         />

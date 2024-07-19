@@ -13,7 +13,7 @@ import {
   InputAdornment,
   Link,
 } from '@material-ui/core';
-import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import ellipseImage from '../../assets/images/Ellipse.svg';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';

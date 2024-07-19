@@ -7,14 +7,7 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('accessToken');
-  return isAuthenticated ? (
-    <>{children}</>
-  ) : (
-    <div>
-      <p>你还没有登录，请先登录。</p>
-      <Navigate to="/signin" />
-    </div>
-  );
+  return isAuthenticated ? <>{children}</> : <Navigate to="/" />;
 };
 
 export default PrivateRoute;
