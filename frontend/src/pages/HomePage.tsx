@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Typography, makeStyles } from '@material-ui/core';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
+import ProductList from '../components/ProductList';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -23,6 +24,7 @@ const Home = () => {
             ? 'Welcome to the Home Page'
             : 'Welcome to our Home Page, Guest'}
         </Typography>
+        <ProductList />
       </Container>
       <Footer />
     </div>
