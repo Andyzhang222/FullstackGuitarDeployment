@@ -9,15 +9,41 @@ import {
   IconButton,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    backgroundColor: '#fff',
+    color: '#000',
+  },
   title: {
     flexGrow: 1,
+    display: 'flex',
+    alignItems: 'center',
   },
-});
+  logo: {
+    marginRight: theme.spacing(2),
+  },
+  navLinks: {
+    marginLeft: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+  },
+  navLink: {
+    marginRight: theme.spacing(4),
+    cursor: 'pointer',
+  },
+  signInButton: {
+    backgroundColor: '#FF416C',
+    backgroundImage: 'linear-gradient(to right, #FF4B2B, #FF416C)',
+    color: '#fff',
+    borderRadius: '20px',
+    padding: '5px 20px',
+    textTransform: 'none',
+  },
+}));
 
 interface DecodedToken {
   email: string;
@@ -36,7 +62,7 @@ const Header = () => {
     const idToken = localStorage.getItem('idToken');
     if (idToken) {
       try {
-        const decoded: DecodedToken = jwtDecode<DecodedToken>(idToken);
+        const decoded: DecodedToken = jwtDecode(idToken);
         setUserEmail(decoded.email);
         setIsLoggedIn(true);
       } catch (error) {
@@ -69,11 +95,53 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" className={classes.appBar}>
       <Toolbar>
-        <Typography variant="h6" className={classes.title}>
-          Fantasy
-        </Typography>
+        <div className={classes.title}>
+          <img
+            src="/path/to/logo.png" // 替换成你自己的logo路径
+            alt="Site Logo"
+            className={classes.logo}
+          />
+          <Typography variant="h6">SiteLogo</Typography>
+        </div>
+        <div className={classes.navLinks}>
+          <Typography
+            variant="body1"
+            className={classes.navLink}
+            onClick={() => navigate('/about')}
+          >
+            About
+          </Typography>
+          <Typography
+            variant="body1"
+            className={classes.navLink}
+            onClick={() => navigate('/features')}
+          >
+            Features
+          </Typography>
+          <Typography
+            variant="body1"
+            className={classes.navLink}
+            onClick={() => navigate('/pricing')}
+          >
+            Pricing
+          </Typography>
+          <Typography
+            variant="body1"
+            className={classes.navLink}
+            onClick={() => navigate('/gallery')}
+          >
+            Gallery
+          </Typography>
+          <Typography
+            variant="body1"
+            className={classes.navLink}
+            onClick={() => navigate('/team')}
+          >
+            Team
+          </Typography>
+        </div>
         {isLoggedIn ? (
           <div>
             <IconButton
@@ -107,7 +175,10 @@ const Header = () => {
             </Menu>
           </div>
         ) : (
-          <Button color="inherit" onClick={() => navigate('/')}>
+          <Button
+            className={classes.signInButton}
+            onClick={() => navigate('/')}
+          >
             Sign in
           </Button>
         )}
