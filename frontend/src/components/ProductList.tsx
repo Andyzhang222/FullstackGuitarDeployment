@@ -1,57 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Grid, Typography } from '@material-ui/core';
-import Pagination from '@material-ui/lab/Pagination';
-import ProductCard from './ProductCard';
+import React, { useEffect, useState } from 'react';
+import ProductionCard from './ProductCard';
+import { Grid } from '@mui/material';
 
-interface Product {
-  id: string;
-  image: string;
+// Define the types for API response and full product
+interface ApiResponseProduct {
+  id: number;
   name: string;
   description: string;
-  price: number;
+  price: string;
+  image: string;
   inStock: boolean;
+  brand: string;
+  category: string;
+  sku: string;
+  quantity: number;
+  type: string;
+  rating: string;
+  reviews_count: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
-const ProductList = () => {
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: string;
+  image: string;
+  inStock: boolean;
+  brand: string;
+  category: string;
+  sku: string;
+  quantity: number;
+  type: string;
+  rating: string;
+  reviews_count: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 10;
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch products from API
-    fetch('/api/products')
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((error) => console.error('Error fetching products:', error));
+    fetch('http://localhost:5001/api/products')
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data: ApiResponseProduct[]) => {
+        console.log('Data received:', data);
+        setProducts(data); // Directly set the data as Product[]
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch products');
+      });
   }, []);
 
-  const handleChangePage = (
-    event: React.ChangeEvent<unknown>,
-    newPage: number
-  ) => {
-    setPage(newPage);
-  };
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        Available Guitars
-      </Typography>
-      <Grid container spacing={4}>
-        {products
-          .slice((page - 1) * itemsPerPage, page * itemsPerPage)
-          .map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4}>
-              <ProductCard product={product} />
-            </Grid>
-          ))}
+    <div>
+      <h1>Product List</h1>
+      <Grid container spacing={2}>
+        {products.map((product) => (
+          <Grid item xs={12} sm={6} md={4} key={product.id}>
+            <ProductionCard product={product} />
+          </Grid>
+        ))}
       </Grid>
-      <Pagination
-        count={Math.ceil(products.length / itemsPerPage)}
-        page={page}
-        onChange={handleChangePage}
-      />
-    </Container>
+    </div>
   );
 };
 

@@ -22,13 +22,21 @@ fs
     return (
       file.indexOf('.') !== 0 &&
       file !== basename &&
-      file.slice(-3) === '.js' &&
+      (file.slice(-3) === '.js' || file.slice(-3) === '.ts') &&
       file.indexOf('.test.js') === -1
     );
   })
   .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
+    const model = require(path.join(__dirname, file));
+    if (typeof model === 'function') {
+      const initializedModel = model(sequelize, Sequelize.DataTypes);
+      db[initializedModel.name] = initializedModel;
+    } else if (model.initializeProduct) {
+      const initializedModel = model.initializeProduct();
+      db[initializedModel.name] = initializedModel;
+    } else {
+      console.log('Error: Model is not a function:', file);
+    }
   });
 
 Object.keys(db).forEach(modelName => {

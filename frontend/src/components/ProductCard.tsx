@@ -4,49 +4,60 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  CardActionArea,
-} from '@material-ui/core';
-import { useNavigate } from 'react-router-dom';
+  Rating,
+} from '@mui/material';
 
 interface Product {
-  id: string;
-  image: string;
+  id: number;
   name: string;
   description: string;
-  price: number;
+  price: string;
+  image: string;
   inStock: boolean;
+  brand: string;
+  category: string;
+  sku: string;
+  quantity: number;
+  type: string;
+  rating: string;
+  reviews_count: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
-interface ProductCardProps {
+interface ProductionCardProps {
   product: Product;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const navigate = useNavigate();
-
-  const handleCardClick = () => {
-    navigate(`/product/${product.id}`);
-  };
-
+const ProductionCard: React.FC<ProductionCardProps> = ({ product }) => {
   return (
-    <Card onClick={handleCardClick}>
-      <CardActionArea>
-        <CardMedia
-          image={product.image}
-          title={product.name}
-          style={{ height: 140 }}
-        />
-        <CardContent>
-          <Typography variant="h6">{product.name}</Typography>
-          <Typography variant="body2">{product.description}</Typography>
-          <Typography variant="h6">${product.price}</Typography>
-          <Typography variant="body2">
-            {product.inStock ? 'In Stock' : 'Out of Stock'}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+    <Card sx={{ maxWidth: 345, mb: 2 }}>
+      <CardMedia
+        component="img"
+        height="140"
+        image="/images/test.jpg"
+        alt={product.name}
+      />
+      <CardContent>
+        <Typography variant="h5" component="div">
+          {product.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {product.description}
+        </Typography>
+        <Typography variant="h6" color="text.primary">
+          ${product.price}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {product.brand} | {product.category}
+        </Typography>
+        <Rating name="read-only" value={parseFloat(product.rating)} readOnly />
+        <Typography variant="body2" color="text.secondary">
+          {product.reviews_count} reviews
+        </Typography>
+      </CardContent>
     </Card>
   );
 };
 
-export default ProductCard;
+export default ProductionCard;
