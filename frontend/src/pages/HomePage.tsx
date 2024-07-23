@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Typography, makeStyles } from '@material-ui/core';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
-import ProductList from '../components/ProductList';
+import ProductList from '../components/productListDisplay/ProductList';
 
 const useStyles = makeStyles((theme) => ({
   content: {

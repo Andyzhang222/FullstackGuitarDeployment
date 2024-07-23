@@ -1,24 +1,22 @@
 import React from 'react';
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Rating,
-} from '@mui/material';
-import { Product } from '../types/types';
+import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Product } from '../../types/types';
 
 interface ProductionCardProps {
   product: Product;
+  onClick: () => void;
 }
 
-const ProductionCard: React.FC<ProductionCardProps> = ({ product }) => {
+const ProductionCard: React.FC<ProductionCardProps> = ({
+  product,
+  onClick,
+}) => {
   return (
-    <Card sx={{ maxWidth: 345, mb: 2 }}>
+    <Card sx={{ maxWidth: 345, mb: 2 }} onClick={onClick}>
       <CardMedia
         component="img"
         height="140"
-        image="images/test.jpg" // 使用产品的真实图像 URL
+        image="images/test.jpg"
         alt={product.name}
       />
       <CardContent>
@@ -37,10 +35,6 @@ const ProductionCard: React.FC<ProductionCardProps> = ({ product }) => {
         <Typography variant="body2" color="text.secondary">
           Quantity: {product.quantity}{' '}
           {product.inStock ? 'In Stock' : 'Out of Stock'}
-        </Typography>
-        <Rating name="read-only" value={parseFloat(product.rating)} readOnly />
-        <Typography variant="body2" color="text.secondary">
-          {product.reviews_count} reviews
         </Typography>
       </CardContent>
     </Card>
