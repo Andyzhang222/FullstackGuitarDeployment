@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Rating,
-} from '@mui/material';
+import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 
 interface Product {
   id: number;
@@ -35,7 +29,7 @@ const ProductionCard: React.FC<ProductionCardProps> = ({ product }) => {
       <CardMedia
         component="img"
         height="140"
-        image="/images/test.jpg"
+        image="/images/test.jpg" // Update image source to use the product image
         alt={product.name}
       />
       <CardContent>
@@ -51,9 +45,9 @@ const ProductionCard: React.FC<ProductionCardProps> = ({ product }) => {
         <Typography variant="body2" color="text.secondary">
           {product.brand} | {product.category}
         </Typography>
-        <Rating name="read-only" value={parseFloat(product.rating)} readOnly />
         <Typography variant="body2" color="text.secondary">
-          {product.reviews_count} reviews
+          Quantity: {product.quantity}{' '}
+          {product.inStock ? 'In Stock' : 'Out of Stock'}
         </Typography>
       </CardContent>
     </Card>
