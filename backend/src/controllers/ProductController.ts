@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { Product } from '../models/product.model';
-import { Op } from 'sequelize'; // 导入Op模块
+import { Op } from 'sequelize';
 import cors from 'cors';
 
 class ProductController {
@@ -39,7 +39,15 @@ class ProductController {
         if (minPrice) options.where.price[Op.gte] = parseFloat(minPrice as string);
         if (maxPrice) options.where.price[Op.lte] = parseFloat(maxPrice as string);
       }
-      if (sort) options.order = [[sort as string, (sort as string).endsWith('desc') ? 'DESC' : 'ASC']];
+      if (sort) {
+        if (sort === 'price-asc') {
+          options.order = [['price', 'ASC']];
+        } else if (sort === 'price-desc') {
+          options.order = [['price', 'DESC']];
+        } else if (sort === 'newest') {
+          options.order = [['createdAt', 'DESC']];
+        }
+      }
       if (search) options.where.name = { [Op.iLike]: `%${search}%` };
 
       // Fetch products with pagination and filters
