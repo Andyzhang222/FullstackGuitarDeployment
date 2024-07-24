@@ -36,7 +36,7 @@ const ProductDetail: React.FC = () => {
   }, [id]);
 
   const handleBackClick = () => {
-    navigate('/products');
+    navigate('/home');
   };
 
   if (error) {
