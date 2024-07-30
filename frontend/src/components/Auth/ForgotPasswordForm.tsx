@@ -12,7 +12,7 @@ import {
   IconButton,
   InputAdornment,
   Link,
-} from '@material-ui/core';
+} from '@mui/material';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import ellipseImage from '../../assets/images/Ellipse.svg';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';

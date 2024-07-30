@@ -1,24 +1,16 @@
 import React from 'react';
-import { Container, Typography, makeStyles } from '@material-ui/core';
+import { Container, Typography, Box } from '@mui/material';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import ProductList from '../components/productListDisplay/ProductList';
 
-const useStyles = makeStyles((theme) => ({
-  content: {
-    marginTop: theme.spacing(8),
-    marginBottom: theme.spacing(8),
-  },
-}));
-
 const Home = () => {
-  const classes = useStyles();
   const isAuthenticated = !!localStorage.getItem('accessToken');
 
   return (
-    <div>
+    <Box>
       <Header />
-      <Container className={classes.content}>
+      <Container sx={{ mt: 8, mb: 8 }}>
         <Typography variant="h4" gutterBottom>
           {isAuthenticated
             ? 'Welcome to the Home Page'
@@ -27,7 +19,7 @@ const Home = () => {
         <ProductList />
       </Container>
       <Footer />
-    </div>
+    </Box>
   );
 };
 

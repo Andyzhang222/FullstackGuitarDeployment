@@ -1,27 +1,22 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, makeStyles } from '@material-ui/core';
+import { AppBar, Toolbar, Typography } from '@mui/material';
+import { styled } from '@mui/system';
 
-const useStyles = makeStyles({
-  footer: {
-    top: 'auto',
-    bottom: 0,
-  },
-  toolbar: {
-    justifyContent: 'center',
-  },
+const FooterStyled = styled(AppBar)({
+  top: 'auto',
+  bottom: 0,
+  position: 'fixed',
 });
 
 const Footer = () => {
-  const classes = useStyles();
-
   return (
-    <AppBar position="fixed" color="primary" className={classes.footer}>
-      <Toolbar className={classes.toolbar}>
+    <FooterStyled color="primary">
+      <Toolbar style={{ justifyContent: 'center' }}>
         <Typography variant="body1" color="inherit">
           © 2024 Fantasy. All rights reserved.
         </Typography>
       </Toolbar>
-    </AppBar>
+    </FooterStyled>
   );
 };
 
