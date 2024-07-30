@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+// import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
@@ -9,6 +9,14 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import { jwtDecode } from 'jwt-decode';
 import theme from '../../theme/theme'; // Import your custom theme
+import { BodyText } from '../../theme/customStyles'; // 假设路径正确
+import { LogoName } from '../../theme/customStyles'; // 假设路径正确
+import { BodyRegular } from '../../theme/customStyles'; // 假设路径正确
+
+// const BodyText = styled(Typography)({
+//   ...theme.typography.body1, // Apply custom body1 styles
+//   color: '#141414',
+// });
 
 // Styled Components
 const PageHeader = styled(AppBar)({
@@ -34,11 +42,6 @@ const LayoutBlocks = styled('div')({
   margin: '0 auto', // Centers the container horizontally
 });
 
-const LogoName = styled('div')({
-  ...theme.typography.h6, // Apply typography styles from theme
-  cursor: 'pointer',
-});
-
 const SearchBarContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
@@ -58,7 +61,6 @@ const SearchInput = styled('input')({
   border: 'none',
   outline: 'none',
   flex: 1,
-  ...theme.typography.body1, // Apply body1 typography styles
 });
 
 const SignInContainer = styled('div')({
@@ -129,12 +131,23 @@ const Header: React.FC = () => {
     <PageHeader position="static">
       <Toolbar>
         <LayoutBlocks>
-          <LogoName onClick={() => navigate('/')}>Logo Name</LogoName>
+          <LogoName>Logo Name</LogoName>
           <SearchBarContainer>
             <IconButton>
               <img src="/images/Header/vector.svg" alt="Search Icon" />
             </IconButton>
-            <SearchInput placeholder="Find guitars you love..." />
+            <SearchInput
+              placeholder="Find guitars you love..."
+              style={{
+                fontFamily: 'Roboto, Arial, sans-serif',
+                fontSize: '14px',
+                fontWeight: 400,
+                lineHeight: '22px',
+                textAlign: 'left',
+                color: '#595959',
+              }}
+            />
+            <BodyRegular></BodyRegular>
           </SearchBarContainer>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {isLoggedIn ? (
@@ -149,7 +162,7 @@ const Header: React.FC = () => {
                     color="inherit"
                   >
                     <img src="/images/Header/User.svg" alt="User Icon" />
-                    <Typography variant="body1">Profile</Typography>
+                    <BodyText>Profile</BodyText>
                   </IconButton>
                   <Menu
                     id="menu-appbar"
@@ -175,14 +188,14 @@ const Header: React.FC = () => {
                 </SignInContainer>
               </>
             ) : (
-              <SignInContainer onClick={() => navigate('/')}>
+              <SignInContainer onClick={() => navigate('/sign')}>
                 <img src="/images/Header/User.svg" alt="User Icon" />
-                <Typography variant="body1">Sign In</Typography>
+                <BodyText>Sign in</BodyText>
               </SignInContainer>
             )}
             <CartContainer>
               <img src="/images/Header/ShoppingCart.svg" alt="Cart Icon" />
-              <Typography variant="body1">Cart</Typography>
+              <BodyText>Cart</BodyText>
             </CartContainer>
           </div>
         </LayoutBlocks>

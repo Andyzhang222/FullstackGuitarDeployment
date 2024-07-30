@@ -123,6 +123,7 @@ const theme = createTheme({
     },
     // Other typography styles can be defined here
   },
+
   components: {
     MuiButton: {
       styleOverrides: {
