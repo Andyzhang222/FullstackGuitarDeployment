@@ -16,11 +16,12 @@ export const LogoName = styled(Typography)({
   color: 'rgba(0, 0, 0, 0.85)', // 使用 85% 不透明度的黑色
 });
 
-export const BodyRegular = styled('p')({
+// Styled component for body text
+export const BodyRegular = styled(Typography)({
   fontFamily: 'Roboto, Arial, sans-serif',
   fontSize: '14px',
   fontWeight: 400,
   lineHeight: '22px',
   textAlign: 'left',
-  color: '#141414', // 使用自定义的文本颜色
+  color: '#141414',
 });

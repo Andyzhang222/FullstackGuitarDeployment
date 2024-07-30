@@ -24,7 +24,6 @@ const PageHeader = styled(AppBar)({
   width: '100%',
   maxWidth: '1600px',
   padding: '16px, 72px, 16px, 72px',
-  margin: '0 auto',
   maxHeight: '72px',
   boxSizing: 'border-box',
   // Applying default font styling and color
@@ -33,7 +32,7 @@ const PageHeader = styled(AppBar)({
 });
 
 const LayoutBlocks = styled('div')({
-  width: '1296px',
+  width: '1300px',
   height: '40px',
   // background: 'red', // For visibility, remove or change as needed
   display: 'flex',
@@ -71,7 +70,7 @@ const SignInContainer = styled('div')({
   gap: '8px',
   cursor: 'pointer',
   // background: 'green',
-  marginRight: '50px', // Move left by half the distance
+  // marginRight: '50px', // Move left by half the distance
 });
 
 const CartContainer = styled('div')({
@@ -81,6 +80,7 @@ const CartContainer = styled('div')({
   alignItems: 'center',
   gap: '8px',
   // background: 'green',
+  justifyContent: 'flex-end', // 设置内容向右对齐
 });
 
 // Interface for decoded token
