@@ -25,3 +25,12 @@ export const BodyRegular = styled(Typography)({
   textAlign: 'left',
   color: '#141414',
 });
+
+// 添加 SectionHeader 样式
+export const SectionHeader = styled(Typography)({
+  fontFamily: 'Roboto, Arial, sans-serif',
+  fontSize: '30px',
+  fontWeight: 500,
+  lineHeight: '40px',
+  textAlign: 'left',
+});

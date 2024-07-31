@@ -3,12 +3,12 @@ import { Card, CardContent, CardMedia } from '@mui/material';
 import { Product } from '../../types/types';
 import { BodyText } from '../../theme/customStyles';
 
-interface ProductionCardProps {
+interface HomePageProductCardProps {
   product: Product;
   onClick: () => void;
 }
 
-const ProductionCard: React.FC<ProductionCardProps> = ({
+const HomePageProductCard: React.FC<HomePageProductCardProps> = ({
   product,
   onClick,
 }) => {
@@ -19,7 +19,7 @@ const ProductionCard: React.FC<ProductionCardProps> = ({
         height: '336px',
         borderRadius: '8px',
         mb: 2,
-        overflow: 'hidden', // 确保圆角对图片生效
+        overflow: 'hidden',
         cursor: 'pointer',
       }}
       onClick={onClick}
@@ -28,25 +28,25 @@ const ProductionCard: React.FC<ProductionCardProps> = ({
         component="img"
         height="240px"
         width="240px"
-        image="images/test.jpg"
+        // image="images/test.jpg"
+        background-color="gray"
         alt={product.name}
         sx={{
-          borderRadius: '8px 8px 0 0', // 只对顶部的圆角生效
+          borderRadius: '8px 8px 8px 8px',
         }}
       />
       <CardContent sx={{ padding: '16px' }}>
         <BodyText
           style={{
-            fontWeight: 600,
-            fontSize: '1.25rem',
             marginBottom: '0.5rem',
+            whiteSpace: 'nowrap', // 强制文本在一行显示
+            overflow: 'hidden', // 隐藏溢出部分
+            textOverflow: 'ellipsis', // 用省略号替换溢出的文本
           }}
         >
           {product.name}
         </BodyText>
-        <BodyText style={{ fontSize: '0.875rem', color: 'text.secondary' }}>
-          {product.description}
-        </BodyText>
+        {/* <BodyText>{product.description}</BodyText> */}
         <BodyText
           style={{ fontWeight: 500, fontSize: '1.125rem', margin: '0.5rem 0' }}
         >
@@ -64,4 +64,4 @@ const ProductionCard: React.FC<ProductionCardProps> = ({
   );
 };
 
-export default ProductionCard;
+export default HomePageProductCard;
