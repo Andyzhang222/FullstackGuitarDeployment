@@ -5,7 +5,8 @@ import GlobalHeader from '../components/Header/GlobalHeader';
 import Footer from '../components/Footer/Footer';
 import ProductList from '../components/productListDisplay/ProductList';
 import MarketingBanner from '../components/MarketingBanner/MarketingBanner';
-import HomepageProductSuggestion from '../components/HomepageProductSuggestion/HomepageProductSuggestion';
+import FeaturedProductDisplay from '../components/HomepageProductSuggestion/FeaturedProductDisplay';
+import NewArrivalsProductDisplay from '../components/HomepageProductSuggestion/NewArrivalsProductDisplay';
 
 const Home = () => {
   const isAuthenticated = !!localStorage.getItem('accessToken');
@@ -15,7 +16,8 @@ const Home = () => {
       <Header />
       <GlobalHeader />
       <MarketingBanner />
-      <HomepageProductSuggestion />
+      <FeaturedProductDisplay />
+      <NewArrivalsProductDisplay />
       <Container sx={{ mt: 8, mb: 8 }}>
         <Typography variant="h4" gutterBottom>
           {isAuthenticated

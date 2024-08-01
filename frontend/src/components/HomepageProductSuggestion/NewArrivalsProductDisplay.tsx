@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { IconButton, Box, Typography } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import HomePageProductCard from '../HomepageProductSuggestion/HomePageProductCard';
+import HomePageProductCard from './HomePageProductCard';
 import { Product, ApiResponse } from '../../types/types';
 import { SectionHeader } from '../../theme/customStyles';
 import { useNavigate } from 'react-router-dom';
 
-const HomepageProductSuggestion: React.FC = () => {
+const NewArrivalsProductDisplay: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
@@ -36,15 +36,13 @@ const HomepageProductSuggestion: React.FC = () => {
   };
 
   const nextSlide = () => {
-    setCurrentSlide(
-      (prev) => (prev + 1) % Math.ceil(products.length / maxVisibleSlides)
+    setCurrentSlide((prev) =>
+      Math.min(prev + maxVisibleSlides, products.length - maxVisibleSlides)
     );
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === 0 ? Math.ceil(products.length / maxVisibleSlides) - 1 : prev - 1
-    );
+    setCurrentSlide((prev) => Math.max(prev - maxVisibleSlides, 0));
   };
 
   const handleProductClick = (id: number) => {
@@ -54,10 +52,12 @@ const HomepageProductSuggestion: React.FC = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <Box
-        maxWidth="16"
+        // maxWidth="lg"
         sx={{
           overflow: 'hidden',
           border: '2px solid black',
+          margin: '0 auto',
+          width: '100%',
         }}
       >
         <Box
@@ -79,7 +79,7 @@ const HomepageProductSuggestion: React.FC = () => {
               Height: '40px',
             }}
           >
-            Shop our featured guitars
+            New Arrivals{' '}
           </SectionHeader>
         </Box>
         <Box
@@ -118,7 +118,7 @@ const HomepageProductSuggestion: React.FC = () => {
               transition: 'transform 0.5s ease-in-out',
               transform: `translateX(-${currentSlide * (240 + 24)}px)`,
               border: '2px solid pink',
-              width: '100%',
+              width: 'calc(100% - 144px)', // Adjust to account for the margin
             }}
           >
             {products.map((product) => (
@@ -160,4 +160,4 @@ const HomepageProductSuggestion: React.FC = () => {
   );
 };
 
-export default HomepageProductSuggestion;
+export default NewArrivalsProductDisplay;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardMedia } from '@mui/material';
 import { Product } from '../../types/types';
-import { BodyText } from '../../theme/customStyles';
+import { BodyText, PriceTag } from '../../theme/customStyles';
 
 interface HomePageProductCardProps {
   product: Product;
@@ -29,13 +29,14 @@ const HomePageProductCard: React.FC<HomePageProductCardProps> = ({
         height="240px"
         width="240px"
         // image="images/test.jpg"
-        background-color="gray"
+        image="images/ProfuctSuggestion/Rectangle.svg"
         alt={product.name}
         sx={{
           borderRadius: '8px 8px 8px 8px',
+          border: '1px red',
         }}
       />
-      <CardContent sx={{ padding: '16px' }}>
+      <CardContent sx={{ padding: '0px', marginTop: '12px' }}>
         <BodyText
           style={{
             marginBottom: '0.5rem',
@@ -47,18 +48,15 @@ const HomePageProductCard: React.FC<HomePageProductCardProps> = ({
           {product.name}
         </BodyText>
         {/* <BodyText>{product.description}</BodyText> */}
-        <BodyText
-          style={{ fontWeight: 500, fontSize: '1.125rem', margin: '0.5rem 0' }}
-        >
-          ${product.price}
-        </BodyText>
-        <BodyText style={{ fontSize: '0.875rem', color: 'text.secondary' }}>
+
+        {/* <BodyText style={{ fontSize: '0.875rem', color: 'text.secondary' }}>
           {product.brand} | {product.category}
-        </BodyText>
-        <BodyText style={{ fontSize: '0.875rem', color: 'text.secondary' }}>
+        </BodyText> */}
+        <BodyText style={{ color: '#595959' }}>
           Quantity: {product.quantity}{' '}
           {product.inStock ? 'In Stock' : 'Out of Stock'}
         </BodyText>
+        <PriceTag>${product.price}</PriceTag>
       </CardContent>
     </Card>
   );

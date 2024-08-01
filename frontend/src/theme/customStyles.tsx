@@ -34,3 +34,11 @@ export const SectionHeader = styled(Typography)({
   lineHeight: '40px',
   textAlign: 'left',
 });
+
+export const PriceTag = styled(Typography)({
+  fontFamily: 'Roboto',
+  fontSize: '20px',
+  fontWeight: '500',
+  lineHeight: '28px',
+  textAlign: 'left',
+});
