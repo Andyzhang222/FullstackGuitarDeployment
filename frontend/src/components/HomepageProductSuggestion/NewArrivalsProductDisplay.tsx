@@ -22,12 +22,13 @@ const NewArrivalsProductDisplay: React.FC = () => {
   const fetchProducts = async () => {
     try {
       const response = await fetch(
-        'http://localhost:5001/api/products?limit=10'
+        'http://localhost:5001/api/products?limit=10&sort=newest'
       );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data: ApiResponse = await response.json();
+      // 假设从后端获取的数据是按照创建日期排序的
       setProducts(data.products);
     } catch (err) {
       console.error('Error fetching products:', err);

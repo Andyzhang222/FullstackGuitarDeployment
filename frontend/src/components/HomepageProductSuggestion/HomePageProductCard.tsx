@@ -47,16 +47,11 @@ const HomePageProductCard: React.FC<HomePageProductCardProps> = ({
         >
           {product.name}
         </BodyText>
-        {/* <BodyText>{product.description}</BodyText> */}
-
-        {/* <BodyText style={{ fontSize: '0.875rem', color: 'text.secondary' }}>
-          {product.brand} | {product.category}
-        </BodyText> */}
-        <BodyText style={{ color: '#595959' }}>
+        <BodyText style={{ color: '#595959', marginTop: '2px' }}>
           Quantity: {product.quantity}{' '}
           {product.inStock ? 'In Stock' : 'Out of Stock'}
         </BodyText>
-        <PriceTag>${product.price}</PriceTag>
+        <PriceTag style={{ marginTop: '4px' }}>${product.price}</PriceTag>
       </CardContent>
     </Card>
   );

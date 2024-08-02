@@ -42,3 +42,12 @@ export const PriceTag = styled(Typography)({
   lineHeight: '28px',
   textAlign: 'left',
 });
+
+export const TitleText = styled(Typography)({
+  fontFamily: 'Roboto',
+  fontSize: '20px',
+  fontWeight: '500',
+  lineHeight: '28px',
+  textAlign: 'center',
+  color: '#141414',
+});

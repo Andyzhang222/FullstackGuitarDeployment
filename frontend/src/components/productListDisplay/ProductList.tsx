@@ -31,15 +31,15 @@ const ProductList: React.FC = () => {
   const navigate = useNavigate();
 
   const fetchProducts = () => {
-    console.log('Fetching products with the following parameters:');
-    console.log('Page:', page);
-    console.log('PageSize:', pageSize);
-    console.log('Brand:', brand);
-    console.log('Type:', type);
-    console.log('MinPrice:', minPrice);
-    console.log('MaxPrice:', maxPrice);
-    console.log('Sort:', sort);
-    console.log('Search:', search);
+    // console.log('Fetching products with the following parameters:');
+    // console.log('Page:', page);
+    // console.log('PageSize:', pageSize);
+    // console.log('Brand:', brand);
+    // console.log('Type:', type);
+    // console.log('MinPrice:', minPrice);
+    // console.log('MaxPrice:', maxPrice);
+    // console.log('Sort:', sort);
+    // console.log('Search:', search);
 
     const query = new URLSearchParams({
       page: page.toString(),

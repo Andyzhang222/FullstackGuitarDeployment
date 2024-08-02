@@ -7,6 +7,8 @@ import ProductList from '../components/productListDisplay/ProductList';
 import MarketingBanner from '../components/MarketingBanner/MarketingBanner';
 import FeaturedProductDisplay from '../components/HomepageProductSuggestion/FeaturedProductDisplay';
 import NewArrivalsProductDisplay from '../components/HomepageProductSuggestion/NewArrivalsProductDisplay';
+import ServicesComponent from '../components/ServicesComponent';
+import BrowseByCategory from '../components/BrowseByCategory';
 
 const Home = () => {
   const isAuthenticated = !!localStorage.getItem('accessToken');
@@ -18,6 +20,8 @@ const Home = () => {
       <MarketingBanner />
       <FeaturedProductDisplay />
       <NewArrivalsProductDisplay />
+      <ServicesComponent />
+      <BrowseByCategory />
       <Container sx={{ mt: 8, mb: 8 }}>
         <Typography variant="h4" gutterBottom>
           {isAuthenticated
