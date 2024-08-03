@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { TitleText } from '../theme/customStyles';
+import { TitleText } from '../../theme/customStyles';
 
 const LargeCategoryCard: React.FC<{ name: string }> = ({ name }) => (
   <Box
