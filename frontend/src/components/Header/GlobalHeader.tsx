@@ -1,19 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/system';
 import { BodyRegular } from '../../theme/customStyles';
+import LocationModal from '../LocationModal';
 
 const GlobalHeaderContainer = styled('div')({
   width: '100%',
   height: '48px',
   backgroundColor: '#FFFFFF',
-  //   borderBottom: '1px solid #F0F0F0',
   display: 'flex',
-  justifyContent: 'center', // Center the ContentWrapper within the GlobalHeaderContainer
+  justifyContent: 'center',
   margin: '0 auto',
   padding: '0 72px',
   boxSizing: 'border-box',
   position: 'relative',
-  background: 'red',
 });
 
 const ContentWrapper = styled('div')({
@@ -29,7 +28,6 @@ const NavItem = styled('div')({
   gap: '8px',
   cursor: 'pointer',
   color: '#000000',
-  background: 'green',
 });
 
 const LeftContainer = styled('div')({
@@ -37,7 +35,6 @@ const LeftContainer = styled('div')({
   display: 'flex',
   gap: '24px',
   alignItems: 'center',
-  background: 'gray',
 });
 
 const RightContainer = styled('div')({
@@ -45,11 +42,22 @@ const RightContainer = styled('div')({
   display: 'flex',
   gap: '24px',
   alignItems: 'center',
-  justifyContent: 'flex-end', // 设置内容向右对齐
-  background: 'yellow',
+  justifyContent: 'flex-end',
 });
 
 const GlobalHeader = () => {
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [address, setAddress] = useState('Deliver to');
+
+  const handleToggleModal = () => {
+    setShowLocationModal(!showLocationModal);
+  };
+
+  const handleSaveAddress = (newAddress: string) => {
+    setAddress(newAddress);
+    setShowLocationModal(false);
+  };
+
   return (
     <GlobalHeaderContainer>
       <ContentWrapper>
@@ -71,9 +79,9 @@ const GlobalHeader = () => {
           </NavItem>
         </LeftContainer>
         <RightContainer>
-          <NavItem>
+          <NavItem onClick={handleToggleModal}>
             <img src="/images/Header/truck.svg" alt="Delivery Icon" />
-            <BodyRegular>Deliver to M5G2G4</BodyRegular>
+            <BodyRegular>{address}</BodyRegular>
           </NavItem>
           <NavItem>
             <img src="/images/Header/shop.svg" alt="Pickup Icon" />
@@ -85,6 +93,9 @@ const GlobalHeader = () => {
           </NavItem>
         </RightContainer>
       </ContentWrapper>
+      {showLocationModal && (
+        <LocationModal onClose={handleToggleModal} onSave={handleSaveAddress} />
+      )}
     </GlobalHeaderContainer>
   );
 };

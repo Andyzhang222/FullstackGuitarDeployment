@@ -1,18 +1,7 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
 # misc
 .DS_Store
+.env
+.env.*               # 忽略所有.env.* 文件
 .env.local
 .env.development.local
 .env.test.local
@@ -21,3 +10,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Ignore environment files
+.env
+.env.*
