@@ -3,4 +3,5 @@ node_modules
 # Ignore environment files
 .env
 .env.*
+frontend/.env
 backend/.env
