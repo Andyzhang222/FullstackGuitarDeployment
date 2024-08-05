@@ -20,7 +20,7 @@ import { BodyRegular } from '../../theme/customStyles'; // 假设路径正确
 
 // Styled Components
 const PageHeader = styled(AppBar)({
-  backgroundColor: '#FFFFFF',
+  backgroundColor: '#02000C',
   width: '100%',
   maxWidth: '1600px',
   padding: '16px, 72px, 16px, 72px',
@@ -44,13 +44,13 @@ const LayoutBlocks = styled('div')({
 const SearchBarContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
-  border: `1px solid ${theme.palette.text.primary}`,
   padding: '5px',
+  Radius: '4px',
   borderRadius: '5px',
   width: '800px',
   height: '40px', // Set explicit height
   boxSizing: 'border-box', // Include padding and border in the element's total width and height
-  // background: 'green',
+  background: '#FFFFFF',
 });
 
 const SearchInput = styled('input')({

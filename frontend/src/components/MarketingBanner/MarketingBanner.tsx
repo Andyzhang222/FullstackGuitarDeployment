@@ -7,7 +7,6 @@ const BannerContainer = styled('div')({
   overflow: 'hidden',
   position: 'relative',
   margin: '0 auto',
-  border: '1px solid black',
 });
 
 const SliderWrapper = styled('div')({
@@ -16,16 +15,17 @@ const SliderWrapper = styled('div')({
   height: '100%',
 });
 
-const Slide = styled('div')<SlideProps>(({ backgroundColor }) => ({
+const Slide = styled('div')({
   minWidth: '100%',
   height: '100%',
-  backgroundColor,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   fontSize: '24px',
   color: '#fff',
-}));
+});
 
 const IndicatorContainer = styled('div')({
   position: 'absolute',
@@ -42,22 +42,25 @@ const Indicator = styled('img')({
   height: '12px',
 });
 
-interface SlideProps {
-  backgroundColor: string;
-}
-
 const MarketingBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
-  const colors = ['#FF5733', 'gray', '#3357FF', 'gray']; // Example colors for slides
+
+  // Replace with actual paths to your SVG images
+  const slides = [
+    '/images/MarketingBanner/bannerImage.svg',
+    '/images/MarketingBanner/bannerImage.svg',
+    '/images/MarketingBanner/bannerImage.svg',
+    '/images/MarketingBanner/bannerImage.svg',
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % colors.length);
-    }, 3000); // Change slide every 3 seconds
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 8000); // Change slide every 3 seconds
 
     return () => clearInterval(interval);
-  }, [colors.length]);
+  }, [slides.length]);
 
   useEffect(() => {
     if (sliderRef.current) {
@@ -68,14 +71,14 @@ const MarketingBanner = () => {
   return (
     <BannerContainer>
       <SliderWrapper ref={sliderRef}>
-        {colors.map((color, index) => (
-          <Slide key={index} backgroundColor={color}>
+        {slides.map((slide, index) => (
+          <Slide key={index} style={{ backgroundImage: `url(${slide})` }}>
             Slide {index + 1}
           </Slide>
         ))}
       </SliderWrapper>
       <IndicatorContainer>
-        {colors.map((_, index) => (
+        {slides.map((_, index) => (
           <Indicator
             key={index}
             src={

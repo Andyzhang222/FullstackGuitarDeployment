@@ -28,6 +28,7 @@ const NavItem = styled('div')({
   gap: '8px',
   cursor: 'pointer',
   color: '#000000',
+  width: '33.33%', // 固定宽度
 });
 
 const LeftContainer = styled('div')({
@@ -40,9 +41,9 @@ const LeftContainer = styled('div')({
 const RightContainer = styled('div')({
   width: '650px',
   display: 'flex',
-  gap: '24px',
   alignItems: 'center',
-  justifyContent: 'flex-end',
+  justifyContent: 'space-between',
+  border: '2px solid yellow', // 可用于调试，完成后可移除
 });
 
 const GlobalHeader = () => {
@@ -83,13 +84,15 @@ const GlobalHeader = () => {
             <img src="/images/Header/truck.svg" alt="Delivery Icon" />
             <BodyRegular>{address}</BodyRegular>
           </NavItem>
-          <NavItem>
-            <img src="/images/Header/shop.svg" alt="Pickup Icon" />
-            <BodyRegular>Pick up at Toronto Downtown</BodyRegular>
-          </NavItem>
+
           <NavItem>
             <img src="/images/Header/phone.svg" alt="Contact Icon" />
             <BodyRegular>Contact Us</BodyRegular>
+          </NavItem>
+
+          <NavItem>
+            <img src="/images/Header/shop.svg" alt="Pickup Icon" />
+            <BodyRegular>Pick up at Toronto Downtown</BodyRegular>
           </NavItem>
         </RightContainer>
       </ContentWrapper>

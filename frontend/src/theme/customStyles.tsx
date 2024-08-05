@@ -5,7 +5,7 @@ import theme from './theme'; // 假设你的主题文件路径
 
 export const BodyText = styled(Typography)({
   ...theme.typography.body1,
-  color: '#141414',
+  color: '#FFFFFF',
 });
 
 export const LogoName = styled(Typography)({
@@ -13,7 +13,7 @@ export const LogoName = styled(Typography)({
   fontWeight: 500,
   fontSize: '20px',
   lineHeight: '28px',
-  color: 'rgba(0, 0, 0, 0.85)', // 使用 85% 不透明度的黑色
+  color: '#FFFFFF', // 使用 85% 不透明度的黑色
 });
 
 // Styled component for body text

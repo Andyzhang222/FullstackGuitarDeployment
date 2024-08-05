@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { styled } from '@mui/system';
 
 const LocationModalContainer = styled(Box)({
@@ -12,10 +13,20 @@ const LocationModalContainer = styled(Box)({
   backgroundColor: '#fff',
   boxShadow: '0px 0px 15px rgba(0, 0, 0, 0.3)',
   zIndex: 1000,
-  padding: '24px',
   display: 'flex',
   flexDirection: 'column',
-  gap: '16px',
+  justifyContent: 'space-between',
+});
+
+const ContentContainer = styled(Box)({
+  padding: '24px',
+  overflowY: 'auto',
+});
+
+const ButtonContainer = styled(Box)({
+  padding: '16px 24px',
+  borderTop: '1px solid #f0f0f0',
+  backgroundColor: '#fff',
 });
 
 const LocationModal: React.FC<{
@@ -63,25 +74,84 @@ const LocationModal: React.FC<{
 
   return (
     <LocationModalContainer>
-      <IconButton sx={{ alignSelf: 'flex-end' }} onClick={onClose}>
-        <CloseIcon />
-      </IconButton>
-      <Typography variant="h6">Use your location</Typography>
-      <Typography>
-        Enter your zip code to find out if we deliver to your area.
-      </Typography>
-      <TextField
-        label="Enter your zip code, e.g., M5G2G4"
-        fullWidth
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-      />
-      <Button variant="contained" onClick={fetchCurrentLocation}>
-        My current location
-      </Button>
-      <Button variant="contained" color="primary" onClick={handleSave}>
-        Save
-      </Button>
+      <ContentContainer>
+        <IconButton
+          sx={{
+            position: 'absolute',
+            top: '24px',
+            right: '24px',
+            color: '#000',
+          }}
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </IconButton>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 500,
+            fontSize: '20px',
+            lineHeight: '28px',
+            color: '#02000C',
+            marginBottom: '8px',
+          }}
+        >
+          Use your location
+        </Typography>
+        <Typography
+          sx={{
+            fontWeight: 400,
+            fontSize: '14px',
+            lineHeight: '22px',
+            color: '#76757C',
+            marginBottom: '16px',
+          }}
+        >
+          Enter your zip code to find out if we deliver to your area.
+        </Typography>
+        <TextField
+          fullWidth
+          placeholder="Enter your zip code, e.g., M5G2G4"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          sx={{
+            height: '40px',
+            marginBottom: '16px',
+          }}
+          inputProps={{
+            style: { height: '40px', padding: '10px 12px' },
+          }}
+        />
+        <Button
+          variant="text"
+          startIcon={<MyLocationIcon />}
+          onClick={fetchCurrentLocation}
+          sx={{
+            color: '#02000C',
+            marginBottom: '16px',
+            textTransform: 'none',
+          }}
+        >
+          My current location
+        </Button>
+      </ContentContainer>
+      <ButtonContainer>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleSave}
+          sx={{
+            backgroundColor: '#02000C',
+            color: '#FFFFFF',
+            height: '48px',
+            textTransform: 'none',
+            fontSize: '16px',
+          }}
+        >
+          Save
+        </Button>
+      </ButtonContainer>
     </LocationModalContainer>
   );
 };
