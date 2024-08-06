@@ -48,10 +48,10 @@ const MarketingBanner = () => {
 
   // Replace with actual paths to your SVG images
   const slides = [
-    '/images/MarketingBanner/bannerImage.png',
-    '/images/MarketingBanner/bannerImage.png',
-    '/images/MarketingBanner/bannerImage.png',
-    '/images/MarketingBanner/bannerImage.png',
+    '/images/MarketingBanner/bannerImage1.png',
+    '/images/MarketingBanner/bannerImage1.png',
+    '/images/MarketingBanner/bannerImage1.png',
+    '/images/MarketingBanner/bannerImage1.png',
   ];
 
   useEffect(() => {

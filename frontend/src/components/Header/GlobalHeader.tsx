@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/system';
 import { BodyRegular } from '../../theme/customStyles';
-import LocationModal from '../LocationModal';
-import ContactModal from '../ContactModal';
-import PickUpModal from '../PickUpModal';
+import LocationModal from '../RightSideInfoComponents/LocationModal';
+import ContactModal from '../RightSideInfoComponents/ContactModal';
+import PickUpModal from '../RightSideInfoComponents/PickUpModal';
 
 const GlobalHeaderContainer = styled('div')({
   width: '100%',

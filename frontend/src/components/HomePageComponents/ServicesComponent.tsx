@@ -3,24 +3,24 @@ import { Box, Typography } from '@mui/material';
 
 const services = [
   {
-    title: 'Free & Insured Shipping on Order',
-    description:
-      'Enjoy peace of mind with every purchase as we offer free shipping or insured shipping options, ensuring your guitar arrives safely.',
+    title: 'Free and Insured Shipping',
+    description: 'Enjoy peace of mind with free or insured shipping.',
+    image: '/images/ServiesImages/circle1.svg',
   },
   {
     title: 'Expert Customer Service',
-    description:
-      'Our dedicated customer service team is here to assist you with any inquiries, providing professional and friendly support every step of the way.',
+    description: 'Friendly support from our dedicated team.',
+    image: '/images/ServiesImages/circle2.svg',
   },
   {
     title: 'In-Store Pick Up',
-    description:
-      'We provide flexibility for you to pick up your guitars in person at our store locations, making it convenient and quick for you.',
+    description: 'Convenient pick-up at our store locations.',
+    image: '/images/ServiesImages/circle3.svg',
   },
   {
     title: 'Pro Selection on Each Guitar',
-    description:
-      'Our experts carefully review each guitar to guarantee top-notch quality, ensuring you receive the best instrument available.',
+    description: 'Carefully reviewed to ensure top quality.',
+    image: '/images/ServiesImages/circle4.svg',
   },
 ];
 
@@ -31,12 +31,9 @@ const ServicesComponent: React.FC = () => {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        margin: '0 72px',
+        margin: '80px 72px',
         padding: '20px 0px',
-        // width: '100%', // 调整宽度以匹配图像中的宽度
-        height: '271px', // 调整高度以匹配图像中的高度
-        // margin: '0px auto', // 水平居中
-        border: '1px solid blue', // 仅供调试，可移除
+        height: '271px',
       }}
     >
       {services.map((service, index) => (
@@ -46,20 +43,23 @@ const ServicesComponent: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            maxWidth: '24%', // 调整每个服务项的最大宽度
+            maxWidth: '24%',
             textAlign: 'center',
           }}
         >
           <Box
             sx={{
               width: '178px',
-              height: '178px',
-              borderRadius: '50%',
-              backgroundColor: '#D9D9D9', // 灰色背景
-              marginBottom: '26px', // 圆形和文字之间的间距
-              marginTop: '0px', // 圆形和文字之间的间距
+              marginBottom: '26px',
+              marginTop: '0px',
             }}
-          />
+          >
+            <img
+              src={service.image}
+              alt={service.title}
+              style={{ width: '100%', height: '100%' }}
+            />
+          </Box>
           <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
             {service.title}
           </Typography>

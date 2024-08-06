@@ -56,7 +56,7 @@ const NewArrivalsProductDisplay: React.FC = () => {
         // maxWidth="lg"
         sx={{
           overflow: 'hidden',
-          border: '2px solid black',
+          // border: '2px solid black',
           margin: '0 auto',
           width: '100%',
         }}
@@ -66,7 +66,7 @@ const NewArrivalsProductDisplay: React.FC = () => {
             textAlign: 'center',
             margin: '0 72px',
             height: '120px',
-            border: '2px solid yellow',
+            // border: '2px solid yellow',
           }}
         >
           <SectionHeader
@@ -75,7 +75,7 @@ const NewArrivalsProductDisplay: React.FC = () => {
               top: '52px',
               left: '0',
               transform: 'translateX(0%)',
-              border: '1px solid yellow',
+              // border: '1px solid yellow',
               width: '350px',
               Height: '40px',
             }}
@@ -86,7 +86,7 @@ const NewArrivalsProductDisplay: React.FC = () => {
         <Box
           sx={{
             position: 'relative',
-            border: '2px solid blue',
+            // border: '2px solid blue',
             overflow: 'hidden',
             margin: '0 72px',
           }}
@@ -118,7 +118,7 @@ const NewArrivalsProductDisplay: React.FC = () => {
               display: 'flex',
               transition: 'transform 0.5s ease-in-out',
               transform: `translateX(-${currentSlide * (240 + 24)}px)`,
-              border: '2px solid pink',
+              // border: '2px solid pink',
               width: 'calc(100% - 144px)', // Adjust to account for the margin
             }}
           >
