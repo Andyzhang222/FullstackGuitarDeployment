@@ -162,7 +162,7 @@ const Header: React.FC = () => {
                     color="inherit"
                   >
                     <img src="/images/Header/User.svg" alt="User Icon" />
-                    <BodyText>Profile</BodyText>
+                    <BodyText> Profile</BodyText>
                   </IconButton>
                   <Menu
                     id="menu-appbar"

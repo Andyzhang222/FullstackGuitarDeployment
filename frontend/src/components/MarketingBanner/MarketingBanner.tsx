@@ -48,10 +48,10 @@ const MarketingBanner = () => {
 
   // Replace with actual paths to your SVG images
   const slides = [
-    '/images/MarketingBanner/bannerImage.svg',
-    '/images/MarketingBanner/bannerImage.svg',
-    '/images/MarketingBanner/bannerImage.svg',
-    '/images/MarketingBanner/bannerImage.svg',
+    '/images/MarketingBanner/bannerImage.png',
+    '/images/MarketingBanner/bannerImage.png',
+    '/images/MarketingBanner/bannerImage.png',
+    '/images/MarketingBanner/bannerImage.png',
   ];
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const MarketingBanner = () => {
       <SliderWrapper ref={sliderRef}>
         {slides.map((slide, index) => (
           <Slide key={index} style={{ backgroundImage: `url(${slide})` }}>
-            Slide {index + 1}
+            {/* Slide {index + 1} */}
           </Slide>
         ))}
       </SliderWrapper>

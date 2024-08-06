@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/system';
 import { BodyRegular } from '../../theme/customStyles';
 import LocationModal from '../LocationModal';
+import ContactModal from '../ContactModal';
+import PickUpModal from '../PickUpModal';
 
 const GlobalHeaderContainer = styled('div')({
   width: '100%',
@@ -43,21 +45,48 @@ const RightContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  border: '2px solid yellow', // 可用于调试，完成后可移除
 });
+
+// 为设置过的地址添加样式
+const AddressText = styled(BodyRegular)<{ isSet: boolean }>(({ isSet }) => ({
+  color: isSet ? '#007BFF' : '#000', // 已设置的地址使用蓝色
+  textDecoration: isSet ? 'underline' : 'none', // 已设置的地址带下划线
+}));
 
 const GlobalHeader = () => {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [address, setAddress] = useState('Deliver to');
 
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [showPickUpModal, setShowPickUpModal] = useState(false);
+
+  // 在组件加载时从localStorage中读取地址
+  useEffect(() => {
+    const savedAddress = localStorage.getItem('address');
+    if (savedAddress) {
+      setAddress(savedAddress);
+    }
+  }, []);
+
   const handleToggleModal = () => {
     setShowLocationModal(!showLocationModal);
   };
 
+  const handleContactToggleModal = () => {
+    setShowContactModal(!showContactModal);
+  };
+
+  const handlePickUpToggleModal = () => {
+    setShowPickUpModal(!showPickUpModal);
+  };
+
   const handleSaveAddress = (newAddress: string) => {
     setAddress(newAddress);
+    localStorage.setItem('address', newAddress); // 将地址保存到localStorage
     setShowLocationModal(false);
   };
+
+  const isAddressSet = address !== 'Deliver to';
 
   return (
     <GlobalHeaderContainer>
@@ -82,23 +111,27 @@ const GlobalHeader = () => {
         <RightContainer>
           <NavItem onClick={handleToggleModal}>
             <img src="/images/Header/truck.svg" alt="Delivery Icon" />
-            <BodyRegular>{address}</BodyRegular>
+            <AddressText isSet={isAddressSet}>{address}</AddressText>
           </NavItem>
 
-          <NavItem>
+          <NavItem onClick={handleContactToggleModal}>
             <img src="/images/Header/phone.svg" alt="Contact Icon" />
             <BodyRegular>Contact Us</BodyRegular>
           </NavItem>
 
-          <NavItem>
+          <NavItem onClick={handlePickUpToggleModal}>
             <img src="/images/Header/shop.svg" alt="Pickup Icon" />
-            <BodyRegular>Pick up at Toronto Downtown</BodyRegular>
+            <BodyRegular>Pick up at Halifax Downtown</BodyRegular>
           </NavItem>
         </RightContainer>
       </ContentWrapper>
       {showLocationModal && (
         <LocationModal onClose={handleToggleModal} onSave={handleSaveAddress} />
       )}
+
+      {showContactModal && <ContactModal onClose={handleContactToggleModal} />}
+
+      {showPickUpModal && <PickUpModal onClose={handlePickUpToggleModal} />}
     </GlobalHeaderContainer>
   );
 };
