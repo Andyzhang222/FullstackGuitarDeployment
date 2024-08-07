@@ -3,32 +3,16 @@ import { Card, CardContent, CardMedia } from '@mui/material';
 import { Product } from '../../types/types';
 import { BodyText, PriceTag } from '../../theme/customStyles';
 
+//set the api
 interface HomePageProductCardProps {
   product: Product;
-  onClick: () => void;
+  onClick: (product: Product) => void; // 修改 onClick 函数签名
 }
-
-// 定义图片路径数组
-const imagePaths: string[] = [
-  'images/ProductImage/1.png',
-  'images/ProductImage/2.png',
-  'images/ProductImage/3.png',
-  'images/ProductImage/4.png',
-  'images/ProductImage/5.png',
-  'images/ProductImage/6.png',
-  'images/ProductImage/7.png',
-  'images/ProductImage/8.png',
-  'images/ProductImage/9.png',
-  'images/ProductImage/10.png',
-];
 
 const HomePageProductCard: React.FC<HomePageProductCardProps> = ({
   product,
   onClick,
 }) => {
-  // 随机选择图片
-  const randomImage = imagePaths[Math.floor(Math.random() * imagePaths.length)];
-
   return (
     <Card
       sx={{
@@ -39,13 +23,14 @@ const HomePageProductCard: React.FC<HomePageProductCardProps> = ({
         overflow: 'hidden',
         cursor: 'pointer',
       }}
-      onClick={onClick}
+      // 当用户点击卡片时，触发onClick事件，并将product和randomImage传递给父组件
+      onClick={() => onClick(product)}
     >
       <CardMedia
         component="img"
         height="240px"
         width="240px"
-        image={randomImage}
+        image={product.image} // 显示随机选择的图片
         alt={product.name}
         sx={{
           borderRadius: '8px 8px 8px 8px',
@@ -61,13 +46,15 @@ const HomePageProductCard: React.FC<HomePageProductCardProps> = ({
             color: 'black',
           }}
         >
-          {product.name}
+          {product.name} {/* 显示产品名称 */}
         </BodyText>
         <BodyText style={{ color: '#595959', marginTop: '2px' }}>
-          Quantity: {product.quantity}{' '}
-          {product.inStock ? 'In Stock' : 'Out of Stock'}
+          Quantity: {product.quantity} {/* 显示产品数量 */}
+          {product.inStock ? 'In Stock' : 'Out of Stock'} {/* 显示库存状态 */}
         </BodyText>
-        <PriceTag style={{ marginTop: '4px' }}>${product.price}</PriceTag>
+        <PriceTag style={{ marginTop: '4px' }}>
+          ${product.price} {/* 显示产品价格 */}
+        </PriceTag>
       </CardContent>
     </Card>
   );

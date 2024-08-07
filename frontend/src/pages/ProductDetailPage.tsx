@@ -1,39 +1,49 @@
+// pages/ProductDetailPage.tsx
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Product } from '../types/types';
 import Header from '../components/Header/Header';
+import GlobalHeader from '../components/Header/GlobalHeader';
 import Footer from '../components/Footer/Footer';
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Container,
-  Button,
-} from '@mui/material';
+import { Container, Button, Card, Box } from '@mui/material';
+import ProductImages from '../components/ProductDetailComponents/ProductImages';
+import ProductDetails from '../components/ProductDetailComponents/ProductDetails';
+import ProductAdditionalDetails from '../components/ProductDetailComponents/ProductAdditionalDetails';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { product: initialProduct } = location.state || {};
+  const [product, setProduct] = useState<Product | null>(
+    initialProduct || null
+  );
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5001/api/products/${id}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data: Product) => {
-        setProduct(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching product:', error);
-        setError(`Failed to fetch product: ${error.message}`);
-      });
-  }, [id]);
+    console.log('Initial Product from location.state:', initialProduct);
+
+    if (!product) {
+      console.log('Fetching product data from API with id:', id);
+      fetch(`http://localhost:5001/api/products/${id}`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data: Product) => {
+          console.log('Fetched product data:', data);
+          setProduct(data);
+        })
+        .catch((error) => {
+          console.error('Error fetching product:', error);
+          setError(`Failed to fetch product: ${error.message}`);
+        });
+    } else {
+      console.log('Using initial product:', product);
+    }
+  }, [id, product, initialProduct]);
 
   const handleBackClick = () => {
     navigate('/');
@@ -50,7 +60,8 @@ const ProductDetail: React.FC = () => {
   return (
     <>
       <Header />
-      <Container>
+      <GlobalHeader />
+      <Container maxWidth={false} sx={{ width: '100%' }}>
         <Button
           variant="contained"
           color="primary"
@@ -59,35 +70,21 @@ const ProductDetail: React.FC = () => {
         >
           Back to Products
         </Button>
-        <Card sx={{ maxWidth: 800, mx: 'auto', mt: 5 }}>
-          <CardMedia
-            component="img"
-            height="400"
-            image="images/test.jpg"
-            alt={product.name}
-          />
-          <CardContent>
-            <Typography variant="h4" component="div">
-              {product.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {product.description}
-            </Typography>
-            <Typography variant="h6" color="text.primary">
-              ${product.price}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Brand: {product.brand}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Category: {product.category}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Quantity: {product.quantity}{' '}
-              {product.inStock ? 'In Stock' : 'Out of Stock'}
-            </Typography>
-          </CardContent>
+        <Card sx={{ mx: 'auto', mt: 5 }}>
+          <Box sx={{ display: 'flex' }}>
+            <ProductImages image={product.image} alt={product.name} />
+            <ProductDetails
+              name={product.name}
+              description={product.description}
+              price={product.price}
+              brand={product.brand}
+              category={product.category}
+              quantity={product.quantity}
+              inStock={product.inStock}
+            />
+          </Box>
         </Card>
+        <ProductAdditionalDetails />
       </Container>
       <Footer />
     </>
