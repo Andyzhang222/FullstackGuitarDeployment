@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Pagination, Typography } from '@mui/material';
 import { Product, ApiResponse } from '../../types/types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SortComponent from './SortComponent';
 import ProductionCard from './ProductCard';
 
@@ -13,7 +13,7 @@ const ProductList: React.FC<ProductListProps> = ({ searchTerm }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [totalProducts, setTotalProducts] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(12); // 每页显示的产品数
+  const [pageSize] = useState<number>(12);
   const [error, setError] = useState<string | null>(null);
 
   const [brand, setBrand] = useState<string>('');
@@ -23,6 +23,15 @@ const ProductList: React.FC<ProductListProps> = ({ searchTerm }) => {
   const [sort, setSort] = useState<string>('');
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const typeParam = params.get('type');
+    if (typeParam) {
+      setType(typeParam);
+    }
+  }, [location.search]);
 
   const fetchProducts = () => {
     const query = new URLSearchParams({
@@ -133,20 +142,20 @@ const ProductList: React.FC<ProductListProps> = ({ searchTerm }) => {
         sx={{
           mt: 2,
           '& .MuiPaginationItem-root': {
-            color: '#000', // 页码数字的颜色
+            color: '#000',
             '&.Mui-selected': {
-              backgroundColor: '#000', // 选中的页码背景颜色
-              color: '#fff', // 选中的页码数字颜色
+              backgroundColor: '#000',
+              color: '#fff',
             },
             '&.MuiPaginationItem-page:hover': {
-              backgroundColor: '#555', // 悬停时页码背景颜色
+              backgroundColor: '#555',
             },
           },
           '& .MuiPaginationItem-ellipsis': {
-            color: '#000', // 省略号颜色
+            color: '#000',
           },
           '& .MuiPaginationItem-previousNext': {
-            color: '#000', // 上一页、下一页箭头的颜色
+            color: '#000',
           },
         }}
       />

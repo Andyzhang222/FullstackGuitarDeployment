@@ -1,7 +1,15 @@
 import React from 'react';
 import { Grid, Button, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const CategoryMenu: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (type: string) => {
+    // 导航到 search 页面并传递 type 参数
+    navigate(`/search?type=${type}`);
+  };
+
   return (
     <Grid
       container
@@ -9,7 +17,7 @@ const CategoryMenu: React.FC = () => {
         display: 'flex',
         gap: '24px',
         alignItems: 'center',
-        flexWrap: 'nowrap', // 禁止换行
+        flexWrap: 'nowrap',
         width: '650px',
       }}
     >
@@ -19,6 +27,7 @@ const CategoryMenu: React.FC = () => {
           textTransform: 'none',
           minWidth: 'fit-content',
         }}
+        onClick={() => handleCategoryClick('Classical')}
       >
         <Typography variant="body1">Classical Guitar</Typography>
       </Button>
@@ -28,6 +37,7 @@ const CategoryMenu: React.FC = () => {
           textTransform: 'none',
           minWidth: 'fit-content',
         }}
+        onClick={() => handleCategoryClick('Acoustic')}
       >
         <Typography variant="body1">Acoustic Guitar</Typography>
       </Button>
@@ -37,6 +47,7 @@ const CategoryMenu: React.FC = () => {
           textTransform: 'none',
           minWidth: 'fit-content',
         }}
+        onClick={() => handleCategoryClick('Semi-Acoustic')}
       >
         <Typography variant="body1">Semi-Acoustic Guitar</Typography>
       </Button>
@@ -46,6 +57,7 @@ const CategoryMenu: React.FC = () => {
           textTransform: 'none',
           minWidth: 'fit-content',
         }}
+        onClick={() => handleCategoryClick('Ukulele')}
       >
         <Typography variant="body1">Ukulele</Typography>
       </Button>
