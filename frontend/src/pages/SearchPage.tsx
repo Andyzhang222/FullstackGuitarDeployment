@@ -4,8 +4,8 @@ import Header from '../components/Header/Header';
 import GlobalHeader from '../components/Header/GlobalHeader';
 import Footer from '../components/Footer/Footer';
 import ProductList from '../components/productListDisplay/ProductList';
-import SearchBar from '../components/Header/SearchBar';
 import { useLocation } from 'react-router-dom';
+import ProductBreadcrumbs from '../components/BackButton'; // 导入 Breadcrumbs 组件
 
 const SearchPage = () => {
   const location = useLocation();
@@ -16,7 +16,8 @@ const SearchPage = () => {
     <Box>
       <Header />
       <GlobalHeader />
-      <SearchBar searchTerm={searchTerm} />{' '}
+      <ProductBreadcrumbs category="Searching Page" />{' '}
+      {/* 传递 'Searching Page' 作为类别 */}
       {/* 将 searchTerm 传递给 SearchBar */}
       <ProductList searchTerm={searchTerm} />
       <Footer />
