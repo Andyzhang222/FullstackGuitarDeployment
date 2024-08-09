@@ -38,17 +38,7 @@ const SortComponent: React.FC<SortComponentProps> = ({
     'Behringer',
     'Boss',
   ];
-  const types = [
-    'Acoustic',
-    'Electric',
-    'Digital',
-    'Dynamic',
-    'Controller',
-    'Analog',
-    'Over-Ear',
-    'Interface',
-    'Distortion',
-  ];
+  const types = ['Acoustic', 'Electric'];
   const sorts = ['price-asc', 'price-desc', 'newest'];
 
   return (

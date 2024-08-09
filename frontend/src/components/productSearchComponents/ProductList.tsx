@@ -130,11 +130,23 @@ const ProductList: React.FC<ProductListProps> = ({ searchTerm }) => {
         count={Math.ceil(totalProducts / pageSize)}
         page={page}
         onChange={handlePageChange}
-        color="primary"
         sx={{
           mt: 2,
           '& .MuiPaginationItem-root': {
-            color: '#000',
+            color: '#000', // 页码数字的颜色
+            '&.Mui-selected': {
+              backgroundColor: '#000', // 选中的页码背景颜色
+              color: '#fff', // 选中的页码数字颜色
+            },
+            '&.MuiPaginationItem-page:hover': {
+              backgroundColor: '#555', // 悬停时页码背景颜色
+            },
+          },
+          '& .MuiPaginationItem-ellipsis': {
+            color: '#000', // 省略号颜色
+          },
+          '& .MuiPaginationItem-previousNext': {
+            color: '#000', // 上一页、下一页箭头的颜色
           },
         }}
       />
