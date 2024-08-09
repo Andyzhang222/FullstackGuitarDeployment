@@ -47,9 +47,9 @@ const CategoryMenu: React.FC = () => {
           textTransform: 'none',
           minWidth: 'fit-content',
         }}
-        onClick={() => handleCategoryClick('Semi-Acoustic')}
+        onClick={() => handleCategoryClick('Digital')}
       >
-        <Typography variant="body1">Semi-Acoustic Guitar</Typography>
+        <Typography variant="body1">Digital Guitar</Typography>
       </Button>
       <Button
         sx={{
@@ -57,9 +57,9 @@ const CategoryMenu: React.FC = () => {
           textTransform: 'none',
           minWidth: 'fit-content',
         }}
-        onClick={() => handleCategoryClick('Ukulele')}
+        onClick={() => handleCategoryClick('Electric')}
       >
-        <Typography variant="body1">Ukulele</Typography>
+        <Typography variant="body1">Electric Guitar</Typography>
       </Button>
     </Grid>
   );

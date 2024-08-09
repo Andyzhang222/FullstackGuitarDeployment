@@ -25,6 +25,20 @@ const ProductList: React.FC<ProductListProps> = ({ searchTerm }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 清空筛选条件函数
+  const resetFilters = () => {
+    setBrand('');
+    setType('');
+    setMinPrice('');
+    setMaxPrice('');
+    setSort('');
+  };
+
+  // 当 location.search 或者 searchTerm 变化时重置筛选条件
+  useEffect(() => {
+    resetFilters(); // 每次导航或新的搜索时清空筛选条件
+  }, [location.search, searchTerm]);
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const typeParam = params.get('type');
