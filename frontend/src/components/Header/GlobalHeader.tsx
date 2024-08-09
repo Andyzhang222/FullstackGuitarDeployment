@@ -3,8 +3,9 @@ import { Box, Typography, Grid, Button } from '@mui/material';
 import LocationModal from '../RightSideInfoComponents/LocationModal';
 import ContactModal from '../RightSideInfoComponents/ContactModal';
 import PickUpModal from '../RightSideInfoComponents/PickUpModal';
+import CategoryMenu from './CategoryMenu'; // Import the CategoryMenu component
 
-const GlobalHeader = () => {
+const GlobalHeader: React.FC = () => {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [address, setAddress] = useState('Deliver to');
   const [showContactModal, setShowContactModal] = useState(false);
@@ -37,7 +38,6 @@ const GlobalHeader = () => {
 
   const isAddressSet = address !== 'Deliver to';
 
-  // 截断地址到前15个字符
   const truncatedAddress = isAddressSet
     ? `${address.substring(0, 15)}...`
     : address;
@@ -68,61 +68,8 @@ const GlobalHeader = () => {
           flexWrap: 'nowrap', // 禁止换行
         }}
       >
-        <Grid
-          item
-          sx={{
-            display: 'flex',
-            gap: '24px',
-            alignItems: 'center',
-            flexWrap: 'nowrap', // 禁止换行
-          }}
-        >
-          <Button
-            sx={{
-              color: '#000000',
-              textTransform: 'none',
-              minWidth: 'fit-content',
-            }}
-          >
-            <Typography variant="body1">Classical Guitar</Typography>
-          </Button>
-          <Button
-            sx={{
-              color: '#000000',
-              textTransform: 'none',
-              minWidth: 'fit-content',
-            }}
-          >
-            <Typography variant="body1">Acoustic Guitar</Typography>
-          </Button>
-          <Button
-            sx={{
-              color: '#000000',
-              textTransform: 'none',
-              minWidth: 'fit-content',
-            }}
-          >
-            <Typography variant="body1">Semi-Acoustic Guitar</Typography>
-          </Button>
-          <Button
-            sx={{
-              color: '#000000',
-              textTransform: 'none',
-              minWidth: 'fit-content',
-            }}
-          >
-            <Typography variant="body1">Ukulele</Typography>
-          </Button>
-          <Button
-            sx={{
-              color: '#000000',
-              textTransform: 'none',
-              minWidth: 'fit-content',
-            }}
-          >
-            <Typography variant="body1">Banjo</Typography>
-          </Button>
-        </Grid>
+        {/* CategoryMenu Component */}
+        <CategoryMenu />
 
         <Grid
           item
@@ -179,7 +126,7 @@ const GlobalHeader = () => {
             onClick={handlePickUpToggleModal}
           >
             <img src="/images/Header/shop.svg" alt="Pickup Icon" />
-            <Typography variant="body1">Pick up at Halifax </Typography>
+            <Typography variant="body1">Pick up at Halifax</Typography>
           </Button>
 
           <Button
