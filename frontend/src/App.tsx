@@ -5,6 +5,7 @@ import Home from './pages/HomePage';
 import PrivateRoute from './middleware/PrivateRoute';
 import ProductList from './components/productListDisplay/ProductList';
 import ProductDetail from './pages/ProductDetailPage'; // 导入产品详情页组件
+import SearchPage from './pages/SearchPage'; // 导入你的 SearchPage 组件
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/sign" element={<SignInAndSignUpPage />} />
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:id" element={<ProductDetail />} />{' '}
+        <Route path="/search" element={<SearchPage />} /> {/* 搜索页面路由 */}
         {/* 产品详情页 */}
         {/* 其他需要认证的页面 */}
         <Route
