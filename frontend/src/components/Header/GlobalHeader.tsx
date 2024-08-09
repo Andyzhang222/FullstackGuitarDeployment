@@ -49,7 +49,7 @@ const GlobalHeader = () => {
         padding: '0 72px',
         boxSizing: 'border-box',
         position: 'relative',
-        borderBottom: '1px solid #DDDCDE', // 添加底部的灰色线条
+        borderBottom: '1px solid #DDDCDE', // 添加底部的灰色线
       }}
     >
       <Grid
