@@ -1,11 +1,10 @@
-// import 相关的包
-import React, { useState } from 'react';
-import { Typography, Button, Box, Divider, Dialog } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Typography, Button, Box, Divider } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StoreIcon from '@mui/icons-material/Store';
 import { format, addDays } from 'date-fns';
+import LocationModal from '../RightSideInfoComponents/LocationModal';
 
-// 定义组件的 props 类型
 interface ProductDetailsProps {
   name: string;
   description: string;
@@ -18,16 +17,26 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
   const deliveryDate = format(addDays(new Date(), 7), 'EEE, MMM d');
-  const [openLocationDialog, setOpenLocationDialog] = useState(false);
+  const [address, setAddress] = useState(''); // 初始为空
+  const [showLocationModal, setShowLocationModal] = useState(false);
 
-  // 打开 Dialog 的函数
-  const handleLocationClick = () => {
-    setOpenLocationDialog(true);
+  useEffect(() => {
+    const savedAddress = localStorage.getItem('address');
+    if (savedAddress) {
+      setAddress(savedAddress);
+    } else {
+      setAddress(''); // 如果没有存储地址，则初始化为空
+    }
+  }, []);
+
+  const handleToggleLocationModal = () => {
+    setShowLocationModal(!showLocationModal);
   };
 
-  // 关闭 Dialog 的函数
-  const handleCloseLocationDialog = () => {
-    setOpenLocationDialog(false);
+  const handleSaveAddress = (newAddress: string) => {
+    setAddress(newAddress);
+    localStorage.setItem('address', newAddress); // 将新地址保存到localStorage
+    setShowLocationModal(false);
   };
 
   return (
@@ -116,7 +125,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
           marginBottom: '8px',
           cursor: 'pointer',
         }}
-        onClick={handleLocationClick} // 点击时打开 Dialog
+        onClick={handleToggleLocationModal}
       >
         <Box>
           <Typography
@@ -124,10 +133,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
             sx={{ display: 'flex', alignItems: 'center', color: '#000000' }}
           >
             <LocalShippingIcon sx={{ marginRight: '8px', color: '#000000' }} />
-            Deliver to M5G2G4
+            Deliver to {address || 'Set your address'}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Free Shipping, Get it by {deliveryDate}
+            {address
+              ? `Free Shipping, Get it by ${deliveryDate}`
+              : 'Click to set your delivery address'}
           </Typography>
         </Box>
         <Typography variant="body1" sx={{ fontSize: '24px', color: '#000000' }}>
@@ -191,27 +202,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
         </Typography>
       </Box>
 
-      {/* 这个部分是 Dialog 组件，用来弹出额外信息 */}
-      <Dialog
-        open={openLocationDialog} // 是否打开由 state 管理
-        onClose={handleCloseLocationDialog} // 点击关闭时调用
-        fullWidth
-        maxWidth="sm"
-      >
-        <Box p={4}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-            Set Delivery Location
-          </Typography>
-          {/* 你可以在这里添加更多的内容，如表单等 */}
-          <Button
-            variant="contained"
-            sx={{ marginTop: '16px' }}
-            onClick={handleCloseLocationDialog}
-          >
-            Save
-          </Button>
-        </Box>
-      </Dialog>
+      {/* LocationModal Component */}
+      {showLocationModal && (
+        <LocationModal
+          onClose={handleToggleLocationModal}
+          onSave={handleSaveAddress}
+        />
+      )}
     </Box>
   );
 };
