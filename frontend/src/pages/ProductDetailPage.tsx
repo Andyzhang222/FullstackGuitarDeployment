@@ -1,18 +1,18 @@
 // pages/ProductDetailPage.tsx
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { Product } from '../types/types';
 import Header from '../components/Header/Header';
 import GlobalHeader from '../components/Header/GlobalHeader';
 import Footer from '../components/Footer/Footer';
-import { Container, Button, Card, Box } from '@mui/material';
+import { Container, Card, Box } from '@mui/material';
 import ProductImages from '../components/ProductDetailComponents/ProductImages';
 import ProductDetails from '../components/ProductDetailComponents/ProductDetails';
 import ProductAdditionalDetails from '../components/ProductDetailComponents/ProductAdditionalDetails';
+import ProductBreadcrumbs from '../components/BackButton'; // 导入 Breadcrumbs 组件
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const location = useLocation();
   const { product: initialProduct } = location.state || {};
   const [product, setProduct] = useState<Product | null>(
@@ -45,10 +45,6 @@ const ProductDetail: React.FC = () => {
     }
   }, [id, product, initialProduct]);
 
-  const handleBackClick = () => {
-    navigate('/');
-  };
-
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -62,15 +58,18 @@ const ProductDetail: React.FC = () => {
       <Header />
       <GlobalHeader />
       <Container maxWidth={false} sx={{ width: '100%' }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleBackClick}
-          sx={{ mt: 2 }}
+        <ProductBreadcrumbs category={product.category} />{' '}
+        {/* 使用 Breadcrumbs 组件 */}
+        <Card
+          sx={{
+            display: 'flex',
+            justifyContent: 'center', // 水平居中
+            alignItems: 'center', // 垂直居中
+            flexDirection: 'row', // 水平排列
+            gap: 2, // 设置图片和详情之间的间距
+            boxShadow: 'none', // 移除阴影
+          }}
         >
-          Back to Products
-        </Button>
-        <Card sx={{ mx: 'auto', mt: 5 }}>
           <Box sx={{ display: 'flex' }}>
             <ProductImages image={product.image} alt={product.name} />
             <ProductDetails

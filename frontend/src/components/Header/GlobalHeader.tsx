@@ -37,6 +37,11 @@ const GlobalHeader = () => {
 
   const isAddressSet = address !== 'Deliver to';
 
+  // 截断地址到前15个字符
+  const truncatedAddress = isAddressSet
+    ? `${address.substring(0, 15)}...`
+    : address;
+
   return (
     <Box
       sx={{
@@ -55,11 +60,12 @@ const GlobalHeader = () => {
       <Grid
         container
         sx={{
-          width: '1300px',
+          width: '100%',
+          maxWidth: '1300px',
           display: 'flex',
           justifyContent: 'space-between',
-          color: 'gray',
-          alignItems: 'center', // 确保垂直方向居中对齐
+          alignItems: 'center',
+          flexWrap: 'nowrap', // 禁止换行
         }}
       >
         <Grid
@@ -123,8 +129,9 @@ const GlobalHeader = () => {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
             gap: '24px',
+            minWidth: 0, // 防止因内容过多导致的溢出
+            flexShrink: 1, // 防止地址部分占用过多空间
           }}
         >
           <Button
@@ -136,6 +143,11 @@ const GlobalHeader = () => {
               color: '#000000',
               textTransform: 'none',
               minWidth: 'fit-content',
+              maxWidth: '150px', // 设置最大宽度
+              overflow: 'hidden', // 隐藏溢出部分
+              textOverflow: 'ellipsis', // 超出部分显示省略号
+              whiteSpace: 'nowrap', // 禁止换行
+              flexShrink: 1, // 防止占用过多空间
             }}
             onClick={handleToggleModal}
           >
@@ -143,11 +155,14 @@ const GlobalHeader = () => {
             <Typography
               variant="body1"
               sx={{
-                color: isAddressSet ? '#007BFF' : '#000',
+                color: isAddressSet ? '#02000C' : '#000',
                 textDecoration: isAddressSet ? 'underline' : 'none',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
               }}
             >
-              {address}
+              {truncatedAddress}
             </Typography>
           </Button>
 
@@ -164,7 +179,7 @@ const GlobalHeader = () => {
             onClick={handlePickUpToggleModal}
           >
             <img src="/images/Header/shop.svg" alt="Pickup Icon" />
-            <Typography variant="body1">Pick up at Halifax Downtown</Typography>
+            <Typography variant="body1">Pick up at Halifax </Typography>
           </Button>
 
           <Button

@@ -8,7 +8,7 @@ import LocationModal from '../RightSideInfoComponents/LocationModal';
 interface ProductDetailsProps {
   name: string;
   description: string;
-  price: string;
+  price: string; // 注意：price 是字符串类型
   brand: string;
   category: string;
   quantity: number;
@@ -19,6 +19,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
   const deliveryDate = format(addDays(new Date(), 7), 'EEE, MMM d');
   const [address, setAddress] = useState(''); // 初始为空
   const [showLocationModal, setShowLocationModal] = useState(false);
+
+  // 计算 New Guitar 的价格，price 转换为 number
+  const newGuitarPrice = (parseFloat(price) * 1.6).toFixed(2);
 
   useEffect(() => {
     const savedAddress = localStorage.getItem('address');
@@ -44,9 +47,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
       sx={{
         width: '502px',
         borderRadius: '8px',
-        backgroundColor: '#FFFFFF',
-        marginLeft: '48px',
-        padding: '16px',
+        marginLeft: '72px',
       }}
     >
       <Typography
@@ -78,7 +79,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
             textDecoration: 'line-through',
           }}
         >
-          New guitar: $999.99
+          New guitar: ${newGuitarPrice}
         </Typography>
       </Typography>
       <Button
