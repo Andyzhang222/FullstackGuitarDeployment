@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import Header from '../components/Header/Header';
 import GlobalHeader from '../components/Header/GlobalHeader';
 import Footer from '../components/Footer/Footer';
-import ProductList from '../components/productListDisplay/ProductList';
+import ProductList from '../components/productSearchComponents/ProductList';
 import { useLocation } from 'react-router-dom';
 import ProductBreadcrumbs from '../components/BackButton'; // 导入 Breadcrumbs 组件
 

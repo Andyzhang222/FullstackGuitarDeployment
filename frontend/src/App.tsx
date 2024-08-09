@@ -4,7 +4,7 @@ import Home from './pages/HomePage';
 import SignInAndSignUpPage from './pages/SignInAndSignUpPage';
 import ProductDetail from './pages/ProductDetailPage';
 import SearchPage from './pages/SearchPage';
-import ProductList from './components/productListDisplay/ProductList';
+import ProductList from './components/productSearchComponents/ProductList';
 
 const App = () => {
   return (

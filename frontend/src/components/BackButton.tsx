@@ -11,7 +11,11 @@ const ProductBreadcrumbs: React.FC<{ category: string }> = ({ category }) => {
   const isSearchPage = location.pathname.includes('/search');
 
   return (
-    <Breadcrumbs aria-label="breadcrumb" sx={{ mt: 2, mb: 2 }}>
+    <Breadcrumbs
+      aria-label="breadcrumb"
+      sx={{ mt: 2, mb: 2, ml: 7.2, mr: 7.2, border: '1px solid red' }}
+    >
+      {' '}
       <Link
         underline="hover"
         color="inherit"
