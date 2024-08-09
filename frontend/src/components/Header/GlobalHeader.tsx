@@ -1,66 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { styled } from '@mui/system';
-import { BodyRegular } from '../../theme/customStyles';
+import { Box, Typography, Grid, Button } from '@mui/material';
 import LocationModal from '../RightSideInfoComponents/LocationModal';
 import ContactModal from '../RightSideInfoComponents/ContactModal';
 import PickUpModal from '../RightSideInfoComponents/PickUpModal';
 
-const GlobalHeaderContainer = styled('div')({
-  width: '100%',
-  height: '48px',
-  backgroundColor: '#FFFFFF',
-  display: 'flex',
-  justifyContent: 'center',
-  margin: '0 auto',
-  padding: '0 72px',
-  boxSizing: 'border-box',
-  position: 'relative',
-});
-
-const ContentWrapper = styled('div')({
-  width: '1300px',
-  display: 'flex',
-  justifyContent: 'space-between',
-  color: 'gray',
-});
-
-const NavItem = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  cursor: 'pointer',
-  color: '#000000',
-  width: '33.33%', // 固定宽度
-});
-
-const LeftContainer = styled('div')({
-  width: '650px',
-  display: 'flex',
-  gap: '24px',
-  alignItems: 'center',
-});
-
-const RightContainer = styled('div')({
-  width: '650px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-});
-
-// 为设置过的地址添加样式
-const AddressText = styled(BodyRegular)<{ isSet: boolean }>(({ isSet }) => ({
-  color: isSet ? '#007BFF' : '#000', // 已设置的地址使用蓝色
-  textDecoration: isSet ? 'underline' : 'none', // 已设置的地址带下划线
-}));
-
 const GlobalHeader = () => {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [address, setAddress] = useState('Deliver to');
-
   const [showContactModal, setShowContactModal] = useState(false);
   const [showPickUpModal, setShowPickUpModal] = useState(false);
 
-  // 在组件加载时从localStorage中读取地址
   useEffect(() => {
     const savedAddress = localStorage.getItem('address');
     if (savedAddress) {
@@ -82,57 +31,166 @@ const GlobalHeader = () => {
 
   const handleSaveAddress = (newAddress: string) => {
     setAddress(newAddress);
-    localStorage.setItem('address', newAddress); // 将地址保存到localStorage
+    localStorage.setItem('address', newAddress);
     setShowLocationModal(false);
   };
 
   const isAddressSet = address !== 'Deliver to';
 
   return (
-    <GlobalHeaderContainer>
-      <ContentWrapper>
-        <LeftContainer>
-          <NavItem>
-            <BodyRegular>Classical Guitar</BodyRegular>
-          </NavItem>
-          <NavItem>
-            <BodyRegular>Acoustic Guitar</BodyRegular>
-          </NavItem>
-          <NavItem>
-            <BodyRegular>Semi-Acoustic Guitar</BodyRegular>
-          </NavItem>
-          <NavItem>
-            <BodyRegular>Ukulele</BodyRegular>
-          </NavItem>
-          <NavItem>
-            <BodyRegular>Banjo</BodyRegular>
-          </NavItem>
-        </LeftContainer>
-        <RightContainer>
-          <NavItem onClick={handleToggleModal}>
+    <Box
+      sx={{
+        width: '100%',
+        height: '48px',
+        backgroundColor: '#FFFFFF',
+        display: 'flex',
+        justifyContent: 'center',
+        margin: '0 auto',
+        padding: '0 72px',
+        boxSizing: 'border-box',
+        position: 'relative',
+        borderBottom: '1px solid #DDDCDE', // 添加底部的灰色线条
+      }}
+    >
+      <Grid
+        container
+        sx={{
+          width: '1300px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          color: 'gray',
+          alignItems: 'center', // 确保垂直方向居中对齐
+        }}
+      >
+        <Grid
+          item
+          sx={{
+            display: 'flex',
+            gap: '24px',
+            alignItems: 'center',
+            flexWrap: 'nowrap', // 禁止换行
+          }}
+        >
+          <Button
+            sx={{
+              color: '#000000',
+              textTransform: 'none',
+              minWidth: 'fit-content',
+            }}
+          >
+            <Typography variant="body1">Classical Guitar</Typography>
+          </Button>
+          <Button
+            sx={{
+              color: '#000000',
+              textTransform: 'none',
+              minWidth: 'fit-content',
+            }}
+          >
+            <Typography variant="body1">Acoustic Guitar</Typography>
+          </Button>
+          <Button
+            sx={{
+              color: '#000000',
+              textTransform: 'none',
+              minWidth: 'fit-content',
+            }}
+          >
+            <Typography variant="body1">Semi-Acoustic Guitar</Typography>
+          </Button>
+          <Button
+            sx={{
+              color: '#000000',
+              textTransform: 'none',
+              minWidth: 'fit-content',
+            }}
+          >
+            <Typography variant="body1">Ukulele</Typography>
+          </Button>
+          <Button
+            sx={{
+              color: '#000000',
+              textTransform: 'none',
+              minWidth: 'fit-content',
+            }}
+          >
+            <Typography variant="body1">Banjo</Typography>
+          </Button>
+        </Grid>
+
+        <Grid
+          item
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '24px',
+          }}
+        >
+          <Button
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              color: '#000000',
+              textTransform: 'none',
+              minWidth: 'fit-content',
+            }}
+            onClick={handleToggleModal}
+          >
             <img src="/images/Header/truck.svg" alt="Delivery Icon" />
-            <AddressText isSet={isAddressSet}>{address}</AddressText>
-          </NavItem>
+            <Typography
+              variant="body1"
+              sx={{
+                color: isAddressSet ? '#007BFF' : '#000',
+                textDecoration: isAddressSet ? 'underline' : 'none',
+              }}
+            >
+              {address}
+            </Typography>
+          </Button>
 
-          <NavItem onClick={handleContactToggleModal}>
-            <img src="/images/Header/phone.svg" alt="Contact Icon" />
-            <BodyRegular>Contact Us</BodyRegular>
-          </NavItem>
-
-          <NavItem onClick={handlePickUpToggleModal}>
+          <Button
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              color: '#000000',
+              textTransform: 'none',
+              minWidth: 'fit-content',
+            }}
+            onClick={handlePickUpToggleModal}
+          >
             <img src="/images/Header/shop.svg" alt="Pickup Icon" />
-            <BodyRegular>Pick up at Halifax Downtown</BodyRegular>
-          </NavItem>
-        </RightContainer>
-      </ContentWrapper>
+            <Typography variant="body1">Pick up at Halifax Downtown</Typography>
+          </Button>
+
+          <Button
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              color: '#000000',
+              textTransform: 'none',
+              minWidth: 'fit-content',
+            }}
+            onClick={handleContactToggleModal}
+          >
+            <img src="/images/Header/phone.svg" alt="Contact Icon" />
+            <Typography variant="body1">Contact Us</Typography>
+          </Button>
+        </Grid>
+      </Grid>
+
       {showLocationModal && (
         <LocationModal onClose={handleToggleModal} onSave={handleSaveAddress} />
       )}
-
       {showContactModal && <ContactModal onClose={handleContactToggleModal} />}
-
       {showPickUpModal && <PickUpModal onClose={handlePickUpToggleModal} />}
-    </GlobalHeaderContainer>
+    </Box>
   );
 };
 
