@@ -10,6 +10,7 @@ const CategoryMenu: React.FC = () => {
         gap: '24px',
         alignItems: 'center',
         flexWrap: 'nowrap', // 禁止换行
+        width: '650px',
       }}
     >
       <Button
@@ -47,15 +48,6 @@ const CategoryMenu: React.FC = () => {
         }}
       >
         <Typography variant="body1">Ukulele</Typography>
-      </Button>
-      <Button
-        sx={{
-          color: '#000000',
-          textTransform: 'none',
-          minWidth: 'fit-content',
-        }}
-      >
-        <Typography variant="body1">Banjo</Typography>
       </Button>
     </Grid>
   );
