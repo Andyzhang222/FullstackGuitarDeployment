@@ -1,22 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-// import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import { jwtDecode } from 'jwt-decode';
-import theme from '../../theme/theme'; // Import your custom theme
-import { BodyText } from '../../theme/customStyles'; // 假设路径正确
-import { LogoName } from '../../theme/customStyles'; // 假设路径正确
-import { BodyRegular } from '../../theme/customStyles'; // 假设路径正确
-
-// const BodyText = styled(Typography)({
-//   ...theme.typography.body1, // Apply custom body1 styles
-//   color: '#141414',
-// });
+import { jwtDecode } from 'jwt-decode'; // 导入 jwtDecode
+import theme from '../../theme/theme';
+import { BodyText, LogoName, BodyRegular } from '../../theme/customStyles';
 
 // Styled Components
 const PageHeader = styled(AppBar)({
@@ -26,37 +18,32 @@ const PageHeader = styled(AppBar)({
   padding: '16px, 72px, 16px, 72px',
   maxHeight: '72px',
   boxSizing: 'border-box',
-  // Applying default font styling and color
-  ...theme.typography.body1,
-  color: theme.palette.common.black, // Using custom black color
+  color: theme.palette.common.black,
 });
 
 const LayoutBlocks = styled('div')({
   width: '1300px',
   height: '40px',
-  // background: 'red', // For visibility, remove or change as needed
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  margin: '0 auto', // Centers the container horizontally
+  margin: '0 auto',
 });
 
 const SearchBarContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
   padding: '5px',
-  Radius: '4px',
   borderRadius: '5px',
   width: '800px',
-  height: '40px', // Set explicit height
-  boxSizing: 'border-box', // Include padding and border in the element's total width and height
+  height: '40px',
+  boxSizing: 'border-box',
   background: '#FFFFFF',
 });
 
 const SearchInput = styled('input')({
   width: '221.79px',
-  height: '24px', // Set explicit height
-  top: '24',
+  height: '24px',
   border: 'none',
   outline: 'none',
   flex: 1,
@@ -69,8 +56,6 @@ const SignInContainer = styled('div')({
   height: '32px',
   gap: '8px',
   cursor: 'pointer',
-  // background: 'green',
-  // marginRight: '50px', // Move left by half the distance
 });
 
 const CartContainer = styled('div')({
@@ -79,11 +64,9 @@ const CartContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
-  // background: 'green',
-  justifyContent: 'flex-end', // 设置内容向右对齐
+  justifyContent: 'flex-end',
 });
 
-// Interface for decoded token
 interface DecodedToken {
   email: string;
   [key: string]: unknown;
@@ -94,9 +77,9 @@ const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    // Check if user is logged in
     const idToken = localStorage.getItem('idToken');
     if (idToken) {
       try {
@@ -118,13 +101,22 @@ const Header: React.FC = () => {
   };
 
   const handleLogout = () => {
-    // Clear tokens and user info
     localStorage.removeItem('accessToken');
     localStorage.removeItem('idToken');
     localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);
     setUserEmail('');
     handleClose();
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      navigate(`/search?query=${searchTerm}`);
+    }
   };
 
   return (
@@ -138,6 +130,9 @@ const Header: React.FC = () => {
             </IconButton>
             <SearchInput
               placeholder="Find guitars you love..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onKeyDown={handleKeyDown} // 监听回车键
               style={{
                 fontFamily: 'Roboto, Arial, sans-serif',
                 fontSize: '14px',
