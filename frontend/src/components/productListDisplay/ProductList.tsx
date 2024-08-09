@@ -4,17 +4,21 @@ import {
   Grid,
   Pagination,
   Typography,
-  TextField,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
   Button,
+  TextField,
 } from '@mui/material';
 import { Product, ApiResponse } from '../../types/types';
 import { useNavigate } from 'react-router-dom';
 
-const ProductList: React.FC = () => {
+interface ProductListProps {
+  searchTerm: string;
+}
+
+const ProductList: React.FC<ProductListProps> = ({ searchTerm }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [totalProducts, setTotalProducts] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
@@ -26,21 +30,10 @@ const ProductList: React.FC = () => {
   const [minPrice, setMinPrice] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<string>('');
   const [sort, setSort] = useState<string>('');
-  const [search, setSearch] = useState<string>('');
 
   const navigate = useNavigate();
 
   const fetchProducts = () => {
-    // console.log('Fetching products with the following parameters:');
-    // console.log('Page:', page);
-    // console.log('PageSize:', pageSize);
-    // console.log('Brand:', brand);
-    // console.log('Type:', type);
-    // console.log('MinPrice:', minPrice);
-    // console.log('MaxPrice:', maxPrice);
-    // console.log('Sort:', sort);
-    // console.log('Search:', search);
-
     const query = new URLSearchParams({
       page: page.toString(),
       pageSize: pageSize.toString(),
@@ -49,19 +42,17 @@ const ProductList: React.FC = () => {
       minPrice,
       maxPrice,
       sort,
-      search,
+      search: searchTerm, // 使用传递进来的 searchTerm 进行搜索
     }).toString();
 
     fetch(`http://localhost:5001/api/products?${query}`)
       .then((res) => {
-        console.log('Response:', res);
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
         }
         return res.json();
       })
       .then((data: ApiResponse) => {
-        console.log('Fetched data:', data);
         if (!data.products) {
           throw new Error('Products data is undefined');
         }
@@ -69,14 +60,13 @@ const ProductList: React.FC = () => {
         setTotalProducts(data.totalProducts);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
         setError(`Failed to fetch products: ${error.message}`);
       });
   };
 
   useEffect(() => {
     fetchProducts();
-  }, [page, pageSize, brand, type, minPrice, maxPrice, sort, search]);
+  }, [page, pageSize, brand, type, minPrice, maxPrice, sort, searchTerm]);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -86,7 +76,6 @@ const ProductList: React.FC = () => {
   };
 
   const handleFilterChange = () => {
-    console.log('Applying filters...');
     setPage(1); // 重置为第一页
     fetchProducts();
   };
@@ -105,14 +94,6 @@ const ProductList: React.FC = () => {
         Product List
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="Search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            fullWidth
-          />
-        </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <FormControl fullWidth>
             <InputLabel>Brand</InputLabel>

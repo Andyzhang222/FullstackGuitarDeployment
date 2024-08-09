@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import { jwtDecode } from 'jwt-decode'; // 导入 jwtDecode
 import theme from '../../theme/theme';
-import { BodyText, LogoName, BodyRegular } from '../../theme/customStyles';
+import { BodyText, LogoName } from '../../theme/customStyles';
+import SearchBar from './SearchBar';
 
 // Styled Components
 const PageHeader = styled(AppBar)({
@@ -28,25 +29,6 @@ const LayoutBlocks = styled('div')({
   alignItems: 'center',
   justifyContent: 'space-between',
   margin: '0 auto',
-});
-
-const SearchBarContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-  padding: '5px',
-  borderRadius: '5px',
-  width: '800px',
-  height: '40px',
-  boxSizing: 'border-box',
-  background: '#FFFFFF',
-});
-
-const SearchInput = styled('input')({
-  width: '221.79px',
-  height: '24px',
-  border: 'none',
-  outline: 'none',
-  flex: 1,
 });
 
 const SignInContainer = styled('div')({
@@ -77,7 +59,6 @@ const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const idToken = localStorage.getItem('idToken');
@@ -109,41 +90,12 @@ const Header: React.FC = () => {
     handleClose();
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      navigate(`/search?query=${searchTerm}`);
-    }
-  };
-
   return (
     <PageHeader position="static">
       <Toolbar>
         <LayoutBlocks>
           <LogoName>Logo Name</LogoName>
-          <SearchBarContainer>
-            <IconButton>
-              <img src="/images/Header/vector.svg" alt="Search Icon" />
-            </IconButton>
-            <SearchInput
-              placeholder="Find guitars you love..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              onKeyDown={handleKeyDown} // 监听回车键
-              style={{
-                fontFamily: 'Roboto, Arial, sans-serif',
-                fontSize: '14px',
-                fontWeight: 400,
-                lineHeight: '22px',
-                textAlign: 'left',
-                color: '#595959',
-              }}
-            />
-            <BodyRegular></BodyRegular>
-          </SearchBarContainer>
+          <SearchBar />
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {isLoggedIn ? (
               <>

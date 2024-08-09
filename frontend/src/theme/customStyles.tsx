@@ -1,10 +1,12 @@
 // customStyles.ts
 import { styled } from '@mui/system';
 import Typography from '@mui/material/Typography';
-import theme from './theme'; // 假设你的主题文件路径
 
 export const BodyText = styled(Typography)({
-  ...theme.typography.body1,
+  fontFamily: 'Roboto,Arial, sans-serif',
+  fontSize: '16px',
+  fontWeight: '500',
+  lineHeight: '24px',
   color: '#FFFFFF',
 });
 
