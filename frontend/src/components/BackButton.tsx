@@ -13,14 +13,28 @@ const ProductBreadcrumbs: React.FC<{ category: string }> = ({ category }) => {
   return (
     <Breadcrumbs
       aria-label="breadcrumb"
-      sx={{ mt: 2, mb: 2, ml: 7.2, mr: 7.2, border: '1px solid red' }}
+      sx={{
+        mt: 2,
+        mb: 2,
+        ml: 7.2,
+        mr: 7.2,
+        padding: '8px 16px',
+        backgroundColor: '#f5f5f5', // 添加背景颜色
+        borderRadius: '8px', // 添加圆角
+        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', // 添加阴影
+      }}
     >
-      {' '}
       <Link
         underline="hover"
         color="inherit"
         href="/"
-        sx={{ color: '#02000C' }} // Home 链接颜色
+        sx={{
+          color: '#02000C', // 蓝色链接
+          fontWeight: 'bold', // 加粗
+          '&:hover': {
+            color: '#02000C', // 深蓝色悬停效果
+          },
+        }}
       >
         Home
       </Link>
@@ -28,22 +42,40 @@ const ProductBreadcrumbs: React.FC<{ category: string }> = ({ category }) => {
         <Link
           underline="hover"
           color="inherit"
-          sx={{ color: '#02000C', cursor: 'pointer' }} // 设置成Link，用户可以点击导航到搜索页面
+          sx={{
+            color: '#02000C',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            '&:hover': {
+              color: '#0056b3',
+            },
+          }}
           onClick={() => navigate('/search')}
         >
           Searching Page
         </Link>
       ) : (
-        <Typography color="textPrimary" sx={{ color: '#02000C' }}>
+        <Typography
+          color="textPrimary"
+          sx={{
+            color: '#02000C',
+            fontWeight: 'bold',
+          }}
+        >
           {category}
         </Typography>
       )}
-      {!isSearchPage &&
-        id && ( // 只有在不是搜索页面时显示 Guitar Inventory ID
-          <Typography color="textPrimary" sx={{ fontWeight: 'bold' }}>
-            Guitar Inventory ID: {id}
-          </Typography>
-        )}
+      {!isSearchPage && id && (
+        <Typography
+          color="textPrimary"
+          sx={{
+            fontWeight: 'bold',
+            color: '#6c757d', // 灰色，用于显示当前页面
+          }}
+        >
+          Guitar Inventory ID: {id}
+        </Typography>
+      )}
     </Breadcrumbs>
   );
 };

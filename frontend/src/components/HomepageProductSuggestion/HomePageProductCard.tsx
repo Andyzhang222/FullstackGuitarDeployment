@@ -30,7 +30,7 @@ const HomePageProductCard: React.FC<HomePageProductCardProps> = ({
         component="img"
         height="240px"
         width="240px"
-        image={product.image} // 显示随机选择的图片
+        image={`${process.env.PUBLIC_URL}/${product.image}`} // 使用绝对路径显示图片
         alt={product.name}
         sx={{
           borderRadius: '8px 8px 8px 8px',

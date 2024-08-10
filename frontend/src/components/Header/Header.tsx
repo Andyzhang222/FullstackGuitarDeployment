@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import { jwtDecode } from 'jwt-decode'; // 导入 jwtDecode
+import { jwtDecode } from 'jwt-decode'; // 修正导入
 import theme from '../../theme/theme';
 import { BodyText, LogoName } from '../../theme/customStyles';
 import SearchBar from './SearchBar';
@@ -90,11 +90,17 @@ const Header: React.FC = () => {
     handleClose();
   };
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <PageHeader position="static">
       <Toolbar>
         <LayoutBlocks>
-          <LogoName>Logo Name</LogoName>
+          <LogoName onClick={handleLogoClick} sx={{ cursor: 'pointer' }}>
+            Logo
+          </LogoName>
           <SearchBar />
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {isLoggedIn ? (
@@ -109,7 +115,7 @@ const Header: React.FC = () => {
                     color="inherit"
                   >
                     <img src="/images/Header/User.svg" alt="User Icon" />
-                    <BodyText> Profile</BodyText>
+                    <BodyText>Profile</BodyText>
                   </IconButton>
                   <Menu
                     id="menu-appbar"

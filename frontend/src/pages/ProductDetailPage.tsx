@@ -10,6 +10,7 @@ import ProductImages from '../components/ProductDetailComponents/ProductImages';
 import ProductDetails from '../components/ProductDetailComponents/ProductDetails';
 import ProductAdditionalDetails from '../components/ProductDetailComponents/ProductAdditionalDetails';
 import ProductBreadcrumbs from '../components/BackButton'; // 导入 Breadcrumbs 组件
+import NewArrivalsProductDisplay from '../components/HomepageProductSuggestion/NewArrivalsProductDisplay';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -84,6 +85,7 @@ const ProductDetail: React.FC = () => {
           </Box>
         </Card>
         <ProductAdditionalDetails />
+        <NewArrivalsProductDisplay />
       </Container>
       <Footer />
     </>
