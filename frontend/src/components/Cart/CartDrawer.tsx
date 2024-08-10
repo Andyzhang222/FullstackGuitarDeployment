@@ -28,6 +28,12 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
   items,
   onRemoveItem,
 }) => {
+  // Calculate subtotal, tax, and total
+  const subtotal = items.reduce((sum, item) => sum + parseFloat(item.price), 0);
+  const tax = subtotal * 0.15; // 15% tax
+  const shipping = 0; // Temporary shipping cost
+  const total = subtotal + tax + shipping;
+
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <Box
@@ -70,8 +76,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                   style={{ width: '50px', height: '50px', marginRight: '10px' }}
                 />
                 <Box sx={{ flexGrow: 1 }}>
-                  <Typography>{item.name}</Typography>
-                  <Typography>${item.price}</Typography>
+                  <Typography variant="body1">{item.name}</Typography>
+                  <Typography variant="body2">${item.price}</Typography>
                 </Box>
                 <Button
                   sx={{
@@ -93,19 +99,47 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
         </Box>
         <Divider />
         <Box sx={{ mt: 2 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{
-              backgroundColor: '#000000',
-              '&:hover': {
-                backgroundColor: '#333333',
-              },
-            }}
-          >
-            Checkout
-          </Button>
+          <Typography variant="h6">Order Summary</Typography>
+          <Box sx={{ mb: 2 }}>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+            >
+              <Typography>Subtotal</Typography>
+              <Typography>${subtotal.toFixed(2)}</Typography>
+            </Box>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+            >
+              <Typography>Estimated Shipping</Typography>
+              <Typography>$0.00</Typography>
+            </Box>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+            >
+              <Typography>Estimated Tax (15%)</Typography>
+              <Typography>${tax.toFixed(2)}</Typography>
+            </Box>
+          </Box>
+          <Divider />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+            <Typography variant="h6">Total</Typography>
+            <Typography variant="h6">${total.toFixed(2)}</Typography>
+          </Box>
+          <Box sx={{ mt: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{
+                backgroundColor: '#000000',
+                '&:hover': {
+                  backgroundColor: '#333333',
+                },
+              }}
+            >
+              Checkout
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Drawer>
