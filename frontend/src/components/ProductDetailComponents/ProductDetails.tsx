@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Button, Box, Divider } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StoreIcon from '@mui/icons-material/Store';
@@ -30,6 +30,14 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
     Array<{ name: string; price: string; image: string }>
   >([]);
 
+  // 从 localStorage 加载购物车数据
+  useEffect(() => {
+    const storedCartItems = localStorage.getItem('cartItems');
+    if (storedCartItems) {
+      setCartItems(JSON.parse(storedCartItems));
+    }
+  }, []);
+
   const handleToggleLocationModal = () => {
     setShowLocationModal(!showLocationModal);
   };
@@ -42,15 +50,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 
   const handleAddToCart = () => {
     const newItem = { name, price, image };
-    setCartItems([...cartItems, newItem]);
+    const updatedCartItems = [...cartItems, newItem];
+    setCartItems(updatedCartItems);
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems)); // 保存到localStorage
     setShowCart(true);
-    localStorage.setItem('cartItems', JSON.stringify([...cartItems, newItem]));
   };
 
   const handleRemoveItem = (index: number) => {
     const updatedCartItems = cartItems.filter((_, i) => i !== index);
     setCartItems(updatedCartItems);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems)); // 更新localStorage中的数据
   };
 
   return (
@@ -59,6 +68,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
         width: '502px',
         borderRadius: '8px',
         marginLeft: '72px',
+        marginRight: '72px', // 添加右边的margin确保两边一致
       }}
     >
       <Typography
@@ -81,17 +91,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
         sx={{ fontWeight: 'bold', fontSize: '32px', marginBottom: '8px' }}
       >
         ${price}
-        <Typography
-          component="span"
-          sx={{
-            marginLeft: '8px',
-            fontSize: '18px',
-            color: '#757575',
-            textDecoration: 'line-through',
-          }}
-        >
-          New guitar: ${(parseFloat(price) * 1.6).toFixed(2)}
-        </Typography>
       </Typography>
       <Button
         variant="contained"
@@ -116,7 +115,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
           width: '100%',
           height: '48px',
           borderRadius: '4px',
-          marginBottom: '24px',
+          marginBottom: '16px',
           fontWeight: 'bold',
           fontSize: '16px',
         }}
@@ -192,9 +191,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
           &gt;
         </Typography>
       </Box>
-      <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
-        Protect your shipment
-      </Typography>
+
+      <Divider sx={{ marginBottom: '16px' }} />
       <Box
         sx={{
           display: 'flex',
