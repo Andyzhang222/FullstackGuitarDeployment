@@ -6,11 +6,11 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import { jwtDecode } from 'jwt-decode'; // 导入 jwtDecode
 import theme from '../../theme/theme';
 import { BodyText, LogoName } from '../../theme/customStyles';
 import SearchBar from './SearchBar';
 import CartDrawer from '../Cart/CartDrawer'; // 导入购物车抽屉组件
+import { jwtDecode } from 'jwt-decode'; // 导入 jwtDecode
 
 // Styled Components
 const PageHeader = styled(AppBar)({
@@ -61,7 +61,13 @@ const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-  const [cartOpen, setCartOpen] = useState(false); // 管理购物车抽屉的状态
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<
+    Array<{ name: string; price: string; image: string }>
+  >(() => {
+    const savedItems = localStorage.getItem('cartItems');
+    return savedItems ? JSON.parse(savedItems) : [];
+  });
 
   useEffect(() => {
     const idToken = localStorage.getItem('idToken');
@@ -99,6 +105,12 @@ const Header: React.FC = () => {
 
   const handleLogoClick = () => {
     navigate('/'); // 导航到主页
+  };
+
+  const handleRemoveItem = (index: number) => {
+    const updatedCartItems = cartItems.filter((_, i) => i !== index);
+    setCartItems(updatedCartItems);
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems)); // 更新localStorage
   };
 
   return (
@@ -160,7 +172,12 @@ const Header: React.FC = () => {
           </div>
         </LayoutBlocks>
       </Toolbar>
-      <CartDrawer open={cartOpen} onClose={toggleCartDrawer(false)} />
+      <CartDrawer
+        open={cartOpen}
+        onClose={toggleCartDrawer(false)}
+        items={cartItems}
+        onRemoveItem={handleRemoveItem}
+      />
     </PageHeader>
   );
 };

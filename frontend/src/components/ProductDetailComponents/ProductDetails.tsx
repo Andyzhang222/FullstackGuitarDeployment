@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Typography, Button, Box, Divider } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StoreIcon from '@mui/icons-material/Store';
 import { format, addDays } from 'date-fns';
 import LocationModal from '../RightSideInfoComponents/LocationModal';
+import CartDrawer from '../ShoppingCart/CartDrawer';
 
 interface ProductDetailsProps {
   name: string;
@@ -13,24 +14,21 @@ interface ProductDetailsProps {
   category: string;
   quantity: number;
   inStock: boolean;
+  image: string;
 }
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
+const ProductDetails: React.FC<ProductDetailsProps> = ({
+  name,
+  price,
+  image,
+}) => {
   const deliveryDate = format(addDays(new Date(), 7), 'EEE, MMM d');
   const [address, setAddress] = useState(''); // 初始为空
   const [showLocationModal, setShowLocationModal] = useState(false);
-
-  // 计算 New Guitar 的价格，price 转换为 number
-  const newGuitarPrice = (parseFloat(price) * 1.6).toFixed(2);
-
-  useEffect(() => {
-    const savedAddress = localStorage.getItem('address');
-    if (savedAddress) {
-      setAddress(savedAddress);
-    } else {
-      setAddress(''); // 如果没有存储地址，则初始化为空
-    }
-  }, []);
+  const [showCart, setShowCart] = useState(false);
+  const [cartItems, setCartItems] = useState<
+    Array<{ name: string; price: string; image: string }>
+  >([]);
 
   const handleToggleLocationModal = () => {
     setShowLocationModal(!showLocationModal);
@@ -40,6 +38,19 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
     setAddress(newAddress);
     localStorage.setItem('address', newAddress); // 将新地址保存到localStorage
     setShowLocationModal(false);
+  };
+
+  const handleAddToCart = () => {
+    const newItem = { name, price, image };
+    setCartItems([...cartItems, newItem]);
+    setShowCart(true);
+    localStorage.setItem('cartItems', JSON.stringify([...cartItems, newItem]));
+  };
+
+  const handleRemoveItem = (index: number) => {
+    const updatedCartItems = cartItems.filter((_, i) => i !== index);
+    setCartItems(updatedCartItems);
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
   };
 
   return (
@@ -79,7 +90,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
             textDecoration: 'line-through',
           }}
         >
-          New guitar: ${newGuitarPrice}
+          New guitar: ${(parseFloat(price) * 1.6).toFixed(2)}
         </Typography>
       </Typography>
       <Button
@@ -109,9 +120,19 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
           fontWeight: 'bold',
           fontSize: '16px',
         }}
+        onClick={handleAddToCart}
       >
         Add to Cart
       </Button>
+
+      {/* 购物车组件 */}
+      <CartDrawer
+        open={showCart}
+        onClose={() => setShowCart(false)}
+        items={cartItems}
+        onRemoveItem={handleRemoveItem}
+      />
+
       <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
         How to get it
       </Typography>

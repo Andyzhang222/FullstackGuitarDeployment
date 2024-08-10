@@ -19,7 +19,7 @@ interface CartDrawerProps {
   open: boolean;
   onClose: () => void;
   items: CartItem[];
-  onRemoveItem: (index: number) => void;
+  onRemoveItem: (index: number) => void; // 添加 onRemoveItem 属性
 }
 
 const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -83,7 +83,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                   }}
                   onClick={() => onRemoveItem(index)}
                 >
-                  Delete
+                  Remove
                 </Button>
               </Box>
             ))

@@ -1,4 +1,3 @@
-// components/ProductDetailComponents/ProductAdditionalDetails.tsx
 import React, { useState } from 'react';
 import {
   Box,
@@ -18,12 +17,19 @@ const ProductAdditionalDetails: React.FC = () => {
     };
 
   return (
-    <Box sx={{ mt: 5, maxWidth: '800px', mx: 'auto' }}>
+    <Box sx={{ mt: 5, maxWidth: '800px', mx: '72px' }}>
       <Typography variant="h5" sx={{ mb: 2 }}>
         Listen to the sound
       </Typography>
-      <Box sx={{ mb: 4 }}>
-        <audio controls>
+      <Box
+        sx={{
+          mb: 4,
+          backgroundColor: '#fbe9c3', // 设置背景颜色
+          borderRadius: '8px', // 添加圆角
+          padding: '16px', // 添加内边距
+        }}
+      >
+        <audio controls style={{ width: '100%' }}>
           <source src="/path/to/your/audio/file.mp3" type="audio/mp3" />
           Your browser does not support the audio element.
         </audio>
@@ -34,10 +40,11 @@ const ProductAdditionalDetails: React.FC = () => {
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
         It is a long established fact that a reader will be distracted by the
-        readable content of a page when looking at its layout The point of using
-        Lorem Ipsum is that it has a more-or-less normal distribution of letters
-        as opposed to using Content here content here making it look like
-        readable English
+        readable content of a page when looking at its layout. The point of
+        using Lorem Ipsum is that it has a more-or-less normal distribution of
+        letters, making it look like readable English. Many desktop publishing
+        packages and web page editors now use Lorem Ipsum as their default model
+        text.
         <a href="#">View more</a>
       </Typography>
 
@@ -49,9 +56,16 @@ const ProductAdditionalDetails: React.FC = () => {
           <Typography>Specification</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>Specification details content goes here...</Typography>
+          <Typography>
+            This product is made from high-quality materials. It meets all
+            relevant industry standards and is designed to be durable and
+            reliable. The product dimensions are 12 x 8 x 6 inches, and it
+            weighs approximately 1.5 pounds. It is available in multiple colors
+            and includes a 1-year warranty.
+          </Typography>
         </AccordionDetails>
       </Accordion>
+
       <Accordion
         expanded={expanded === 'panel2'}
         onChange={handleChange('panel2')}
@@ -60,9 +74,17 @@ const ProductAdditionalDetails: React.FC = () => {
           <Typography>Shipping policy</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>Shipping policy details content goes here...</Typography>
+          <Typography>
+            We offer free standard shipping on all orders within the United
+            States. Orders are processed within 2-3 business days and delivery
+            typically takes 5-7 business days. Expedited shipping options are
+            available at an additional cost. We ship to most international
+            locations with applicable shipping fees and delivery times vary by
+            region.
+          </Typography>
         </AccordionDetails>
       </Accordion>
+
       <Accordion
         expanded={expanded === 'panel3'}
         onChange={handleChange('panel3')}
@@ -71,7 +93,14 @@ const ProductAdditionalDetails: React.FC = () => {
           <Typography>Return policy</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>Return policy details content goes here...</Typography>
+          <Typography>
+            If you are not completely satisfied with your purchase, you may
+            return the item within 30 days of receipt for a full refund. The
+            item must be in its original condition with all tags and packaging
+            intact. Return shipping costs are the responsibility of the customer
+            unless the item is defective or damaged upon arrival. Please contact
+            our customer service team to initiate a return.
+          </Typography>
         </AccordionDetails>
       </Accordion>
     </Box>
