@@ -20,7 +20,7 @@ const SearchPage = () => {
       {/* 传递 'Searching Page' 作为类别 */}
       {/* 将 searchTerm 传递给 SearchBar */}
       <ProductList searchTerm={searchTerm} />
-      <Footer />
+      <ProductBreadcrumbs category="Searching Page" /> <Footer />
     </Box>
   );
 };

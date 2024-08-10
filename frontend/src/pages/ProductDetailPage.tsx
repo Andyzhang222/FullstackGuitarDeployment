@@ -78,6 +78,7 @@ const ProductDetailPage: React.FC = () => {
         </Card>
         <ProductAdditionalDetails />
         <NewArrivalsProductDisplay />
+        <ProductBreadcrumbs category={product.category} />
       </Container>
       <Footer />
     </>
