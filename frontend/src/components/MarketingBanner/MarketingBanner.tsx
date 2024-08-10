@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { styled } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
 
 const BannerContainer = styled('div')({
   width: '100%',
@@ -25,6 +26,7 @@ const Slide = styled('div')({
   justifyContent: 'center',
   fontSize: '24px',
   color: '#fff',
+  position: 'relative',
 });
 
 const IndicatorContainer = styled('div')({
@@ -42,11 +44,29 @@ const Indicator = styled('img')({
   height: '12px',
 });
 
+const ShopNowButton = styled('button')({
+  position: 'absolute',
+  bottom: '150px', // Adjusted to move the button up
+  left: '160px', // Adjusted to move the button right
+  padding: '15px 30px', // Increased padding for larger button
+  backgroundColor: 'black',
+  color: 'white',
+  width: '230px',
+  border: 'none',
+  borderRadius: '8px', // Increased border radius for a more prominent button
+  fontSize: '18px', // Increased font size
+  cursor: 'pointer',
+  zIndex: 1,
+  '&:hover': {
+    opacity: 0.8,
+  },
+});
+
 const MarketingBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
-  // Replace with actual paths to your SVG images
   const slides = [
     '/images/MarketingBanner/bannerImage1.png',
     '/images/MarketingBanner/bannerImage1.png',
@@ -57,7 +77,7 @@ const MarketingBanner = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 8000); // Change slide every 3 seconds
+    }, 8000); // Change slide every 8 seconds
 
     return () => clearInterval(interval);
   }, [slides.length]);
@@ -73,7 +93,9 @@ const MarketingBanner = () => {
       <SliderWrapper ref={sliderRef}>
         {slides.map((slide, index) => (
           <Slide key={index} style={{ backgroundImage: `url(${slide})` }}>
-            {/* Slide {index + 1} */}
+            <ShopNowButton onClick={() => navigate('/search')}>
+              Shop Now
+            </ShopNowButton>
           </Slide>
         ))}
       </SliderWrapper>
