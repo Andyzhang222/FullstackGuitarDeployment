@@ -46,15 +46,15 @@ const Indicator = styled('img')({
 
 const ShopNowButton = styled('button')({
   position: 'absolute',
-  bottom: '150px', // Adjusted to move the button up
-  left: '160px', // Adjusted to move the button right
+  bottom: '139px', // Adjusted to move the button up
+  left: '70px', // Adjusted to move the button right
   padding: '15px 30px', // Increased padding for larger button
   backgroundColor: 'black',
   color: 'white',
-  width: '230px',
+  width: '260px',
   border: 'none',
   borderRadius: '8px', // Increased border radius for a more prominent button
-  fontSize: '18px', // Increased font size
+  fontSize: '22px', // Increased font size
   cursor: 'pointer',
   zIndex: 1,
   '&:hover': {
