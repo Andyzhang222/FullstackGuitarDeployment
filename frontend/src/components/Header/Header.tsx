@@ -6,10 +6,11 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import { jwtDecode } from 'jwt-decode'; // 修正导入
+import { jwtDecode } from 'jwt-decode'; // 导入 jwtDecode
 import theme from '../../theme/theme';
 import { BodyText, LogoName } from '../../theme/customStyles';
 import SearchBar from './SearchBar';
+import CartDrawer from '../Cart/CartDrawer'; // 导入购物车抽屉组件
 
 // Styled Components
 const PageHeader = styled(AppBar)({
@@ -47,6 +48,7 @@ const CartContainer = styled('div')({
   alignItems: 'center',
   gap: '8px',
   justifyContent: 'flex-end',
+  cursor: 'pointer',
 });
 
 interface DecodedToken {
@@ -59,6 +61,7 @@ const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [cartOpen, setCartOpen] = useState(false); // 管理购物车抽屉的状态
 
   useEffect(() => {
     const idToken = localStorage.getItem('idToken');
@@ -90,8 +93,12 @@ const Header: React.FC = () => {
     handleClose();
   };
 
+  const toggleCartDrawer = (open: boolean) => () => {
+    setCartOpen(open);
+  };
+
   const handleLogoClick = () => {
-    navigate('/');
+    navigate('/'); // 导航到主页
   };
 
   return (
@@ -115,7 +122,7 @@ const Header: React.FC = () => {
                     color="inherit"
                   >
                     <img src="/images/Header/User.svg" alt="User Icon" />
-                    <BodyText>Profile</BodyText>
+                    <BodyText> Profile</BodyText>
                   </IconButton>
                   <Menu
                     id="menu-appbar"
@@ -146,13 +153,14 @@ const Header: React.FC = () => {
                 <BodyText>Sign in</BodyText>
               </SignInContainer>
             )}
-            <CartContainer>
+            <CartContainer onClick={toggleCartDrawer(true)}>
               <img src="/images/Header/ShoppingCart.svg" alt="Cart Icon" />
               <BodyText>Cart</BodyText>
             </CartContainer>
           </div>
         </LayoutBlocks>
       </Toolbar>
+      <CartDrawer open={cartOpen} onClose={toggleCartDrawer(false)} />
     </PageHeader>
   );
 };
