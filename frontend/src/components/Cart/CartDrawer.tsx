@@ -86,6 +86,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                     '&:hover': {
                       backgroundColor: '#333333',
                     },
+                    width: '100px',
+                    minWidth: '100px',
                   }}
                   onClick={() => onRemoveItem(index)}
                 >

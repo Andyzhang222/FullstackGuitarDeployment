@@ -4,7 +4,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StoreIcon from '@mui/icons-material/Store';
 import { format, addDays } from 'date-fns';
 import LocationModal from '../RightSideInfoComponents/LocationModal';
-import CartDrawer from '../ShoppingCart/CartDrawer';
+import CartDrawer from '../Cart/CartDrawer';
 
 interface ProductDetailsProps {
   name: string;
