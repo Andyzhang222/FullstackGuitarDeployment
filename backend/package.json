@@ -2,11 +2,11 @@
   "name": "express-cognito",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",  
   "scripts": {
-    "dev": "nodemon",
-    "start": "ts-node dist/server.js",
-    "build": "tsc -p ."
+    "dev": "nodemon src/server.ts", 
+    "start": "node dist/server.js",  
+    "build": "tsc -p ."  
   },
   "author": "",
   "license": "ISC",

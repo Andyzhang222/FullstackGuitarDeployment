@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
       "sourceMap": true, // helps for debugging
+      "types": ["jest"], // 仅引入 jest 的类型定义
       "target": "es6",
       "module": "commonjs",
       "outDir": "./dist",
