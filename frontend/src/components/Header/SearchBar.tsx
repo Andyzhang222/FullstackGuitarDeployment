@@ -47,7 +47,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchTerm = '' }) => {
   return (
     <SearchBarContainer>
       <IconButton>
-        <img src="/images/Header/vector.svg" alt="Search Icon" />
+        <img src="/images/Header/Vector.svg" alt="Search Icon" />
       </IconButton>
       <SearchInput
         placeholder="Find guitars you love..."

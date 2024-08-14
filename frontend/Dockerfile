@@ -1,5 +1,5 @@
 # 使用 Node.js 官方镜像作为基础镜像
-FROM node:16
+FROM node:18
 
 # 创建应用目录
 WORKDIR /app

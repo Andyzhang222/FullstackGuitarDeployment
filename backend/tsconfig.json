@@ -8,7 +8,9 @@
       "baseUrl": "./src",
       "removeComments": true, // removes all comments
       "incremental": true, // compares dist and compiles whats needed 
-      "esModuleInterop": true // allows default export
+      "esModuleInterop": true, // allows default export
+      "moduleResolution": "node",
+
   },
   "include": [
       "src/**/*.ts"
