@@ -137,7 +137,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
 
     try {
       const response = await fetch(
-        'http://localhost:5001/auth/forgot-password',
+        `${BASE_URL}:5001/auth/forgot-password`,
         {
           method: 'POST',
           headers: {
@@ -179,7 +179,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
     try {
       const verificationCode = code.join('');
       const response = await fetch(
-        'http://localhost:5001/auth/confirm-password',
+        `${BASE_URL}:5001/auth/confirm-password`,
         {
           method: 'POST',
           headers: {

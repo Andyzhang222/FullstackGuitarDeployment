@@ -33,7 +33,7 @@ const NewArrivalsProductDisplay: React.FC = () => {
       setProducts(data.products);
     } catch (err) {
       console.error('Error fetching products:', err);
-      setError('无法加载产品，请稍后重试。');
+      setError('can not load the product');
     }
   };
 
