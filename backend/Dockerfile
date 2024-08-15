@@ -7,14 +7,11 @@ WORKDIR /app
 # 复制 package.json 和 yarn.lock 文件
 COPY package*.json yarn.lock ./
 
-# 安装依赖，只安装生产环境依赖
+# 安装依赖
 RUN yarn install --frozen-lockfile --production
 
 # 复制项目文件
 COPY . .
-
-# 构建项目（如果你的项目需要构建，比如 TypeScript 转译）
-# RUN yarn build
 
 # 使用更小的基础镜像来运行应用
 FROM node:18-alpine
