@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  database:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    container_name: database
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=GuitarDatabase
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./database-init:/docker-entrypoint-initdb.d # 确保备份文件和脚本在此目录中
+    networks:
+      - mynetwork
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=GuitarDatabase
+    depends_on:
+      - database
+    networks:
+      - mynetwork
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - mynetwork
+
+volumes:
+  db_data:
+
+networks:
+  mynetwork:
+    driver: bridge

@@ -14,19 +14,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const aws_sdk_1 = __importDefault(require("aws-sdk"));
 const crypto_1 = __importDefault(require("crypto"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+dotenv_1.default.config();
 class Cognito {
     constructor() {
         this.config = {
-            apiVersion: '2016-04-18',
-            region: 'ca-central-1',
+            apiVersion: "2024-06-03",
+            region: process.env.AWS_REGION,
         };
-        this.secretHash = '10j74r0nsekujafhd777t01omagltb34m16mvrb8e3v6rfop7ud3';
-        this.clientId = '7lkobomofk4vsi2iktb0mdmaeq';
+        this.secretHash = process.env.SECRET_HASH;
+        this.clientId = process.env.CLIENT_ID;
         this.cognitoIdentity = new aws_sdk_1.default.CognitoIdentityServiceProvider(this.config);
     }
     signUpUser(username, password, userAttr) {
         return __awaiter(this, void 0, void 0, function* () {
-            var params = {
+            const params = {
                 ClientId: this.clientId,
                 Password: password,
                 Username: username,
@@ -36,33 +39,42 @@ class Cognito {
             try {
                 const data = yield this.cognitoIdentity.signUp(params).promise();
                 console.log(data);
-                return true;
+                return data;
             }
             catch (error) {
                 console.log(error);
-                return false;
+                throw error;
             }
         });
     }
     signInUser(username, password) {
         return __awaiter(this, void 0, void 0, function* () {
             var params = {
-                AuthFlow: 'USER_PASSWORD_AUTH',
+                AuthFlow: "USER_PASSWORD_AUTH",
                 ClientId: this.clientId,
                 AuthParameters: {
-                    'USERNAME': username,
-                    'PASSWORD': password,
-                    'SECRET_HASH': this.hashSecret(username)
+                    USERNAME: username,
+                    PASSWORD: password,
+                    SECRET_HASH: this.hashSecret(username),
                 },
             };
             try {
                 let data = yield this.cognitoIdentity.initiateAuth(params).promise();
                 console.log(data);
-                return true;
+                if (data.AuthenticationResult) {
+                    const decodedAccessToken = jsonwebtoken_1.default.decode(data.AuthenticationResult.AccessToken);
+                    const decodedIdToken = jsonwebtoken_1.default.decode(data.AuthenticationResult.IdToken);
+                    const decodedRefreshToken = jsonwebtoken_1.default.decode(data.AuthenticationResult.RefreshToken);
+                    console.log("Decoded Access Token: ", decodedAccessToken);
+                    console.log("Decoded ID Token: ", decodedIdToken);
+                    console.log("Decoded Refresh Token: ", decodedRefreshToken);
+                }
+                return data;
             }
             catch (error) {
                 console.log(error);
-                return false;
+                console.log(error.code, "         test error code ");
+                throw error;
             }
         });
     }
@@ -75,7 +87,9 @@ class Cognito {
                 SecretHash: this.hashSecret(username),
             };
             try {
-                const cognitoResp = yield this.cognitoIdentity.confirmSignUp(params).promise();
+                const cognitoResp = yield this.cognitoIdentity
+                    .confirmSignUp(params)
+                    .promise();
                 console.log(cognitoResp);
                 return true;
             }
@@ -95,11 +109,11 @@ class Cognito {
             try {
                 const data = yield this.cognitoIdentity.forgotPassword(params).promise();
                 console.log(data);
-                return true;
+                return { success: true };
             }
             catch (error) {
                 console.log(error);
-                return false;
+                return { success: false, message: error.message };
             }
         });
     }
@@ -113,20 +127,51 @@ class Cognito {
                 SecretHash: this.hashSecret(username),
             };
             try {
-                const data = yield this.cognitoIdentity.confirmForgotPassword(params).promise();
+                const data = yield this.cognitoIdentity
+                    .confirmForgotPassword(params)
+                    .promise();
                 console.log(data);
-                return true;
+                return { success: true };
             }
             catch (error) {
                 console.log(error);
-                return false;
+                return { success: false, message: error.message, code: error.code };
             }
         });
     }
     hashSecret(username) {
-        return crypto_1.default.createHmac('SHA256', this.secretHash)
+        return crypto_1.default
+            .createHmac("SHA256", this.secretHash)
             .update(username + this.clientId)
-            .digest('base64');
+            .digest("base64");
+    }
+    getUserInfoFromToken(token) {
+        const decodedToken = jsonwebtoken_1.default.decode(token);
+        const sub = decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken.sub;
+        const email = decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken.email;
+        return { sub, email };
+    }
+    verifyCode(username, code) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                ClientId: this.clientId,
+                ConfirmationCode: code,
+                Username: username,
+                SecretHash: this.hashSecret(username),
+            };
+            console.log("Params sent to AWS Cognito for verifyCode:", params);
+            try {
+                const data = yield this.cognitoIdentity
+                    .confirmForgotPassword(params)
+                    .promise();
+                console.log("AWS Cognito response:", data);
+                return true;
+            }
+            catch (error) {
+                console.log("Error in verifyCode:", error);
+                return false;
+            }
+        });
     }
 }
 exports.default = Cognito;

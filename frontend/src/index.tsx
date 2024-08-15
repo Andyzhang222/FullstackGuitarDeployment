@@ -1,28 +1,19 @@
-// Import necessary libraries and configurations
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import awsconfig from './aws-exports';
-import App from './App';
+import ReactDOM from 'react-dom/client';
 import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
-// Configure AWS Amplify when DOM content is loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.Amplify) {
-    window.Amplify.configure(awsconfig);
-    console.log('Amplify configured in index.tsx');
-  } else {
-    console.error('Failed to load AWS Amplify in index.tsx');
-  }
-});
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
 
-// Get root container and render the App component
-const container = document.getElementById('root');
-if (container) {
-  createRoot(container).render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-} else {
-  console.error('Root container not found');
-}
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

@@ -37,7 +37,10 @@
   "author": "nowicki.przemek@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.20",
+    "@mui/material": "^5.16.0",
     "apicache": "^1.6.3",
     "aws-amplify": "^6.3.7",
     "axios": "^1.4.0",

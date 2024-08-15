@@ -15,24 +15,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jwk_to_pem_1 = __importDefault(require("jwk-to-pem"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const node_fetch_1 = __importDefault(require("node-fetch"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 let pems = {};
 class AuthMiddleware {
     constructor() {
-        this.poolRegion = 'ca-central-1';
-        this.userPoolId = 'ca-central-1_ef5bKns1b';
+        this.poolRegion = process.env.POOL_REGION;
+        this.userPoolId = process.env.USER_POOL_ID;
         this.setUp();
     }
     verifyToken(req, resp, next) {
         const { token } = req.body;
-        console.log(token);
-        if (!token)
-            return resp.status(401).end();
+        console.log("Original Token:", token);
+        if (!token) {
+            resp.status(401).end();
+            return;
+        }
         let decodedJwt = jsonwebtoken_1.default.decode(token, { complete: true });
         if (decodedJwt === null) {
             resp.status(401).end();
             return;
         }
-        console.log(decodedJwt);
+        console.log("Decoded Token:", decodedJwt);
         let kid = decodedJwt.header.kid;
         let pem = pems[kid];
         console.log(pem);
@@ -54,7 +58,7 @@ class AuthMiddleware {
         return __awaiter(this, void 0, void 0, function* () {
             const URL = `https://cognito-idp.${this.poolRegion}.amazonaws.com/${this.userPoolId}/.well-known/jwks.json`;
             try {
-                const response = yield node_fetch_1.default(URL);
+                const response = yield (0, node_fetch_1.default)(URL);
                 if (response.status !== 200) {
                     throw 'request not successful';
                 }
@@ -66,7 +70,7 @@ class AuthMiddleware {
                     const exponent = keys[i].e;
                     const key_type = keys[i].kty;
                     const jwk = { kty: key_type, n: modulus, e: exponent };
-                    const pem = jwk_to_pem_1.default(jwk);
+                    const pem = (0, jwk_to_pem_1.default)(jwk);
                     pems[key_id] = pem;
                 }
                 console.log("got PEMS");
