@@ -349,7 +349,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             width: '432px',
             height: '40px',
             fontWeight: '700',
-            backgroundColor: '#0057FE', // 设置按钮背景颜色为蓝色
+            backgroundColor: 'black', // 设置按钮背景颜色为蓝色
             color: 'white', // 设置按钮字体颜色为白色
             textTransform: 'none', // 确保没有强制转换文本
             borderRadius: '4px',
@@ -390,7 +390,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             onClick={onSwitch}
             style={{
               marginLeft: '3px',
-              color: '#0057FE', // 设置按钮背景颜色为蓝色
+              color: 'black', // 设置按钮背景颜色为蓝色
               fontWeight: '400',
               textDecoration: 'none', // 去掉下划线
             }}

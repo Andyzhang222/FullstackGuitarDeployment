@@ -136,16 +136,13 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
     }
 
     try {
-      const response = await fetch(
-        `${BASE_URL}:5001/auth/forgot-password`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username: email }),
-        }
-      );
+      const response = await fetch(`${BASE_URL}:5001/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: email }),
+      });
 
       const data = await response.json();
       if (response.ok) {
@@ -178,20 +175,17 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
 
     try {
       const verificationCode = code.join('');
-      const response = await fetch(
-        `${BASE_URL}:5001/auth/confirm-password`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: email,
-            code: verificationCode,
-            newPassword,
-          }),
-        }
-      );
+      const response = await fetch(`${BASE_URL}:5001/auth/confirm-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: email,
+          code: verificationCode,
+          newPassword,
+        }),
+      });
 
       const data = await response.json();
 
@@ -373,7 +367,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               width: '432px',
               height: '40px',
               fontWeight: '700',
-              backgroundColor: isButtonDisabled ? '#A9A9A9' : '#0057FE',
+              backgroundColor: isButtonDisabled ? '#A9A9A9' : 'black',
               color: 'white',
               textTransform: 'none',
               borderRadius: '4px',
@@ -392,7 +386,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               marginTop: '-10px',
               display: 'block',
               textAlign: 'center',
-              color: '#0057FE', // 设置按钮背景颜色为蓝色
+              color: 'black', // 设置按钮背景颜色为蓝色
             }}
           >
             Back to Sign In
@@ -599,7 +593,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                 height: '32px',
                 marginBottom: '16px',
                 marginLeft: '20px',
-                backgroundColor: '#0057FE',
+                backgroundColor: 'black',
                 minWidth: '150px', // 固定最小宽度
               }}
             >
@@ -612,7 +606,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             variant="contained"
             color="primary"
             fullWidth
-            style={{ marginTop: '16px', backgroundColor: '#0057FE' }}
+            style={{ marginTop: '16px', backgroundColor: 'gray' }}
             disabled={!isResetButtonEnabled}
           >
             Reset Password
@@ -644,7 +638,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             marginTop: '10px',
             display: 'block',
             textAlign: 'center',
-            color: '#0057FE', // 设置按钮背景颜色为蓝色
+            color: 'black', // 设置按钮背景颜色为蓝色
           }}
         >
           Back to Sign In
