@@ -6,6 +6,7 @@ import HomePageProductCard from './HomePageProductCard';
 import { Product, ApiResponse } from '../../types/types';
 import { SectionHeader } from '../../theme/customStyles';
 import { useNavigate } from 'react-router-dom';
+import BASE_URL from '../../config';
 
 const HomepageProductSuggestion: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -21,9 +22,7 @@ const HomepageProductSuggestion: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(
-        'http://localhost:5001/api/products?limit=10'
-      );
+      const response = await fetch(`${BASE_URL}:5001/api/products?limit=10`);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }

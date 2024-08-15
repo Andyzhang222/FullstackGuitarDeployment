@@ -71,7 +71,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                 }}
               >
                 <img
-                  src={`http://localhost:3000/${item.image}`}
+                  src={`/${item.image}`}
                   alt={item.name}
                   style={{ width: '50px', height: '50px', marginRight: '10px' }}
                 />

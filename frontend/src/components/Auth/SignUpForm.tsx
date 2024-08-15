@@ -19,6 +19,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import ellipseImage from '../../assets/images/Ellipse.svg';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import BASE_URL from '../../config';
 
 interface SignUpFormProps {
   onSwitch: () => void;
@@ -69,7 +70,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     }
 
     try {
-      const response = await fetch('http://localhost:5001/auth/signup', {
+      const response = await fetch(`${BASE_URL}:5001/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

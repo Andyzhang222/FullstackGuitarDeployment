@@ -10,6 +10,7 @@ import ProductDetails from '../components/ProductDetailComponents/ProductDetails
 import ProductAdditionalDetails from '../components/ProductDetailComponents/ProductAdditionalDetails';
 import ProductBreadcrumbs from '../components/BackButton';
 import NewArrivalsProductDisplay from '../components/HomepageProductSuggestion/NewArrivalsProductDisplay';
+import BASE_URL from '../config';
 
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +23,7 @@ const ProductDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (!product) {
-      fetch(`http://localhost:5001/api/products/${id}`)
+      fetch(`${BASE_URL}:5001/api/products/${id}`)
         .then((res) => {
           if (!res.ok) {
             throw new Error(`HTTP error! Status: ${res.status}`);

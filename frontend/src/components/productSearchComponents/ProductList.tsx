@@ -4,6 +4,7 @@ import { Product, ApiResponse } from '../../types/types';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SortComponent from './SortComponent';
 import ProductionCard from './ProductCard';
+import BASE_URL from '../../config';
 
 interface ProductListProps {
   searchTerm: string;
@@ -59,7 +60,7 @@ const ProductList: React.FC<ProductListProps> = ({ searchTerm }) => {
       search: searchTerm,
     }).toString();
 
-    fetch(`http://localhost:5001/api/products?${query}`)
+    fetch(`${BASE_URL}:5001/api/products?${query}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);

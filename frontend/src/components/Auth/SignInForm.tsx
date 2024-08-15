@@ -15,6 +15,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import ellipseImage from '../../assets/images/Ellipse.svg';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import BASE_URL from '../../config';
 
 interface SignInFormProps {
   onSwitch: () => void;
@@ -36,7 +37,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
     event.preventDefault();
     setError(''); // 提交前清除错误信息
     try {
-      const response = await fetch('http://localhost:5001/auth/signin', {
+      const response = await fetch(`${BASE_URL}:5001/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

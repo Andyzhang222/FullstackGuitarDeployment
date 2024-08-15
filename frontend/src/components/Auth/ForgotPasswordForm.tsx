@@ -17,6 +17,7 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import ellipseImage from '../../assets/images/Ellipse.svg';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import BASE_URL from '../../config';
 
 interface ForgotPasswordFormProps {
   onSwitchToSignIn: () => void;
@@ -81,7 +82,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
     }, 10000);
 
     try {
-      const response = await fetch('http://localhost:5001/auth/check-email', {
+      const response = await fetch(`${BASE_URL}:5001/auth/check-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
