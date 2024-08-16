@@ -14,3 +14,6 @@ yarn-error.log*
 # Ignore environment files
 .env
 .env.*
+
+node_modules/
+node_modules
