@@ -14,20 +14,22 @@ const Footer = () => {
       <Container
         maxWidth={false}
         sx={{
-          maxWidth: 'calc(100% - 144px)', // 设置最大宽度并保持两边 72px 的间距
+          width: '1600px', // 固定宽度为电脑端宽度
           margin: '0 auto', // 居中对齐
-          padding: '40px 0', // 设置内边距，上下 40px，左右 0
+          padding: '40px 0', // 设置内边距
           boxSizing: 'border-box', // 确保边框和内边距包含在宽度和高度内
         }}
       >
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={4}>
+            {' '}
+            {/* 确保各列宽度在手机和电脑端一致 */}
             <Typography variant="h6" sx={{ marginBottom: '16px' }}>
               Contact Us
             </Typography>
             <Typography
               variant="body2"
-              sx={{ marginBottom: '8px', color: ' white' }}
+              sx={{ marginBottom: '8px', color: 'white' }}
             >
               Feel free to contact us if you need more information about our
               guitars or any of our services.
@@ -50,7 +52,7 @@ const Footer = () => {
               Sat - Sun, 10:00 am - 6:00 pm (EST)
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={4}>
             <Typography variant="h6" sx={{ marginBottom: '16px' }}>
               Store Address
             </Typography>
@@ -64,7 +66,7 @@ const Footer = () => {
               <strong>382 Yonge Street, Halifax</strong>
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={4}>
             <Typography variant="h6" sx={{ marginBottom: '16px' }}>
               Follow Us
             </Typography>

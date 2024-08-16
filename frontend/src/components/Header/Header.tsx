@@ -16,7 +16,6 @@ import CartDrawer from '../Cart/CartDrawer'; // 导入购物车抽屉组件
 const PageHeader = styled(AppBar)({
   backgroundColor: '#02000C',
   width: '100%',
-  maxWidth: '1600px',
   padding: '16px, 72px, 16px, 72px',
   maxHeight: '72px',
   boxSizing: 'border-box',

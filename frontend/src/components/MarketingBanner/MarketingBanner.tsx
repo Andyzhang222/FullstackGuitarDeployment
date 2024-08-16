@@ -46,15 +46,15 @@ const Indicator = styled('img')({
 
 const ShopNowButton = styled('button')({
   position: 'absolute',
-  bottom: '139px', // Adjusted to move the button up
-  left: '70px', // Adjusted to move the button right
-  padding: '15px 30px', // Increased padding for larger button
+  bottom: '20%',
+  left: '10%',
+  padding: '15px 30px',
   backgroundColor: 'black',
   color: 'white',
   width: '260px',
   border: 'none',
-  borderRadius: '8px', // Increased border radius for a more prominent button
-  fontSize: '22px', // Increased font size
+  borderRadius: '8px',
+  fontSize: '22px',
   cursor: 'pointer',
   zIndex: 1,
   '&:hover': {
@@ -77,7 +77,7 @@ const MarketingBanner = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 8000); // Change slide every 8 seconds
+    }, 8000);
 
     return () => clearInterval(interval);
   }, [slides.length]);

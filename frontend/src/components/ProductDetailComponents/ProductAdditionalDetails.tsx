@@ -18,15 +18,18 @@ const ProductAdditionalDetails: React.FC = () => {
 
   return (
     <Box sx={{ mt: 5, maxWidth: '800px', mx: '72px' }}>
-      <Typography variant="h5" sx={{ mb: 2 }}>
+      <Typography
+        variant="h5"
+        sx={{ mb: 2, fontSize: '24px', lineHeight: '1.5' }}
+      >
         Listen to the sound
       </Typography>
       <Box
         sx={{
           mb: 4,
-          backgroundColor: '#fbe9c3', // 设置背景颜色
-          borderRadius: '8px', // 添加圆角
-          padding: '16px', // 添加内边距
+          backgroundColor: '#fbe9c3',
+          borderRadius: '8px',
+          padding: '16px',
         }}
       >
         <audio controls style={{ width: '100%' }}>
@@ -35,10 +38,16 @@ const ProductAdditionalDetails: React.FC = () => {
         </audio>
       </Box>
 
-      <Typography variant="h5" sx={{ mb: 2 }}>
+      <Typography
+        variant="h5"
+        sx={{ mb: 2, fontSize: '24px', lineHeight: '1.5' }}
+      >
         Review from us
       </Typography>
-      <Typography variant="body1" sx={{ mb: 2 }}>
+      <Typography
+        variant="body1"
+        sx={{ mb: 2, fontSize: '16px', lineHeight: '1.5' }}
+      >
         It is a long established fact that a reader will be distracted by the
         readable content of a page when looking at its layout. The point of
         using Lorem Ipsum is that it has a more-or-less normal distribution of
@@ -53,10 +62,12 @@ const ProductAdditionalDetails: React.FC = () => {
         onChange={handleChange('panel1')}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Specification</Typography>
+          <Typography sx={{ fontSize: '18px', lineHeight: '1.5' }}>
+            Specification
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
+          <Typography sx={{ fontSize: '16px', lineHeight: '1.5' }}>
             This product is made from high-quality materials. It meets all
             relevant industry standards and is designed to be durable and
             reliable. The product dimensions are 12 x 8 x 6 inches, and it
@@ -71,10 +82,12 @@ const ProductAdditionalDetails: React.FC = () => {
         onChange={handleChange('panel2')}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Shipping policy</Typography>
+          <Typography sx={{ fontSize: '18px', lineHeight: '1.5' }}>
+            Shipping policy
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
+          <Typography sx={{ fontSize: '16px', lineHeight: '1.5' }}>
             We offer free standard shipping on all orders within the United
             States. Orders are processed within 2-3 business days and delivery
             typically takes 5-7 business days. Expedited shipping options are
@@ -90,10 +103,12 @@ const ProductAdditionalDetails: React.FC = () => {
         onChange={handleChange('panel3')}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Return policy</Typography>
+          <Typography sx={{ fontSize: '18px', lineHeight: '1.5' }}>
+            Return policy
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
+          <Typography sx={{ fontSize: '16px', lineHeight: '1.5' }}>
             If you are not completely satisfied with your purchase, you may
             return the item within 30 days of receipt for a full refund. The
             item must be in its original condition with all tags and packaging
