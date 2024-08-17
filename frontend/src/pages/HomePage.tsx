@@ -12,7 +12,8 @@ import BrowseByCategory from '../components/HomePageComponents/BrowseByCategory'
 
 const Home = () => {
   return (
-    <Box>
+    <Box sx={{ maxWidth: '100%', overflowX: 'hidden' }}>
+      {' '}
       <Header />
       <GlobalHeader />
       <MarketingBanner />
@@ -20,7 +21,6 @@ const Home = () => {
       <NewArrivalsProductDisplay />
       <ServicesComponent />
       <BrowseByCategory />
-
       <Footer />
     </Box>
   );
