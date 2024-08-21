@@ -1,10 +1,10 @@
-import { Router, Request, Response } from 'express';
-import { Product } from '../models/product.model';
-import { Op } from 'sequelize';
-import cors from 'cors';
+import { Router, Request, Response } from "express";
+import { Product } from "../models/product.model";
+import { Op } from "sequelize";
+import cors from "cors";
 
 class ProductController {
-  public path = '/api/products';
+  public path = "/api/products";
   public router = Router();
 
   constructor() {
@@ -13,8 +13,8 @@ class ProductController {
 
   public initRoutes() {
     this.router.use(cors()); // 添加CORS中间件
-    this.router.get('/', this.getAllProducts);
-    this.router.post('/', this.createProduct);
+    this.router.get("/", this.getAllProducts);
+    this.router.post("/", this.createProduct);
   }
 
   private getAllProducts = async (req: Request, res: Response) => {
@@ -35,22 +35,24 @@ class ProductController {
       if (type) options.where.type = type;
       if (minPrice || maxPrice) {
         options.where.price = {};
-        if (minPrice) options.where.price[Op.gte] = parseFloat(minPrice as string);
-        if (maxPrice) options.where.price[Op.lte] = parseFloat(maxPrice as string);
+        if (minPrice)
+          options.where.price[Op.gte] = parseFloat(minPrice as string);
+        if (maxPrice)
+          options.where.price[Op.lte] = parseFloat(maxPrice as string);
       }
       if (sort) {
         switch (sort) {
-          case 'price-asc':
-            options.order = [['price', 'ASC']];
+          case "price-asc":
+            options.order = [["price", "ASC"]];
             break;
-          case 'price-desc':
-            options.order = [['price', 'DESC']];
+          case "price-desc":
+            options.order = [["price", "DESC"]];
             break;
-          case 'newest':
-            options.order = [['createdAt', 'DESC']];
+          case "newest":
+            options.order = [["createdAt", "DESC"]];
             break;
           default:
-            options.order = [['createdAt', 'DESC']];
+            options.order = [["createdAt", "DESC"]];
         }
       }
       if (search) options.where.name = { [Op.iLike]: `%${search}%` };
@@ -69,20 +71,20 @@ class ProductController {
         pageSize,
       });
     } catch (error) {
-      console.error('Error fetching products:', error);
-      res.status(500).json({ error: 'Failed to fetch products' });
+      console.error("Error fetching products:", error);
+      res.status(500).json({ error: "Failed to fetch products" });
     }
   };
 
   private createProduct = async (req: Request, res: Response) => {
     try {
-      console.log('Creating product with data:', req.body);
+      console.log("Creating product with data:", req.body);
       const product = await Product.create(req.body);
-      console.log('Created product:', product);
+      console.log("Created product:", product);
       res.json(product);
     } catch (error) {
-      console.error('Failed to create product:', error);
-      res.status(500).json({ error: 'Failed to create product' });
+      console.error("Failed to create product:", error);
+      res.status(500).json({ error: "Failed to create product" });
     }
   };
 }

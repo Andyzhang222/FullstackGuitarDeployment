@@ -8,13 +8,7 @@ import CartDrawer from '../Cart/CartDrawer';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import BASE_URL from '../../config';
-
-interface CartItem {
-  productId: string;
-  name: string;
-  price: string;
-  image: string;
-}
+import { CartItem } from '../../types/cartTypes'; // Adjust the path accordingl
 
 interface ProductDetailsProps {
   name: string;
@@ -58,24 +52,26 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 
   const handleAddToCart = async () => {
     if (productId) {
-      const newItem: CartItem = { productId, name, price, image };
+      const newItem: CartItem = {
+        productId,
+        name,
+        price,
+        image,
+        quantity: 1, // Add the quantity here, default to 1
+      };
       const updatedCartItems = [...cartItems, newItem];
       setCartItems(updatedCartItems);
       localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-      setShowCart(true);
 
-      // 获取 accessToken 并打印
+      // Log the accessToken and request body as before
       const token = localStorage.getItem('accessToken');
       console.log('Sending request to backend with token:', token);
-
-      // 打印请求体数据
       console.log('Request body:', { productId, quantity: 1 });
 
       try {
-        // 请求后端接口，不需要手动设置 userId
         await axios.post(
           `${BASE_URL}:5001/carts`,
-          { productId, quantity: 1 },
+          { productId, quantity: 1 }, // Keep quantity as part of the request
           {
             headers: {
               Authorization: `Bearer ${token}`,

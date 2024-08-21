@@ -1,4 +1,4 @@
-import { User } from '../models/user.model';
+import { User } from "../models/user.model";
 
 class UserService {
   async createUserIfNotExists(sub: string, email: string): Promise<void> {

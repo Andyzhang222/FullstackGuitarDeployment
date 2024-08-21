@@ -1,5 +1,5 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
-import { sequelize } from '../config/database';
+import { Model, DataTypes, Sequelize } from "sequelize";
+import { sequelize } from "../config/database";
 
 class Product extends Model {
   public id!: number;
@@ -20,7 +20,7 @@ class Product extends Model {
 }
 
 const initializeProduct = (sequelizeInstance: Sequelize) => {
-  console.log('Initializing Product model...');
+  console.log("Initializing Product model...");
   Product.init(
     {
       id: {
@@ -80,11 +80,11 @@ const initializeProduct = (sequelizeInstance: Sequelize) => {
       },
     },
     {
-      tableName: 'Products',
+      tableName: "Products",
       sequelize: sequelizeInstance,
     }
   );
-  console.log('Product model initialized');
+  console.log("Product model initialized");
   return Product;
 };
 

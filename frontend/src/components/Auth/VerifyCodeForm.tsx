@@ -6,14 +6,19 @@ interface VerifyCodeFormProps {
   onSwitchToResetPassword: (code: string) => void; // 确保 onSwitchToResetPassword 接受一个字符串参数
 }
 
-const VerifyCodeForm: React.FC<VerifyCodeFormProps> = ({ email, onSwitchToResetPassword }) => {
+const VerifyCodeForm: React.FC<VerifyCodeFormProps> = ({
+  email,
+  onSwitchToResetPassword,
+}) => {
   const [verificationCode, setVerificationCode] = useState('');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     // 验证验证码的逻辑，这里可以暂时忽略
-    setMessage('Verification code is correct. Redirecting to reset password page...');
+    setMessage(
+      'Verification code is correct. Redirecting to reset password page...'
+    );
     setTimeout(() => onSwitchToResetPassword(verificationCode), 2000); // 传递验证码
   };
 

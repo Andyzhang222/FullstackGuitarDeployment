@@ -1,19 +1,19 @@
-import logger from 'utils/logger'
+import logger from "utils/logger";
 
-import AppError from './appError'
+import AppError from "./appError";
 
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleError", "isTrustedError"] }] */
 class ErrorHandler {
   public handleError(error: Error): void {
-    logger.error(error)
+    logger.error(error);
   }
 
   public isTrustedError(error: Error): boolean {
     if (error instanceof AppError) {
-      return error.isOperational
+      return error.isOperational;
     }
-    return false
+    return false;
   }
 }
 
-export default new ErrorHandler()
+export default new ErrorHandler();

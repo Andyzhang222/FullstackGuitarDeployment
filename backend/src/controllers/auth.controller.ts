@@ -288,19 +288,15 @@ class AuthController {
       .then((response) => {
         if (response.success) {
           console.log("Verification code sent successfully");
-          res
-            .status(200)
-            .json({
-              message:
-                "Verification code sent to your email. Please check your inbox.",
-            });
+          res.status(200).json({
+            message:
+              "Verification code sent to your email. Please check your inbox.",
+          });
         } else {
           console.log("Failed to send verification code");
-          res
-            .status(400)
-            .json({
-              message: response.message || "Failed to send verification code",
-            });
+          res.status(400).json({
+            message: response.message || "Failed to send verification code",
+          });
         }
       })
       .catch((error) => {

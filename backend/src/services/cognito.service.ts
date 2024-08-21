@@ -32,7 +32,7 @@ export default class Cognito {
       SecretHash: this.hashSecret(username),
       UserAttributes: userAttr,
     };
-  
+
     try {
       const data = await this.cognitoIdentity.signUp(params).promise();
       console.log(data);
@@ -43,7 +43,6 @@ export default class Cognito {
       throw error;
     }
   }
-
 
   public async signInUser(username: string, password: string): Promise<any> {
     var params = {
@@ -112,13 +111,15 @@ export default class Cognito {
     }
   }
 
-  public async forgotPassword(username): Promise<{ success: boolean, message?: string }> {
+  public async forgotPassword(
+    username
+  ): Promise<{ success: boolean; message?: string }> {
     var params = {
       ClientId: this.clientId /* required */,
       Username: username /* required */,
       SecretHash: this.hashSecret(username),
     };
-  
+
     try {
       const data = await this.cognitoIdentity.forgotPassword(params).promise();
       console.log(data);
@@ -133,7 +134,7 @@ export default class Cognito {
     username: string,
     password: string,
     code: string
-  ): Promise<{ success: boolean, message?: string, code?: string }> {
+  ): Promise<{ success: boolean; message?: string; code?: string }> {
     var params = {
       ClientId: this.clientId /* required */,
       ConfirmationCode: code /* required */,
@@ -141,7 +142,7 @@ export default class Cognito {
       Username: username /* required */,
       SecretHash: this.hashSecret(username),
     };
-  
+
     try {
       const data = await this.cognitoIdentity
         .confirmForgotPassword(params)
@@ -168,8 +169,8 @@ export default class Cognito {
     return { sub, email };
   }
 
-   // 在 cognito.service.ts 中
-   public async verifyCode(username: string, code: string): Promise<boolean> {
+  // 在 cognito.service.ts 中
+  public async verifyCode(username: string, code: string): Promise<boolean> {
     const params = {
       ClientId: this.clientId,
       ConfirmationCode: code,

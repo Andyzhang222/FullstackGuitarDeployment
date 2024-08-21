@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import jwkToPem from 'jwk-to-pem';
-import jwt from 'jsonwebtoken';
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
+import { Request, Response, NextFunction } from "express";
+import jwkToPem from "jwk-to-pem";
+import jwt from "jsonwebtoken";
+import fetch from "node-fetch";
+import dotenv from "dotenv";
 dotenv.config();
 
 let pems: { [key: string]: any } = {};
@@ -16,43 +16,43 @@ class AuthMiddleware {
   }
 
   public verifyToken(req: Request, res: Response, next: NextFunction): void {
-    const token = req.headers['authorization']?.split(' ')[1];
-    console.log('Authorization token:', token); // 调试信息
+    const token = req.headers["authorization"]?.split(" ")[1];
+    console.log("Authorization token:", token); // 调试信息
 
     if (!token) {
-      console.log('Token is missing'); // 调试信息
-      res.status(401).send('Token is missing');
+      console.log("Token is missing"); // 调试信息
+      res.status(401).send("Token is missing");
       return;
     }
 
     const decodedJwt: any = jwt.decode(token, { complete: true });
-    console.log('Decoded JWT:', decodedJwt); // 调试信息
+    console.log("Decoded JWT:", decodedJwt); // 调试信息
 
     if (!decodedJwt) {
-      console.log('Token is invalid (decoding failed)'); // 调试信息
-      res.status(401).send('Token is invalid');
+      console.log("Token is invalid (decoding failed)"); // 调试信息
+      res.status(401).send("Token is invalid");
       return;
     }
 
     const kid = decodedJwt.header.kid;
     const pem = pems[kid];
-    console.log('PEM used for verification:', pem); // 调试信息
+    console.log("PEM used for verification:", pem); // 调试信息
 
     if (!pem) {
-      console.log('Token is invalid (no matching PEM)'); // 调试信息
-      res.status(401).send('Token is invalid');
+      console.log("Token is invalid (no matching PEM)"); // 调试信息
+      res.status(401).send("Token is invalid");
       return;
     }
 
     jwt.verify(token, pem, (err: any, payload: any) => {
       if (err) {
-        console.log('Token is invalid (verification failed)', err); // 调试信息
-        res.status(401).send('Token is invalid');
+        console.log("Token is invalid (verification failed)", err); // 调试信息
+        res.status(401).send("Token is invalid");
         return;
       }
 
       const userId = payload.sub;
-      console.log('Extracted userId:', userId); // 调试信息
+      console.log("Extracted userId:", userId); // 调试信息
       req.body.userId = userId;
       next();
     });
@@ -64,7 +64,7 @@ class AuthMiddleware {
     try {
       const response = await fetch(URL);
       if (response.status !== 200) {
-        throw new Error('Request not successful');
+        throw new Error("Request not successful");
       }
       const data = await response.json();
       const { keys } = data;
@@ -77,9 +77,9 @@ class AuthMiddleware {
         const pem = jwkToPem(jwk);
         pems[key_id] = pem;
       }
-      console.log('PEMS loaded successfully');
+      console.log("PEMS loaded successfully");
     } catch (error) {
-      console.error('Error! Unable to download JWKs', error);
+      console.error("Error! Unable to download JWKs", error);
     }
   }
 }

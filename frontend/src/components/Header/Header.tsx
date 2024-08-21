@@ -11,6 +11,9 @@ import theme from '../../theme/theme';
 import { BodyText, LogoName } from '../../theme/customStyles';
 import SearchBar from './SearchBar';
 import CartDrawer from '../Cart/CartDrawer';
+import axios from 'axios';
+import BASE_URL from '../../config';
+import { CartItem } from '../../types/cartTypes'; // Adjust the path accordingly
 
 const PageHeader = styled(AppBar)({
   backgroundColor: '#02000C',
@@ -54,13 +57,6 @@ interface DecodedToken {
   [key: string]: unknown;
 }
 
-interface CartItem {
-  productId: string;
-  name: string;
-  price: string;
-  image: string;
-}
-
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -82,6 +78,23 @@ const Header: React.FC = () => {
     }
   }, []);
 
+  const fetchCartItems = async () => {
+    const authToken = localStorage.getItem('accessToken'); // 获取 token
+    const userId = localStorage.getItem('userId'); // 获取当前用户的 ID
+
+    try {
+      const response = await axios.get(`${BASE_URL}:5001/carts`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        params: { userId }, // 传递用户 ID
+      });
+      setCartItems(response.data.cartItems); // 更新购物车状态
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+    }
+  };
+
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -94,6 +107,8 @@ const Header: React.FC = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('idToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('cartItems'); // 清除购物车数据
+
     setIsLoggedIn(false);
     setUserEmail('');
     handleClose();
@@ -101,10 +116,7 @@ const Header: React.FC = () => {
 
   const toggleCartDrawer = (open: boolean) => () => {
     if (open) {
-      const storedCartItems: CartItem[] = JSON.parse(
-        localStorage.getItem('cartItems') || '[]'
-      );
-      setCartItems(storedCartItems);
+      fetchCartItems(); // 获取购物车数据
     }
     setCartOpen(open);
   };

@@ -1,5 +1,5 @@
-import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../config/database';
+import { Model, DataTypes } from "sequelize";
+import { sequelize } from "../config/database";
 
 class User extends Model {
   public sub!: string;
@@ -22,7 +22,7 @@ User.init(
     },
   },
   {
-    tableName: 'Users',
+    tableName: "Users",
     sequelize, // passing the `sequelize` instance is required
   }
 );
