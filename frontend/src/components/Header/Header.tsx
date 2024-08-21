@@ -6,13 +6,12 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import { jwtDecode } from 'jwt-decode'; // 导入 jwtDecode
+import { jwtDecode } from 'jwt-decode';
 import theme from '../../theme/theme';
 import { BodyText, LogoName } from '../../theme/customStyles';
 import SearchBar from './SearchBar';
-import CartDrawer from '../Cart/CartDrawer'; // 导入购物车抽屉组件
+import CartDrawer from '../Cart/CartDrawer';
 
-// Styled Components
 const PageHeader = styled(AppBar)({
   backgroundColor: '#02000C',
   width: '100%',
@@ -55,15 +54,20 @@ interface DecodedToken {
   [key: string]: unknown;
 }
 
+interface CartItem {
+  productId: string;
+  name: string;
+  price: string;
+  image: string;
+}
+
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-  const [cartOpen, setCartOpen] = useState(false); // 管理购物车抽屉的状态
-  const [cartItems, setCartItems] = useState<
-    Array<{ name: string; price: string; image: string }>
-  >([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
     const idToken = localStorage.getItem('idToken');
@@ -97,7 +101,7 @@ const Header: React.FC = () => {
 
   const toggleCartDrawer = (open: boolean) => () => {
     if (open) {
-      const storedCartItems = JSON.parse(
+      const storedCartItems: CartItem[] = JSON.parse(
         localStorage.getItem('cartItems') || '[]'
       );
       setCartItems(storedCartItems);

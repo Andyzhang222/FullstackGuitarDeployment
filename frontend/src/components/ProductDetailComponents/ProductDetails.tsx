@@ -5,11 +5,21 @@ import StoreIcon from '@mui/icons-material/Store';
 import { format, addDays } from 'date-fns';
 import LocationModal from '../RightSideInfoComponents/LocationModal';
 import CartDrawer from '../Cart/CartDrawer';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import BASE_URL from '../../config';
+
+interface CartItem {
+  productId: string;
+  name: string;
+  price: string;
+  image: string;
+}
 
 interface ProductDetailsProps {
   name: string;
   description: string;
-  price: string; // 注意：price 是字符串类型
+  price: string;
   brand: string;
   category: string;
   quantity: number;
@@ -22,15 +32,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
   price,
   image,
 }) => {
+  const { id: productId } = useParams<{ id: string }>();
   const deliveryDate = format(addDays(new Date(), 7), 'EEE, MMM d');
-  const [address, setAddress] = useState(''); // 初始为空
+  const [address, setAddress] = useState('');
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  const [cartItems, setCartItems] = useState<
-    Array<{ name: string; price: string; image: string }>
-  >([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  // 从 localStorage 加载购物车数据
   useEffect(() => {
     const storedCartItems = localStorage.getItem('cartItems');
     if (storedCartItems) {
@@ -44,22 +52,49 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 
   const handleSaveAddress = (newAddress: string) => {
     setAddress(newAddress);
-    localStorage.setItem('address', newAddress); // 将新地址保存到localStorage
+    localStorage.setItem('address', newAddress);
     setShowLocationModal(false);
   };
 
-  const handleAddToCart = () => {
-    const newItem = { name, price, image };
-    const updatedCartItems = [...cartItems, newItem];
-    setCartItems(updatedCartItems);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems)); // 保存到localStorage
-    setShowCart(true);
+  const handleAddToCart = async () => {
+    if (productId) {
+      const newItem: CartItem = { productId, name, price, image };
+      const updatedCartItems = [...cartItems, newItem];
+      setCartItems(updatedCartItems);
+      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+      setShowCart(true);
+
+      // 获取 accessToken 并打印
+      const token = localStorage.getItem('accessToken');
+      console.log('Sending request to backend with token:', token);
+
+      // 打印请求体数据
+      console.log('Request body:', { productId, quantity: 1 });
+
+      try {
+        // 请求后端接口，不需要手动设置 userId
+        await axios.post(
+          `${BASE_URL}:5001/carts`,
+          { productId, quantity: 1 },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log('Item successfully added to cart.');
+      } catch (error) {
+        console.error('Failed to add item to cart:', error);
+      }
+    } else {
+      console.error('Product ID is undefined');
+    }
   };
 
   const handleRemoveItem = (index: number) => {
     const updatedCartItems = cartItems.filter((_, i) => i !== index);
     setCartItems(updatedCartItems);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems)); // 更新localStorage中的数据
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
   };
 
   return (
@@ -68,7 +103,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
         width: '502px',
         borderRadius: '8px',
         marginLeft: '72px',
-        marginRight: '72px', // 添加右边的margin确保两边一致
+        marginRight: '72px',
       }}
     >
       <Typography
@@ -124,7 +159,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
         Add to Cart
       </Button>
 
-      {/* 购物车组件 */}
       <CartDrawer
         open={showCart}
         onClose={() => setShowCart(false)}
@@ -222,7 +256,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
         </Typography>
       </Box>
 
-      {/* LocationModal Component */}
       {showLocationModal && (
         <LocationModal
           onClose={handleToggleLocationModal}

@@ -9,13 +9,13 @@ module.exports = {
         primaryKey: true,
         references: {
           model: 'Users',
-          key: 'id',
+          key: 'sub',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       productId: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER, // 将类型改为 INTEGER
         allowNull: false,
         primaryKey: true,
         references: {
