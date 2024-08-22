@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Typography, Button, Box, Divider } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StoreIcon from '@mui/icons-material/Store';
@@ -8,7 +8,8 @@ import CartDrawer from '../Cart/CartDrawer';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import BASE_URL from '../../config';
-import { CartItem } from '../../types/cartTypes'; // Adjust the path accordingly
+import { useCart } from '../../context/CartContext'; // 引入 CartContext
+import { CartItem } from '../../types/cartTypes';
 
 interface ProductDetailsProps {
   name: string;
@@ -31,14 +32,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
   const [address, setAddress] = useState('');
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
-  useEffect(() => {
-    const storedCartItems = localStorage.getItem('cartItems');
-    if (storedCartItems) {
-      setCartItems(JSON.parse(storedCartItems));
-    }
-  }, []);
+  const { cartItems, setCartItems } = useCart(); // 使用 CartContext
 
   const handleToggleLocationModal = () => {
     setShowLocationModal(!showLocationModal);
@@ -78,7 +72,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
       setCartItems(updatedCartItems);
       localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
 
-      // Log the accessToken and request body as before
       const token = localStorage.getItem('accessToken');
       console.log('Sending request to backend with token:', token);
       console.log('Request body:', { productId, quantity: 1 });
@@ -86,7 +79,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
       try {
         await axios.post(
           `${BASE_URL}:5001/carts`,
-          { productId, quantity: 1 }, // Keep quantity as part of the request
+          { productId, quantity: 1 },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -94,12 +87,18 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
           }
         );
         console.log('Item successfully added to cart.');
+        setShowCart(true); // 显示购物车抽屉
       } catch (error) {
         console.error('Failed to add item to cart:', error);
       }
     } else {
       console.error('Product ID is undefined');
     }
+  };
+
+  const handleBuyItNow = async () => {
+    await handleAddToCart(); // 先将商品添加到购物车
+    setShowCart(true); // 然后显示购物车抽屉
   };
 
   const handleRemoveItem = (updatedItems: CartItem[]) => {
@@ -149,6 +148,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
           fontWeight: 'bold',
           fontSize: '16px',
         }}
+        onClick={handleBuyItNow} // 添加点击事件处理函数
       >
         Buy It Now
       </Button>
@@ -172,7 +172,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
       <CartDrawer
         open={showCart}
         onClose={() => setShowCart(false)}
-        items={cartItems}
+        items={cartItems} // 使用共享的 cartItems
         onRemoveItem={handleRemoveItem}
       />
 

@@ -13,7 +13,7 @@ import SearchBar from './SearchBar';
 import CartDrawer from '../Cart/CartDrawer';
 import axios from 'axios';
 import BASE_URL from '../../config';
-import { CartItem } from '../../types/cartTypes'; // Adjust the path accordingly
+import { CartItem } from '../../types/cartTypes'; // 确保类型已导入
 
 const PageHeader = styled(AppBar)({
   backgroundColor: '#02000C',
