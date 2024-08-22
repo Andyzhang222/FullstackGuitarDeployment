@@ -8,7 +8,7 @@ import CartDrawer from '../Cart/CartDrawer';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import BASE_URL from '../../config';
-import { CartItem } from '../../types/cartTypes'; // Adjust the path accordingl
+import { CartItem } from '../../types/cartTypes'; // Adjust the path accordingly
 
 interface ProductDetailsProps {
   name: string;
@@ -59,7 +59,22 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
         image,
         quantity: 1, // Add the quantity here, default to 1
       };
-      const updatedCartItems = [...cartItems, newItem];
+
+      const existingItemIndex = cartItems.findIndex(
+        (item) => item.productId === productId
+      );
+
+      let updatedCartItems;
+      if (existingItemIndex !== -1) {
+        updatedCartItems = cartItems.map((item, index) =>
+          index === existingItemIndex
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      } else {
+        updatedCartItems = [...cartItems, newItem];
+      }
+
       setCartItems(updatedCartItems);
       localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
 
@@ -87,10 +102,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
     }
   };
 
-  const handleRemoveItem = (index: number) => {
-    const updatedCartItems = cartItems.filter((_, i) => i !== index);
-    setCartItems(updatedCartItems);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+  const handleRemoveItem = (updatedItems: CartItem[]) => {
+    setCartItems(updatedItems);
+    localStorage.setItem('cartItems', JSON.stringify(updatedItems));
   };
 
   return (

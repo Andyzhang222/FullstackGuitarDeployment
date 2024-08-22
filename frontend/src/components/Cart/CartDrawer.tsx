@@ -13,18 +13,18 @@ import axios from 'axios';
 import BASE_URL from '../../config';
 
 interface CartItem {
-  productId: string; // 添加 productId
+  productId: string;
   name: string;
   price: string;
   image: string;
-  quantity: number; // 添加数量字段
+  quantity: number;
 }
 
 interface CartDrawerProps {
   open: boolean;
   onClose: () => void;
   items: CartItem[];
-  onRemoveItem: (index: number) => void; // 原有的 onRemoveItem 函数
+  onRemoveItem: (updatedItems: CartItem[]) => void; // 更新为接收更新后的购物车项
 }
 
 const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -34,7 +34,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
   onRemoveItem,
 }) => {
   const navigate = useNavigate();
-  const authToken = localStorage.getItem('accessToken'); // 直接获取 token
+  const authToken = localStorage.getItem('accessToken');
 
   // 计算小计、税和总计
   const subtotal = items.reduce(
@@ -95,8 +95,17 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
         }
       );
 
-      // 从前端购物车列表中移除该商品
-      onRemoveItem(index); // 调用原有的 onRemoveItem 方法来更新前端状态
+      // 更新前端购物车状态
+      const updatedItems = items
+        .map((item, i) => {
+          if (i === index) {
+            return { ...item, quantity: item.quantity - 1 };
+          }
+          return item;
+        })
+        .filter((item) => item.quantity > 0); // 仅保留数量大于0的商品
+
+      onRemoveItem(updatedItems); // 调用更新后的购物车状态
       console.log('Item quantity updated or removed from cart.');
     } catch (error) {
       console.error('Error removing item from cart:', error);
@@ -130,46 +139,46 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
         <Divider />
         <Box sx={{ flexGrow: 1, overflowY: 'auto', mt: 2 }}>
           {items.length > 0 ? (
-            items.flatMap((item, itemIndex) =>
-              Array.from({ length: item.quantity }).map((_, qtyIndex) => (
-                <Box
-                  key={`${item.productId}-${qtyIndex}`} // 使用产品 ID 和数量索引确保唯一性
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    mb: 2,
+            items.map((item, itemIndex) => (
+              <Box
+                key={`${item.productId}-${itemIndex}`} // 使用产品 ID 和索引确保唯一性
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  mb: 2,
+                }}
+              >
+                <img
+                  src={`/${item.image}`}
+                  alt={item.name}
+                  style={{
+                    width: '50px',
+                    height: '50px',
+                    marginRight: '10px',
                   }}
-                >
-                  <img
-                    src={`/${item.image}`}
-                    alt={item.name}
-                    style={{
-                      width: '50px',
-                      height: '50px',
-                      marginRight: '10px',
-                    }}
-                  />
-                  <Box sx={{ flexGrow: 1 }}>
-                    <Typography variant="body1">{item.name}</Typography>
-                    <Typography variant="body2">${item.price}</Typography>
-                  </Box>
-                  <Button
-                    sx={{
-                      color: '#FFFFFF',
-                      backgroundColor: '#000000',
-                      '&:hover': {
-                        backgroundColor: '#333333',
-                      },
-                      width: '100px',
-                      minWidth: '100px',
-                    }}
-                    onClick={() => handleRemoveItem(itemIndex)} // 使用当前商品的索引
-                  >
-                    Delete
-                  </Button>
+                />
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography variant="body1">{item.name}</Typography>
+                  <Typography variant="body2">
+                    ${item.price} x {item.quantity}
+                  </Typography>
                 </Box>
-              ))
-            )
+                <Button
+                  sx={{
+                    color: '#FFFFFF',
+                    backgroundColor: '#000000',
+                    '&:hover': {
+                      backgroundColor: '#333333',
+                    },
+                    width: '100px',
+                    minWidth: '100px',
+                  }}
+                  onClick={() => handleRemoveItem(itemIndex)} // 使用当前商品的索引
+                >
+                  Delete
+                </Button>
+              </Box>
+            ))
           ) : (
             <Typography>Your cart is currently empty.</Typography>
           )}

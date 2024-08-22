@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; // 使用命名导入
 import theme from '../../theme/theme';
 import { BodyText, LogoName } from '../../theme/customStyles';
 import SearchBar from './SearchBar';
@@ -125,10 +125,9 @@ const Header: React.FC = () => {
     navigate('/'); // 导航到主页
   };
 
-  const handleRemoveItem = (index: number) => {
-    const updatedCartItems = cartItems.filter((_, i) => i !== index);
-    setCartItems(updatedCartItems);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+  const handleRemoveItem = (updatedItems: CartItem[]) => {
+    setCartItems(updatedItems);
+    localStorage.setItem('cartItems', JSON.stringify(updatedItems));
   };
 
   return (
