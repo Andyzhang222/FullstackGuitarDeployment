@@ -192,7 +192,10 @@ const Header: React.FC = () => {
       <CartDrawer
         open={cartOpen}
         onClose={toggleCartDrawer(false)}
-        items={cartItems}
+        items={cartItems.map((item) => ({
+          ...item,
+          image: `/${item.image}`, // 确保路径前加斜杠，成为绝对路径
+        }))}
         onRemoveItem={handleRemoveItem}
       />
     </PageHeader>

@@ -8,7 +8,6 @@ import CartDrawer from '../Cart/CartDrawer';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import BASE_URL from '../../config';
-import { useCart } from '../../context/CartContext'; // 引入 CartContext
 import { CartItem } from '../../types/cartTypes';
 
 interface ProductDetailsProps {
@@ -22,17 +21,13 @@ interface ProductDetailsProps {
   image: string;
 }
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({
-  name,
-  price,
-  image,
-}) => {
+const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
   const { id: productId } = useParams<{ id: string }>();
   const deliveryDate = format(addDays(new Date(), 7), 'EEE, MMM d');
   const [address, setAddress] = useState('');
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  const { cartItems, setCartItems } = useCart(); // 使用 CartContext
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const handleToggleLocationModal = () => {
     setShowLocationModal(!showLocationModal);
@@ -44,50 +39,47 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
     setShowLocationModal(false);
   };
 
+  const fetchCartItems = async () => {
+    const authToken = localStorage.getItem('accessToken');
+    const userId = localStorage.getItem('userId'); // 获取当前用户的 ID
+
+    try {
+      const response = await axios.get(`${BASE_URL}:5001/carts`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        params: { userId },
+      });
+      setCartItems(response.data.cartItems);
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+    }
+  };
+
   const handleAddToCart = async () => {
     if (productId) {
-      const newItem: CartItem = {
-        productId,
-        name,
-        price,
-        image,
-        quantity: 1, // Add the quantity here, default to 1
-      };
-
-      const existingItemIndex = cartItems.findIndex(
-        (item) => item.productId === productId
-      );
-
-      let updatedCartItems;
-      if (existingItemIndex !== -1) {
-        updatedCartItems = cartItems.map((item, index) =>
-          index === existingItemIndex
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        updatedCartItems = [...cartItems, newItem];
-      }
-
-      setCartItems(updatedCartItems);
-      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-
       const token = localStorage.getItem('accessToken');
-      console.log('Sending request to backend with token:', token);
-      console.log('Request body:', { productId, quantity: 1 });
+      const userId = localStorage.getItem('userId');
+
+      const newItem = {
+        productId,
+        quantity: 1,
+      };
 
       try {
         await axios.post(
           `${BASE_URL}:5001/carts`,
-          { productId, quantity: 1 },
+          { ...newItem, userId },
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
+
         console.log('Item successfully added to cart.');
-        setShowCart(true); // 显示购物车抽屉
+        fetchCartItems(); // 更新购物车
+        setShowCart(true); // 展示购物车抽屉
       } catch (error) {
         console.error('Failed to add item to cart:', error);
       }
@@ -101,9 +93,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
     setShowCart(true); // 然后显示购物车抽屉
   };
 
-  const handleRemoveItem = (updatedItems: CartItem[]) => {
+  const handleRemoveItem = async (updatedItems: CartItem[]) => {
     setCartItems(updatedItems);
-    localStorage.setItem('cartItems', JSON.stringify(updatedItems));
   };
 
   return (
@@ -172,7 +163,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
       <CartDrawer
         open={showCart}
         onClose={() => setShowCart(false)}
-        items={cartItems} // 使用共享的 cartItems
+        items={cartItems}
         onRemoveItem={handleRemoveItem}
       />
 
