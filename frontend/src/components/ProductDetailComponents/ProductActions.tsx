@@ -1,9 +1,18 @@
-import React from 'react';
-import { Button, Box } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Button,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { fetchCartItems, addToCart } from '../../components/store/cartSlice';
 import { AppDispatch } from '../../components/store/store';
-import axios from 'axios'; // 仅导入 axios
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 interface ProductActionsProps {
   productId: string;
@@ -15,8 +24,17 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   setShowCart,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const handleAddToCart = async () => {
+    const idToken = localStorage.getItem('idToken');
+
+    if (!idToken) {
+      setOpen(true); // 未登录时弹出登录对话框
+      return;
+    }
+
     if (productId) {
       try {
         console.log('Sending request to add item to cart:', {
@@ -29,13 +47,11 @@ const ProductActions: React.FC<ProductActionsProps> = ({
         setShowCart(true); // 展示购物车抽屉
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          // 使用 axios 的类型守卫来确保 `error` 是 axios 的错误类型
           console.error(
             'Failed to add item to cart:',
             error.response ? error.response.data : error.message
           );
         } else {
-          // 处理非 axios 错误的情况
           console.error('An unexpected error occurred:', error);
         }
       }
@@ -47,6 +63,15 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   const handleBuyItNow = async () => {
     await handleAddToCart(); // 先将商品添加到购物车
     setShowCart(true); // 然后显示购物车抽屉
+  };
+
+  const handleDialogClose = () => {
+    setOpen(false);
+  };
+
+  const handleLoginRedirect = () => {
+    handleDialogClose();
+    navigate('/sign');
   };
 
   return (
@@ -83,6 +108,28 @@ const ProductActions: React.FC<ProductActionsProps> = ({
       >
         Add to Cart
       </Button>
+
+      <Dialog
+        open={open}
+        onClose={handleDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Please log in'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You need to log in to add items to your cart.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleLoginRedirect} color="primary" autoFocus>
+            Log in
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
