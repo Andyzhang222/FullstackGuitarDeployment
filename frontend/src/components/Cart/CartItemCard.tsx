@@ -23,7 +23,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   const dispatch = useDispatch();
 
   const handleRemoveItem = () => {
-    dispatch(itemRemoved(productId)); // 移除商品
+    dispatch(itemRemoved(productId)); // 触发减少商品数量的逻辑
   };
 
   const imagePath = image
@@ -65,7 +65,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           width: '100px',
           minWidth: '100px',
         }}
-        onClick={handleRemoveItem} // 处理移除商品
+        onClick={handleRemoveItem}
       >
         Delete
       </Button>
