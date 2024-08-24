@@ -105,6 +105,8 @@ const Header: React.FC = () => {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('cartItems'); // 清除购物车数据
 
+    window.location.reload();
+
     setIsLoggedIn(false);
     setUserEmail('');
     handleClose();
