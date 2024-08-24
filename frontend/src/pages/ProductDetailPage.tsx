@@ -73,7 +73,11 @@ const ProductDetailPage: React.FC = () => {
               category={product.category}
               quantity={product.quantity}
               inStock={product.inStock}
-              image={product.image} // 传递 image 属性
+              image={
+                product.image.startsWith('/')
+                  ? product.image
+                  : `/${product.image}`
+              }
             />
           </Box>
         </Card>

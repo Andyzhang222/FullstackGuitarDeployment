@@ -1,16 +1,21 @@
 {
   "compilerOptions": {
-    "sourceMap": true, // helps for debugging
-    "types": ["jest"], // 仅引入 jest 的类型定义
+    "sourceMap": true,
     "target": "es6",
     "module": "commonjs",
     "outDir": "./dist",
     "baseUrl": "./src",
-    "removeComments": true, // removes all comments
-    "incremental": true, // compares dist and compiles whats needed
-    "esModuleInterop": true, // allows default export
+    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "removeComments": true,
+    "incremental": true,
+    "esModuleInterop": true,
     "moduleResolution": "node"
   },
-  "include": ["src/**/*.ts", "src/config/database.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",  // 包含所有的类型声明文件
+    "src/types/**/*.d.ts",  // 添加这行
+    "src/config/database.ts"
+  ],
   "exclude": ["node_modules"]
 }

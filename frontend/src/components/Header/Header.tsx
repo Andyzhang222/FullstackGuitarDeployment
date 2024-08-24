@@ -11,9 +11,9 @@ import theme from '../../theme/theme';
 import { BodyText, LogoName } from '../../theme/customStyles';
 import SearchBar from './SearchBar';
 import CartDrawer from '../Cart/CartDrawer';
-import axios from 'axios';
-import BASE_URL from '../../config';
-import { CartItem } from '../../types/cartTypes'; // 确保类型已导入
+import { useDispatch } from 'react-redux';
+import { fetchCartItems } from '../../components/store/cartSlice';
+import { AppDispatch } from '../../components/store/store'; // 确保路径正确
 
 const PageHeader = styled(AppBar)({
   backgroundColor: '#02000C',
@@ -58,12 +58,12 @@ interface DecodedToken {
 }
 
 const Header: React.FC = () => {
-  const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch(); // 使用 AppDispatch 类型
+  const navigate = useNavigate(); // 使用 navigate 进行导航
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [cartOpen, setCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
     const idToken = localStorage.getItem('idToken');
@@ -78,21 +78,17 @@ const Header: React.FC = () => {
     }
   }, []);
 
-  const fetchCartItems = async () => {
-    const authToken = localStorage.getItem('accessToken'); // 获取 token
-    const userId = localStorage.getItem('userId'); // 获取当前用户的 ID
-
-    try {
-      const response = await axios.get(`${BASE_URL}:5001/carts`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-        params: { userId }, // 传递用户 ID
-      });
-      setCartItems(response.data.cartItems); // 更新购物车状态
-    } catch (error) {
-      console.error('Error fetching cart items:', error);
+  const toggleCartDrawer = (open: boolean) => () => {
+    if (open) {
+      const authToken = localStorage.getItem('accessToken');
+      if (authToken) {
+        console.log('Sending token to backend:', authToken);
+        dispatch(fetchCartItems()); // 直接发请求到后端，后端处理token
+      } else {
+        console.error('Token not found in localStorage');
+      }
     }
+    setCartOpen(open);
   };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -114,20 +110,8 @@ const Header: React.FC = () => {
     handleClose();
   };
 
-  const toggleCartDrawer = (open: boolean) => () => {
-    if (open) {
-      fetchCartItems(); // 获取购物车数据
-    }
-    setCartOpen(open);
-  };
-
   const handleLogoClick = () => {
     navigate('/'); // 导航到主页
-  };
-
-  const handleRemoveItem = (updatedItems: CartItem[]) => {
-    setCartItems(updatedItems);
-    localStorage.setItem('cartItems', JSON.stringify(updatedItems));
   };
 
   return (
@@ -189,15 +173,7 @@ const Header: React.FC = () => {
           </div>
         </LayoutBlocks>
       </Toolbar>
-      <CartDrawer
-        open={cartOpen}
-        onClose={toggleCartDrawer(false)}
-        items={cartItems.map((item) => ({
-          ...item,
-          image: `/${item.image}`, // 确保路径前加斜杠，成为绝对路径
-        }))}
-        onRemoveItem={handleRemoveItem}
-      />
+      <CartDrawer open={cartOpen} onClose={toggleCartDrawer(false)} />
     </PageHeader>
   );
 };

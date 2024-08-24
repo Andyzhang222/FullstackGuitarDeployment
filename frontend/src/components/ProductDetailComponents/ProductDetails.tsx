@@ -1,14 +1,14 @@
+// src/components/ProductDetailComponents/ProductDetails.tsx
+
 import React, { useState } from 'react';
-import { Typography, Button, Box, Divider } from '@mui/material';
+import { Typography, Box, Divider } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StoreIcon from '@mui/icons-material/Store';
 import { format, addDays } from 'date-fns';
 import LocationModal from '../RightSideInfoComponents/LocationModal';
 import CartDrawer from '../Cart/CartDrawer';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import BASE_URL from '../../config';
-import { CartItem } from '../../types/cartTypes';
+import ProductActions from './ProductActions';
 
 interface ProductDetailsProps {
   name: string;
@@ -27,7 +27,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
   const [address, setAddress] = useState('');
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const handleToggleLocationModal = () => {
     setShowLocationModal(!showLocationModal);
@@ -37,64 +36,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
     setAddress(newAddress);
     localStorage.setItem('address', newAddress);
     setShowLocationModal(false);
-  };
-
-  const fetchCartItems = async () => {
-    const authToken = localStorage.getItem('accessToken');
-    const userId = localStorage.getItem('userId'); // 获取当前用户的 ID
-
-    try {
-      const response = await axios.get(`${BASE_URL}:5001/carts`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-        params: { userId },
-      });
-      setCartItems(response.data.cartItems);
-    } catch (error) {
-      console.error('Error fetching cart items:', error);
-    }
-  };
-
-  const handleAddToCart = async () => {
-    if (productId) {
-      const token = localStorage.getItem('accessToken');
-      const userId = localStorage.getItem('userId');
-
-      const newItem = {
-        productId,
-        quantity: 1,
-      };
-
-      try {
-        await axios.post(
-          `${BASE_URL}:5001/carts`,
-          { ...newItem, userId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        console.log('Item successfully added to cart.');
-        fetchCartItems(); // 更新购物车
-        setShowCart(true); // 展示购物车抽屉
-      } catch (error) {
-        console.error('Failed to add item to cart:', error);
-      }
-    } else {
-      console.error('Product ID is undefined');
-    }
-  };
-
-  const handleBuyItNow = async () => {
-    await handleAddToCart(); // 先将商品添加到购物车
-    setShowCart(true); // 然后显示购物车抽屉
-  };
-
-  const handleRemoveItem = async (updatedItems: CartItem[]) => {
-    setCartItems(updatedItems);
   };
 
   return (
@@ -127,45 +68,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, price }) => {
       >
         ${price}
       </Typography>
-      <Button
-        variant="contained"
-        sx={{
-          backgroundColor: '#000000',
-          color: '#FFFFFF',
-          width: '100%',
-          height: '48px',
-          borderRadius: '4px',
-          marginBottom: '16px',
-          fontWeight: 'bold',
-          fontSize: '16px',
-        }}
-        onClick={handleBuyItNow} // 添加点击事件处理函数
-      >
-        Buy It Now
-      </Button>
-      <Button
-        variant="outlined"
-        sx={{
-          borderColor: '#000000',
-          color: '#000000',
-          width: '100%',
-          height: '48px',
-          borderRadius: '4px',
-          marginBottom: '16px',
-          fontWeight: 'bold',
-          fontSize: '16px',
-        }}
-        onClick={handleAddToCart}
-      >
-        Add to Cart
-      </Button>
 
-      <CartDrawer
-        open={showCart}
-        onClose={() => setShowCart(false)}
-        items={cartItems}
-        onRemoveItem={handleRemoveItem}
-      />
+      {/* 使用 ProductActions 组件 */}
+      {productId && (
+        <ProductActions productId={productId} setShowCart={setShowCart} />
+      )}
+
+      <CartDrawer open={showCart} onClose={() => setShowCart(false)} />
 
       <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
         How to get it

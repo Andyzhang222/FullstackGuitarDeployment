@@ -3,13 +3,20 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import store from './components/store/store'; // 确保路径正确
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      {' '}
+      {/* 将 Provider 包裹在 App 外 */}
+      <App />
+    </Provider>
   </React.StrictMode>
 );
 

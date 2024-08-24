@@ -53,7 +53,7 @@ class AuthMiddleware {
 
       const userId = payload.sub;
       console.log("Extracted userId:", userId); // 调试信息
-      req.body.userId = userId;
+      req.userId = userId; // 将 userId 附加到 req 对象上
       next();
     });
   }
