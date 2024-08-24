@@ -1,9 +1,8 @@
-// src/components/Cart/CartItemCard.tsx
-
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { itemRemoved } from '../../components/store/cartSlice';
+import { AppDispatch } from '../../components/store/store';
+import { removeFromCart } from '../../components/store/cartSlice';
 
 interface CartItemCardProps {
   productId: string;
@@ -20,10 +19,14 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   price,
   quantity,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleRemoveItem = () => {
-    dispatch(itemRemoved(productId)); // 触发减少商品数量的逻辑
+    dispatch(removeFromCart(productId))
+      .unwrap()
+      .catch((error: unknown) => {
+        console.error('Failed to remove item from cart:', error);
+      });
   };
 
   const imagePath = image
@@ -65,7 +68,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           width: '100px',
           minWidth: '100px',
         }}
-        onClick={handleRemoveItem}
+        onClick={handleRemoveItem} // 处理移除商品
       >
         Delete
       </Button>
