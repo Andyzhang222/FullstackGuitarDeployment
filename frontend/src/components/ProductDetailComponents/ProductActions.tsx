@@ -1,10 +1,9 @@
-// src/components/ProductDetailComponents/ProductActions.tsx
-
 import React from 'react';
 import { Button, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { fetchCartItems, addToCart } from '../../components/store/cartSlice';
 import { AppDispatch } from '../../components/store/store';
+import axios from 'axios'; // 仅导入 axios
 
 interface ProductActionsProps {
   productId: string;
@@ -29,7 +28,16 @@ const ProductActions: React.FC<ProductActionsProps> = ({
         dispatch(fetchCartItems()); // 更新购物车数据
         setShowCart(true); // 展示购物车抽屉
       } catch (error) {
-        console.error('Failed to add item to cart:', error);
+        if (axios.isAxiosError(error)) {
+          // 使用 axios 的类型守卫来确保 `error` 是 axios 的错误类型
+          console.error(
+            'Failed to add item to cart:',
+            error.response ? error.response.data : error.message
+          );
+        } else {
+          // 处理非 axios 错误的情况
+          console.error('An unexpected error occurred:', error);
+        }
       }
     } else {
       console.error('Product ID is undefined');

@@ -1,5 +1,7 @@
+// src/components/Cart/CartDrawer.tsx
+
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   Drawer,
   Box,
@@ -9,7 +11,8 @@ import {
   Button,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { itemRemoved, selectCartItems } from '../../components/store/cartSlice';
+import { selectCartItems } from '../../components/store/cartSlice';
+import CartItemCard from './CartItemCard';
 
 interface CartDrawerProps {
   open: boolean;
@@ -17,12 +20,7 @@ interface CartDrawerProps {
 }
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
-  const dispatch = useDispatch();
   const items = useSelector(selectCartItems);
-
-  const handleRemoveItem = (productId: string) => {
-    dispatch(itemRemoved(productId)); // 使用 Redux dispatch 移除商品
-  };
 
   const subtotal = items.reduce(
     (sum, item) => sum + parseFloat(item.price) * item.quantity,
@@ -59,51 +57,16 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
         <Divider />
         <Box sx={{ flexGrow: 1, overflowY: 'auto', mt: 2 }}>
           {items.length > 0 ? (
-            items.map((item) => {
-              const imagePath = item.image.startsWith('/')
-                ? item.image
-                : `/${item.image}`;
-              return (
-                <Box
-                  key={item.productId}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    mb: 2,
-                  }}
-                >
-                  <img
-                    src={imagePath}
-                    alt={item.name}
-                    style={{
-                      width: '50px',
-                      height: '50px',
-                      marginRight: '10px',
-                    }}
-                  />
-                  <Box sx={{ flexGrow: 1 }}>
-                    <Typography variant="body1">{item.name}</Typography>
-                    <Typography variant="body2">
-                      ${item.price} x {item.quantity}
-                    </Typography>
-                  </Box>
-                  <Button
-                    sx={{
-                      color: '#FFFFFF',
-                      backgroundColor: '#000000',
-                      '&:hover': {
-                        backgroundColor: '#333333',
-                      },
-                      width: '100px',
-                      minWidth: '100px',
-                    }}
-                    onClick={() => handleRemoveItem(item.productId)} // 处理移除商品
-                  >
-                    Delete
-                  </Button>
-                </Box>
-              );
-            })
+            items.map((item) => (
+              <CartItemCard
+                key={item.productId}
+                productId={item.productId}
+                name={item.name}
+                image={item.image}
+                price={item.price}
+                quantity={item.quantity}
+              />
+            ))
           ) : (
             <Typography>Your cart is currently empty.</Typography>
           )}
