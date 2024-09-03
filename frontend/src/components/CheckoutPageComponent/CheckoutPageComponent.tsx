@@ -7,20 +7,49 @@ import {
   RadioGroup,
   FormControlLabel,
   Divider,
+  styled,
 } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { selectCartItems } from '../../components/store/cartSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  selectCartItems,
+  removeFromCart,
+} from '../../components/store/cartSlice';
+import { AppDispatch } from '../../components/store/store'; // 引入 AppDispatch
 
-const CheckoutPageComponent: React.FC = () => {
+const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
+  marginRight: theme.spacing(4),
+  '.MuiRadio-root': {
+    color: '#6E6E73',
+    '&.Mui-checked': {
+      color: '#007BFF',
+    },
+  },
+  '.MuiTypography-root': {
+    fontWeight: 500,
+    fontSize: '16px',
+    color: '#02000C',
+  },
+}));
+
+const CheckoutPage = () => {
   const items = useSelector(selectCartItems);
+  const dispatch = useDispatch<AppDispatch>(); // 使用 AppDispatch 类型
 
   const subtotal = items.reduce(
     (sum, item) => sum + parseFloat(item.price) * item.quantity,
     0
   );
   const tax = subtotal * 0.15;
-  const shipping = 30; // Example shipping fee
+  const shipping = 30; // 示例运费
   const total = subtotal + tax + shipping;
+
+  const handleRemoveItem = async (productId: string) => {
+    try {
+      await dispatch(removeFromCart(productId)).unwrap(); // 使用 unwrap 解包结果
+    } catch (error) {
+      console.error('Failed to remove item from cart:', error);
+    }
+  };
 
   return (
     <Box
@@ -36,12 +65,12 @@ const CheckoutPageComponent: React.FC = () => {
           My Cart ({items.length})
         </Typography>
         <RadioGroup row defaultValue="delivery" sx={{ mb: 4 }}>
-          <FormControlLabel
+          <StyledFormControlLabel
             value="delivery"
             control={<Radio />}
             label="Deliver to M5G2G4"
           />
-          <FormControlLabel
+          <StyledFormControlLabel
             value="pickup"
             control={<Radio />}
             label="Pick up at Toronto Downtown"
@@ -77,7 +106,12 @@ const CheckoutPageComponent: React.FC = () => {
             <Button variant="outlined" color="secondary" sx={{ ml: 2 }}>
               Save for later
             </Button>
-            <Button variant="text" color="error" sx={{ ml: 2 }}>
+            <Button
+              variant="text"
+              color="error"
+              sx={{ ml: 2 }}
+              onClick={() => handleRemoveItem(item.productId)} // 使用 handleRemoveItem 处理删除操作
+            >
               Remove
             </Button>
           </Box>
@@ -125,4 +159,4 @@ const CheckoutPageComponent: React.FC = () => {
   );
 };
 
-export default CheckoutPageComponent;
+export default CheckoutPage;
