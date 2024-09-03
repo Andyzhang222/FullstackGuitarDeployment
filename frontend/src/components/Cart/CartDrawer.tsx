@@ -11,6 +11,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { selectCartItems } from '../../components/store/cartSlice';
 import CartItemCard from './CartItemCard';
+import { useNavigate } from 'react-router-dom'; // 导入useNavigate
 
 interface CartDrawerProps {
   open: boolean;
@@ -19,6 +20,7 @@ interface CartDrawerProps {
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
   const items = useSelector(selectCartItems);
+  const navigate = useNavigate(); // 使用useNavigate来导航到新页面
 
   const subtotal = items.reduce(
     (sum, item) => sum + parseFloat(item.price) * item.quantity,
@@ -27,6 +29,10 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
   const tax = subtotal * 0.15; // 15% 税
   const shipping = 0; // 临时运费
   const total = subtotal + tax + shipping;
+
+  const handleCheckout = () => {
+    navigate('/checkout'); // 点击Checkout按钮后导航到Checkout页面
+  };
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
@@ -108,6 +114,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
                   backgroundColor: '#333333',
                 },
               }}
+              onClick={handleCheckout} // 绑定导航事件
             >
               Checkout
             </Button>

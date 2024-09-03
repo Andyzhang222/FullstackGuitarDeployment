@@ -5,6 +5,7 @@ import SignInAndSignUpPage from './pages/SignInAndSignUpPage';
 import ProductDetail from './pages/ProductDetailPage';
 import SearchPage from './pages/SearchPage';
 import ProductList from './components/productSearchComponents/ProductList';
+import CheckoutPage from './pages/CheckoutPage'; // 导入CheckoutPage组件
 import { CartProvider } from './context/CartContext';
 
 const App = () => {
@@ -21,6 +22,8 @@ const App = () => {
           {/* 提供默认 searchTerm */}
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />{' '}
+          {/* 添加Checkout页面路由 */}
         </Routes>
       </Router>
     </CartProvider>
