@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, TextField, Button, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { styled } from '@mui/system';
+import { useDispatch } from 'react-redux';
+import { fetchAddressFromCoords } from '../../components/store/locationSlice';
+import { AppDispatch } from '../../components/store/store'; // 引入 AppDispatch 类型
 
 const LocationModalContainer = styled(Box)({
   position: 'fixed',
@@ -33,14 +36,18 @@ const LocationModal: React.FC<{
   onClose: () => void;
   onSave: (newAddress: string) => void;
 }> = ({ onClose, onSave }) => {
-  const [address, setAddress] = useState('');
+  const dispatch = useDispatch<AppDispatch>();
+  const [address, setAddress] = React.useState('');
 
   const fetchCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          fetchAddressFromCoords(latitude, longitude);
+          dispatch(fetchAddressFromCoords({ lat: latitude, lng: longitude }))
+            .unwrap()
+            .then((address) => setAddress(address))
+            .catch((error) => console.error('Failed to fetch address:', error));
         },
         (error) => {
           console.error(error);
@@ -51,25 +58,8 @@ const LocationModal: React.FC<{
     }
   };
 
-  const fetchAddressFromCoords = (lat: number, lng: number) => {
-    const apiKey = process.env.REACT_APP_GOOGLE_API_KEY; // 从环境变量中获取API Key
-    fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.results && data.results.length > 0) {
-          const fullAddress = data.results[0].formatted_address;
-          setAddress(fullAddress);
-        } else {
-          console.error('No results found');
-        }
-      })
-      .catch((error) => console.error('Error fetching address:', error));
-  };
-
   const handleSave = () => {
-    onSave(address);
+    onSave(address); // 通过回调函数传递地址
   };
 
   return (
@@ -140,7 +130,7 @@ const LocationModal: React.FC<{
           variant="contained"
           color="primary"
           fullWidth
-          onClick={handleSave}
+          onClick={handleSave} // 点击保存时，调用 handleSave
           sx={{
             backgroundColor: '#02000C',
             color: '#FFFFFF',

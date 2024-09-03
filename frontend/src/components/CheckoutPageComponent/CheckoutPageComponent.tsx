@@ -1,39 +1,16 @@
 import React from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  Divider,
-  styled,
-} from '@mui/material';
+import { Box, Typography, Button, Divider } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   selectCartItems,
   removeFromCart,
 } from '../../components/store/cartSlice';
-import { AppDispatch } from '../../components/store/store'; // 引入 AppDispatch
+import { AppDispatch } from '../../components/store/store';
+import AddressSelection from './AddressSelection'; // 引入 AddressSelection 组件
 
-const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
-  marginRight: theme.spacing(4),
-  '.MuiRadio-root': {
-    color: '#6E6E73',
-    '&.Mui-checked': {
-      color: '#007BFF',
-    },
-  },
-  '.MuiTypography-root': {
-    fontWeight: 500,
-    fontSize: '16px',
-    color: '#02000C',
-  },
-}));
-
-const CheckoutPage = () => {
+const CheckoutPageComponent: React.FC = () => {
   const items = useSelector(selectCartItems);
-  const dispatch = useDispatch<AppDispatch>(); // 使用 AppDispatch 类型
+  const dispatch = useDispatch<AppDispatch>();
 
   const subtotal = items.reduce(
     (sum, item) => sum + parseFloat(item.price) * item.quantity,
@@ -57,26 +34,13 @@ const CheckoutPage = () => {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: '24px',
       }}
     >
       <Box sx={{ width: '65%' }}>
         <Typography variant="h4" sx={{ mb: 3 }}>
           My Cart ({items.length})
         </Typography>
-        <RadioGroup row defaultValue="delivery" sx={{ mb: 4 }}>
-          <StyledFormControlLabel
-            value="delivery"
-            control={<Radio />}
-            label="Deliver to M5G2G4"
-          />
-          <StyledFormControlLabel
-            value="pickup"
-            control={<Radio />}
-            label="Pick up at Toronto Downtown"
-          />
-        </RadioGroup>
-
+        <AddressSelection /> {/* 在此处使用 AddressSelection 组件 */}
         {items.map((item) => (
           <Box
             key={item.productId}
@@ -110,7 +74,7 @@ const CheckoutPage = () => {
               variant="text"
               color="error"
               sx={{ ml: 2 }}
-              onClick={() => handleRemoveItem(item.productId)} // 使用 handleRemoveItem 处理删除操作
+              onClick={() => handleRemoveItem(item.productId)}
             >
               Remove
             </Button>
@@ -159,4 +123,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutPage;
+export default CheckoutPageComponent;

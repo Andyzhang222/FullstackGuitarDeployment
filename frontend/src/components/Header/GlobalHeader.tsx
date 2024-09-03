@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, Grid, Button } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
 import LocationModal from '../RightSideInfoComponents/LocationModal';
 import ContactModal from '../RightSideInfoComponents/ContactModal';
 import PickUpModal from '../RightSideInfoComponents/PickUpModal';
-import CategoryMenu from './CategoryMenu'; // Import the CategoryMenu component
+import CategoryMenu from './CategoryMenu';
+import {
+  selectAddress,
+  setAddress,
+} from '../../components/store/locationSlice'; // Import Redux actions and selectors
+import { AppDispatch } from '../../components/store/store'; // Import AppDispatch
 
 const GlobalHeader: React.FC = () => {
+  const address = useSelector(selectAddress); // Get the address from Redux
+  const dispatch = useDispatch<AppDispatch>(); // Use AppDispatch type
   const [showLocationModal, setShowLocationModal] = useState(false);
-  const [address, setAddress] = useState('Deliver to');
   const [showContactModal, setShowContactModal] = useState(false);
   const [showPickUpModal, setShowPickUpModal] = useState(false);
-
-  useEffect(() => {
-    const savedAddress = localStorage.getItem('address');
-    if (savedAddress) {
-      setAddress(savedAddress);
-    }
-  }, []);
 
   const handleToggleModal = () => {
     setShowLocationModal(!showLocationModal);
@@ -31,16 +31,14 @@ const GlobalHeader: React.FC = () => {
   };
 
   const handleSaveAddress = (newAddress: string) => {
-    setAddress(newAddress);
-    localStorage.setItem('address', newAddress);
+    dispatch(setAddress(newAddress)); // Save the address to Redux
     setShowLocationModal(false);
   };
 
-  const isAddressSet = address !== 'Deliver to';
-
+  const isAddressSet = address !== '';
   const truncatedAddress = isAddressSet
     ? `${address.substring(0, 15)}...`
-    : address;
+    : 'Deliver to your location';
 
   return (
     <Box
@@ -54,7 +52,7 @@ const GlobalHeader: React.FC = () => {
         padding: '0 72px',
         boxSizing: 'border-box',
         position: 'relative',
-        borderBottom: '1px solid #DDDCDE', // 添加底部的灰色线
+        borderBottom: '1px solid #DDDCDE',
       }}
     >
       <Grid
@@ -65,7 +63,7 @@ const GlobalHeader: React.FC = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          flexWrap: 'nowrap', // 禁止换行
+          flexWrap: 'nowrap',
         }}
       >
         {/* CategoryMenu Component */}
@@ -77,8 +75,8 @@ const GlobalHeader: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             gap: '24px',
-            minWidth: 0, // 防止因内容过多导致的溢出
-            flexShrink: 1, // 防止地址部分占用过多空间
+            minWidth: 0,
+            flexShrink: 1,
           }}
         >
           <Button
@@ -90,11 +88,11 @@ const GlobalHeader: React.FC = () => {
               color: '#000000',
               textTransform: 'none',
               minWidth: 'fit-content',
-              maxWidth: '150px', // 设置最大宽度
-              overflow: 'hidden', // 隐藏溢出部分
-              textOverflow: 'ellipsis', // 超出部分显示省略号
-              whiteSpace: 'nowrap', // 禁止换行
-              flexShrink: 1, // 防止占用过多空间
+              maxWidth: '150px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              flexShrink: 1,
             }}
             onClick={handleToggleModal}
           >
