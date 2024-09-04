@@ -33,7 +33,7 @@ const AddressSelectionContainer = styled(Box)({
   border: '1px solid #E0E0E0',
   borderRadius: '8px',
   marginBottom: '16px',
-  width: '365px', // 调整为适合的宽度
+  width: '365px',
   height: '102px',
 });
 
@@ -42,10 +42,10 @@ const StyledLabelText = styled(Typography)({
   fontSize: '16px',
   color: '#02000C',
   marginLeft: '8px',
-  whiteSpace: 'nowrap', // 禁止换行
-  overflow: 'hidden', // 隐藏超出部分
-  textOverflow: 'ellipsis', // 超出部分显示省略号
-  maxWidth: '240px', // 限制最大宽度以保持布局
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '240px',
 });
 
 const StyledSubText = styled(Typography)({
@@ -55,9 +55,9 @@ const StyledSubText = styled(Typography)({
 });
 
 const StyledRadio = styled(Radio)({
-  color: '#000', // 默认颜色
+  color: '#000',
   '&.Mui-checked': {
-    color: '#000', // 选中时的颜色
+    color: '#000',
   },
 });
 
@@ -65,6 +65,15 @@ const AddressSelection: React.FC = () => {
   const address = useSelector(selectAddress);
   const dispatch = useDispatch<AppDispatch>();
   const [showLocationModal, setShowLocationModal] = React.useState(false);
+
+  // 计算当前时间加一周
+  const today = new Date();
+  const nextWeek = new Date(today.setDate(today.getDate() + 7));
+  const formattedDate = nextWeek.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === 'delivery' && !address) {
@@ -83,21 +92,33 @@ const AddressSelection: React.FC = () => {
         row
         defaultValue="delivery"
         onChange={handleAddressChange}
-        sx={{ gap: '16px' }} // 保持16px的间隔
+        sx={{ gap: '16px' }}
       >
         <AddressSelectionContainer>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {' '}
+            {/* 确保图标和 "Deliver to" 在一行 */}
             <StyledRadio value="delivery" />
-            <TruckIcon /> {/* 使用本地卡车图标 */}
-            <Box>
-              <StyledLabelText>
-                Deliver to {address || 'M5G2G4'}
-              </StyledLabelText>
-              {address && (
-                <StyledSubText>
-                  $30 Shipping, Get it by Sat, Jul 27
-                </StyledSubText>
-              )}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginLeft: '8px',
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {' '}
+                {/* 卡车图标和第一行文本 */}
+                <TruckIcon />
+                <StyledLabelText>
+                  Deliver to {address || 'your location'}
+                </StyledLabelText>
+              </Box>
+              <StyledSubText sx={{ marginTop: '4px' }}>
+                {' '}
+                {/* 第二行文本 */}
+                $30 Shipping, Get it by {formattedDate}
+              </StyledSubText>
             </Box>
           </Box>
         </AddressSelectionContainer>
@@ -105,7 +126,7 @@ const AddressSelection: React.FC = () => {
         <AddressSelectionContainer>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <StyledRadio value="pickup" />
-            <ShopIcon /> {/* 使用本地商店图标 */}
+            <ShopIcon />
             <StyledLabelText>Pick up at Toronto Downtown</StyledLabelText>
           </Box>
         </AddressSelectionContainer>
