@@ -10,7 +10,15 @@ const CheckoutPage: React.FC = () => {
     <Box sx={{ maxWidth: '100%', overflowX: 'hidden' }}>
       <Header />
       <GlobalHeader />
-      <Box sx={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
+      <Box
+        sx={{
+          padding: '24px',
+          maxWidth: '1800px',
+          margin: '0 auto',
+          paddingLeft: '72px', // 设置左右边距为 72px
+          paddingRight: '72px', // 设置左右边距为 72px
+        }}
+      >
         <CheckoutPageComponent />
       </Box>
       <Footer />
