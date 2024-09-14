@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, IconButton } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../components/store/store';
-import { removeFromCart } from '../../components/store/cartSlice';
+import {
+  removeFromCart,
+  addToCart,
+  fetchCartItems,
+} from '../../components/store/cartSlice'; // 引入 addToCart 和 fetchCartItems 方法
 import axios from 'axios';
 import BASE_URL from '../../config';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 interface CartItemCardProps {
   productId: string;
@@ -55,9 +61,37 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   const handleRemoveItem = () => {
     dispatch(removeFromCart(productId))
       .unwrap()
+      .then(() => dispatch(fetchCartItems())) // 更新购物车数据
       .catch((error: unknown) => {
         console.error('Failed to remove item from cart:', error);
       });
+  };
+
+  const handleIncrementQuantity = async () => {
+    try {
+      console.log('Sending request to add item to cart:', {
+        productId,
+        quantity: 1,
+      });
+      await dispatch(addToCart({ productId, quantity: 1 })).unwrap();
+      console.log('Item successfully added to cart.');
+      dispatch(fetchCartItems()); // 更新购物车数据
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+    }
+  };
+
+  const handleDecrementQuantity = () => {
+    if (quantity > 1) {
+      dispatch(removeFromCart(productId))
+        .unwrap()
+        .then(() => dispatch(fetchCartItems())) // 更新购物车数据
+        .catch((error: unknown) => {
+          console.error('Failed to decrement item quantity:', error);
+        });
+    } else {
+      handleRemoveItem();
+    }
   };
 
   const imagePath = image
@@ -93,6 +127,21 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
             Only {availableQuantity} in stock
           </Typography>
         )}
+      </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {/* 减号按钮 */}
+        <IconButton onClick={handleDecrementQuantity} disabled={!inStock}>
+          <RemoveIcon />
+        </IconButton>
+        {/* 显示当前数量 */}
+        <Typography>{quantity}</Typography>
+        {/* 加号按钮 */}
+        <IconButton
+          onClick={handleIncrementQuantity}
+          disabled={availableQuantity !== null && quantity >= availableQuantity}
+        >
+          <AddIcon />
+        </IconButton>
       </Box>
       <Button
         sx={{
