@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../components/store/store';
 import { removeFromCart } from '../../components/store/cartSlice';
+import axios from 'axios';
+import BASE_URL from '../../config';
 
 interface CartItemCardProps {
   productId: string;
@@ -20,6 +22,35 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   quantity,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [inStock, setInStock] = useState(true);
+  const [availableQuantity, setAvailableQuantity] = useState<number | null>(
+    null
+  );
+
+  useEffect(() => {
+    // 当组件加载时检查库存
+    const checkItemStock = async () => {
+      try {
+        const authToken = localStorage.getItem('accessToken'); // 从本地存储获取token
+        const response = await axios.post(
+          `${BASE_URL}/carts/check-stock`,
+          { items: [{ productId, quantity }] },
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`, // 将token附加到请求头
+            },
+          }
+        );
+        const stockResult = response.data.stockResults[0];
+        setInStock(stockResult.isInStock);
+        setAvailableQuantity(stockResult.availableQuantity);
+      } catch (error) {
+        console.error('Error checking stock:', error);
+      }
+    };
+
+    checkItemStock();
+  }, [productId, quantity]);
 
   const handleRemoveItem = () => {
     dispatch(removeFromCart(productId))
@@ -57,6 +88,11 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         <Typography variant="body2">
           ${price} x {quantity}
         </Typography>
+        {!inStock && (
+          <Typography color="error">
+            Only {availableQuantity} in stock
+          </Typography>
+        )}
       </Box>
       <Button
         sx={{
@@ -69,6 +105,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           minWidth: '100px',
         }}
         onClick={handleRemoveItem} // 处理移除商品
+        disabled={!inStock} // 如果库存不足，禁用按钮
       >
         Delete
       </Button>

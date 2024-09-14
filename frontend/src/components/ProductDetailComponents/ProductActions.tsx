@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Alert,
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { fetchCartItems, addToCart } from '../../components/store/cartSlice';
@@ -26,8 +27,10 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleAddToCart = async () => {
+    setErrorMessage(null); // 清除之前的错误消息
     const idToken = localStorage.getItem('idToken');
 
     if (!idToken) {
@@ -45,14 +48,36 @@ const ProductActions: React.FC<ProductActionsProps> = ({
         console.log('Item successfully added to cart.');
         dispatch(fetchCartItems()); // 更新购物车数据
         setShowCart(true); // 展示购物车抽屉
-      } catch (error) {
+      } catch (error: unknown) {
+        // 打印出完整的错误对象，帮助调试
+        console.error('Caught error:', error);
+
         if (axios.isAxiosError(error)) {
-          console.error(
-            'Failed to add item to cart:',
-            error.response ? error.response.data : error.message
-          );
+          const errorData = error.response?.data;
+
+          // 打印出 errorData，帮助确认数据结构
+          console.log('Error data:', errorData);
+
+          // 处理库存不足的情况
+          if (
+            errorData?.error === 'Insufficient stock' &&
+            errorData?.availableQuantity
+          ) {
+            // 这里直接提示库存不足的消息
+            setErrorMessage(
+              `库存不足！当前仅剩 ${errorData.availableQuantity} 件商品。`
+            );
+          } else if (error.response) {
+            // 其他类型的错误处理
+            setErrorMessage(
+              `Error: ${error.response.status} - ${error.response.statusText}`
+            );
+          } else {
+            setErrorMessage('Failed to add item to cart');
+          }
         } else {
-          console.error('An unexpected error occurred:', error);
+          console.error('Non-Axios error:', error);
+          setErrorMessage('Insufficient stock, failed to add to cart.');
         }
       }
     } else {
@@ -88,7 +113,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({
           fontWeight: 'bold',
           fontSize: '16px',
         }}
-        onClick={handleBuyItNow} // 添加点击事件处理函数
+        onClick={handleBuyItNow}
       >
         Buy It Now
       </Button>
@@ -108,6 +133,12 @@ const ProductActions: React.FC<ProductActionsProps> = ({
       >
         Add to Cart
       </Button>
+
+      {errorMessage && (
+        <Alert severity="error" sx={{ marginTop: '16px' }}>
+          {errorMessage}
+        </Alert>
+      )}
 
       <Dialog
         open={open}
