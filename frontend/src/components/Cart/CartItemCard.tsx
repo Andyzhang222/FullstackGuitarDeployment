@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, IconButton } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../components/store/store';
 import {
   removeFromCart,
   addToCart,
   fetchCartItems,
-} from '../../components/store/cartSlice'; // 引入 addToCart 和 fetchCartItems 方法
+} from '../../components/store/cartSlice';
 import axios from 'axios';
 import BASE_URL from '../../config';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteIcon from '@mui/icons-material/Delete'; // 引入垃圾桶图标
 
 interface CartItemCardProps {
   productId: string;
@@ -34,7 +35,6 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   );
 
   useEffect(() => {
-    // 当组件加载时检查库存
     const checkItemStock = async () => {
       try {
         const authToken = localStorage.getItem('accessToken'); // 从本地存储获取token
@@ -61,7 +61,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   const handleRemoveItem = () => {
     dispatch(removeFromCart(productId))
       .unwrap()
-      .then(() => dispatch(fetchCartItems())) // 更新购物车数据
+      .then(() => dispatch(fetchCartItems()))
       .catch((error: unknown) => {
         console.error('Failed to remove item from cart:', error);
       });
@@ -74,8 +74,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         quantity: 1,
       });
       await dispatch(addToCart({ productId, quantity: 1 })).unwrap();
-      console.log('Item successfully added to cart.');
-      dispatch(fetchCartItems()); // 更新购物车数据
+      dispatch(fetchCartItems());
     } catch (error) {
       console.error('Error adding item to cart:', error);
     }
@@ -85,7 +84,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
     if (quantity > 1) {
       dispatch(removeFromCart(productId))
         .unwrap()
-        .then(() => dispatch(fetchCartItems())) // 更新购物车数据
+        .then(() => dispatch(fetchCartItems()))
         .catch((error: unknown) => {
           console.error('Failed to decrement item quantity:', error);
         });
@@ -106,21 +105,32 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         display: 'flex',
         alignItems: 'center',
         mb: 2,
+        borderRadius: 2,
+        p: 2,
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+        backgroundColor: '#fff',
       }}
     >
       <img
         src={imagePath}
         alt={name}
         style={{
-          width: '50px',
-          height: '50px',
+          width: '60px',
+          height: '60px',
           marginRight: '10px',
+          borderRadius: '10px',
+          objectFit: 'cover',
         }}
       />
-      <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="body1">{name}</Typography>
-        <Typography variant="body2">
-          ${price} x {quantity}
+      <Box sx={{ flexGrow: 1, maxWidth: '150px' }}>
+        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+          {name}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'gray' }}>
+          ${price}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'gray' }}>
+          x {quantity}
         </Typography>
         {!inStock && (
           <Typography color="error">
@@ -128,36 +138,64 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           </Typography>
         )}
       </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        {/* 减号按钮 */}
-        <IconButton onClick={handleDecrementQuantity} disabled={!inStock}>
-          <RemoveIcon />
+      <Box sx={{ display: 'flex', alignItems: 'center', minWidth: '110px' }}>
+        {/* 自定义的减号按钮 */}
+        <IconButton
+          onClick={handleDecrementQuantity}
+          sx={{
+            backgroundColor: '#f0f0f0',
+            '&:hover': { backgroundColor: '#e0e0e0' },
+            '&.Mui-disabled': { backgroundColor: '#f0f0f0' },
+            borderRadius: '50%',
+            padding: '6px', // 减小按钮尺寸
+            marginRight: '8px',
+            boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          <RemoveIcon fontSize="small" />
         </IconButton>
-        {/* 显示当前数量 */}
-        <Typography>{quantity}</Typography>
-        {/* 加号按钮 */}
+        {/* 当前数量显示 */}
+        <Typography variant="h6" sx={{ mx: 1 }}>
+          {quantity}
+        </Typography>
+        {/* 自定义的加号按钮 */}
         <IconButton
           onClick={handleIncrementQuantity}
           disabled={availableQuantity !== null && quantity >= availableQuantity}
+          sx={{
+            backgroundColor: '#f0f0f0',
+            '&:hover': { backgroundColor: '#e0e0e0' },
+            '&.Mui-disabled': {
+              backgroundColor: '#f0f0f0',
+              color: '#b0b0b0',
+              boxShadow: 'none',
+            },
+            borderRadius: '50%',
+            padding: '6px', // 减小按钮尺寸
+            marginLeft: '8px',
+            boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+          }}
         >
-          <AddIcon />
+          <AddIcon fontSize="small" />
         </IconButton>
       </Box>
-      <Button
+      {/* 使用垃圾桶图标替代删除按钮 */}
+      <IconButton
         sx={{
-          color: '#FFFFFF',
-          backgroundColor: '#000000',
+          color: 'black',
           '&:hover': {
-            backgroundColor: '#333333',
+            backgroundColor: 'rgba(255, 0, 0, 0.1)',
           },
-          width: '100px',
-          minWidth: '100px',
+          width: '50px',
+          minWidth: '50px',
+          marginLeft: '10px',
+          borderRadius: '5px',
         }}
-        onClick={handleRemoveItem} // 处理移除商品
-        disabled={!inStock} // 如果库存不足，禁用按钮
+        onClick={handleRemoveItem}
+        disabled={!inStock}
       >
-        Delete
-      </Button>
+        <DeleteIcon />
+      </IconButton>
     </Box>
   );
 };
