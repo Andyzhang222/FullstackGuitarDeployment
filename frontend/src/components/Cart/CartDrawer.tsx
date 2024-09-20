@@ -9,7 +9,10 @@ import {
   Button,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { selectCartItems } from '../../components/store/cartSlice';
+import {
+  selectCartItems,
+  selectOutOfStockItems, // 导入选择器来检查库存不足
+} from '../../components/store/cartSlice';
 import CartItemCard from './CartItemCard';
 import { useNavigate } from 'react-router-dom'; // 导入useNavigate
 
@@ -20,6 +23,7 @@ interface CartDrawerProps {
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
   const items = useSelector(selectCartItems);
+  const outOfStockItems = useSelector(selectOutOfStockItems); // 获取库存不足的商品
   const navigate = useNavigate(); // 使用useNavigate来导航到新页面
 
   const subtotal = items.reduce(
@@ -30,8 +34,13 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
   const shipping = 0; // 临时运费
   const total = subtotal + tax + shipping;
 
+  // 当库存不足时禁用结账按钮
+  const isCheckoutDisabled = outOfStockItems.length > 0;
+
   const handleCheckout = () => {
-    navigate('/checkout'); // 点击Checkout按钮后导航到Checkout页面
+    if (!isCheckoutDisabled) {
+      navigate('/checkout'); // 点击Checkout按钮后导航到Checkout页面
+    }
   };
 
   return (
@@ -109,15 +118,23 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
               color="primary"
               fullWidth
               sx={{
-                backgroundColor: '#000000',
+                backgroundColor: isCheckoutDisabled ? '#aaaaaa' : '#000000', // 当禁用时，按钮颜色变灰
                 '&:hover': {
-                  backgroundColor: '#333333',
+                  backgroundColor: isCheckoutDisabled ? '#aaaaaa' : '#333333',
                 },
               }}
-              onClick={handleCheckout} // 绑定导航事件
+              onClick={handleCheckout}
+              disabled={isCheckoutDisabled} // 如果有库存不足的商品，则禁用按钮
             >
               Checkout
             </Button>
+            {/* 显示库存不足的警告 */}
+            {isCheckoutDisabled && (
+              <Typography color="error" sx={{ mt: 2 }}>
+                You have items that are out of stock. Please adjust quantities
+                before checking out.
+              </Typography>
+            )}
           </Box>
         </Box>
       </Box>
