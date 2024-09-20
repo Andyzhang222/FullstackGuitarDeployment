@@ -6,6 +6,7 @@ import {
   removeFromCart,
   addToCart,
   fetchCartItems,
+  removeEntireCartItem,
 } from '../../components/store/cartSlice';
 import axios from 'axios';
 import BASE_URL from '../../config';
@@ -58,10 +59,22 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
     checkItemStock();
   }, [productId, quantity]);
 
+  // 完全删除购物车项
   const handleRemoveItem = () => {
+    // 完全删除购物车中的商品
     dispatch(removeFromCart(productId))
       .unwrap()
-      .then(() => dispatch(fetchCartItems()))
+      .then(() => dispatch(fetchCartItems())) // 更新购物车数据
+      .catch((error: unknown) => {
+        console.error('Failed to remove item from cart:', error);
+      });
+  };
+
+  const handleRemoveEntireItem = () => {
+    // 点击垃圾桶时，调用 removeEntireCartItem 完全删除商品
+    dispatch(removeEntireCartItem(productId))
+      .unwrap()
+      .then(() => dispatch(fetchCartItems())) // 更新购物车数据
       .catch((error: unknown) => {
         console.error('Failed to remove item from cart:', error);
       });
@@ -84,12 +97,12 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
     if (quantity > 1) {
       dispatch(removeFromCart(productId))
         .unwrap()
-        .then(() => dispatch(fetchCartItems()))
+        .then(() => dispatch(fetchCartItems())) // 更新购物车数据
         .catch((error: unknown) => {
           console.error('Failed to decrement item quantity:', error);
         });
     } else {
-      handleRemoveItem();
+      handleRemoveItem(); // 如果数量为 1，删除整个项
     }
   };
 
@@ -147,7 +160,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
             '&:hover': { backgroundColor: '#e0e0e0' },
             '&.Mui-disabled': { backgroundColor: '#f0f0f0' },
             borderRadius: '50%',
-            padding: '6px', // 减小按钮尺寸
+            padding: '6px',
             marginRight: '8px',
             boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
           }}
@@ -171,7 +184,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
               boxShadow: 'none',
             },
             borderRadius: '50%',
-            padding: '6px', // 减小按钮尺寸
+            padding: '6px',
             marginLeft: '8px',
             boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
           }}
@@ -191,7 +204,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           marginLeft: '10px',
           borderRadius: '5px',
         }}
-        onClick={handleRemoveItem}
+        onClick={handleRemoveEntireItem} // 现在直接删除整个商品
         disabled={!inStock}
       >
         <DeleteIcon />
