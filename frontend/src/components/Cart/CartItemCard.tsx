@@ -7,17 +7,16 @@ import {
   addToCart,
   fetchCartItems,
   removeEntireCartItem,
+  checkStock,
 } from '../../components/store/cartSlice';
-import axios from 'axios';
-import BASE_URL from '../../config';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import DeleteIcon from '@mui/icons-material/Delete'; // 引入垃圾桶图标
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface CartItemCardProps {
   productId: string;
   name: string;
-  image?: string; // 允许 image 为 undefined
+  image?: string;
   price: string;
   quantity: number;
 }
@@ -30,79 +29,74 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   quantity,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [inStock, setInStock] = useState(true);
   const [availableQuantity, setAvailableQuantity] = useState<number | null>(
     null
-  );
+  ); // 单独管理此商品的可用库存
 
+  // 当组件加载时检查当前商品的库存
   useEffect(() => {
     const checkItemStock = async () => {
       try {
-        const authToken = localStorage.getItem('accessToken'); // 从本地存储获取token
-        const response = await axios.post(
-          `${BASE_URL}/carts/check-stock`,
-          { items: [{ productId, quantity }] },
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`, // 将token附加到请求头
-            },
-          }
+        const response = await dispatch(checkStock()).unwrap();
+        const stockResult = response.find(
+          (item: { productId: string }) => item.productId === productId
         );
-        const stockResult = response.data.stockResults[0];
-        setInStock(stockResult.isInStock);
-        setAvailableQuantity(stockResult.availableQuantity);
+        if (stockResult) {
+          setAvailableQuantity(stockResult.availableQuantity);
+        }
       } catch (error) {
         console.error('Error checking stock:', error);
       }
     };
 
     checkItemStock();
-  }, [productId, quantity]);
+  }, [dispatch, productId]);
 
   // 完全删除购物车项
   const handleRemoveItem = () => {
-    // 完全删除购物车中的商品
     dispatch(removeFromCart(productId))
       .unwrap()
-      .then(() => dispatch(fetchCartItems())) // 更新购物车数据
+      .then(() => dispatch(fetchCartItems()))
       .catch((error: unknown) => {
         console.error('Failed to remove item from cart:', error);
       });
   };
 
+  // 删除整个商品
   const handleRemoveEntireItem = () => {
-    // 点击垃圾桶时，调用 removeEntireCartItem 完全删除商品
     dispatch(removeEntireCartItem(productId))
       .unwrap()
-      .then(() => dispatch(fetchCartItems())) // 更新购物车数据
+      .then(() => dispatch(fetchCartItems()))
       .catch((error: unknown) => {
         console.error('Failed to remove item from cart:', error);
       });
   };
 
+  // 增加数量
   const handleIncrementQuantity = async () => {
-    try {
-      console.log('Sending request to add item to cart:', {
-        productId,
-        quantity: 1,
-      });
-      await dispatch(addToCart({ productId, quantity: 1 })).unwrap();
-      dispatch(fetchCartItems());
-    } catch (error) {
-      console.error('Error adding item to cart:', error);
+    if (availableQuantity !== null && quantity < availableQuantity) {
+      try {
+        await dispatch(addToCart({ productId, quantity: 1 })).unwrap();
+        dispatch(fetchCartItems());
+      } catch (error) {
+        console.error('Error adding item to cart:', error);
+      }
+    } else {
+      console.log('Cannot add more items, stock is limited');
     }
   };
 
+  // 减少数量
   const handleDecrementQuantity = () => {
     if (quantity > 1) {
       dispatch(removeFromCart(productId))
         .unwrap()
-        .then(() => dispatch(fetchCartItems())) // 更新购物车数据
+        .then(() => dispatch(fetchCartItems()))
         .catch((error: unknown) => {
           console.error('Failed to decrement item quantity:', error);
         });
     } else {
-      handleRemoveItem(); // 如果数量为 1，删除整个项
+      handleRemoveItem(); // 如果数量为1，直接删除该项
     }
   };
 
@@ -110,7 +104,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
     ? image.startsWith('/')
       ? image
       : `/${image}`
-    : '/default-image-path.jpg'; // 如果 image 为空，使用默认图片路径
+    : '/default-image-path.jpg';
 
   return (
     <Box
@@ -145,14 +139,14 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         <Typography variant="body2" sx={{ color: 'gray' }}>
           x {quantity}
         </Typography>
-        {!inStock && (
+        {/* 只有当用户数量超过库存时才显示库存不足的警告 */}
+        {availableQuantity !== null && quantity > availableQuantity && (
           <Typography color="error">
             Only {availableQuantity} in stock
           </Typography>
         )}
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', minWidth: '110px' }}>
-        {/* 自定义的减号按钮 */}
         <IconButton
           onClick={handleDecrementQuantity}
           sx={{
@@ -167,11 +161,9 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         >
           <RemoveIcon fontSize="small" />
         </IconButton>
-        {/* 当前数量显示 */}
         <Typography variant="h6" sx={{ mx: 1 }}>
           {quantity}
         </Typography>
-        {/* 自定义的加号按钮 */}
         <IconButton
           onClick={handleIncrementQuantity}
           disabled={availableQuantity !== null && quantity >= availableQuantity}
@@ -192,7 +184,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           <AddIcon fontSize="small" />
         </IconButton>
       </Box>
-      {/* 使用垃圾桶图标替代删除按钮 */}
+      {/* 确保垃圾箱按钮始终可点击 */}
       <IconButton
         sx={{
           color: 'black',
@@ -204,8 +196,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           marginLeft: '10px',
           borderRadius: '5px',
         }}
-        onClick={handleRemoveEntireItem} // 现在直接删除整个商品
-        disabled={!inStock}
+        onClick={handleRemoveEntireItem} // 删除整个商品
       >
         <DeleteIcon />
       </IconButton>
