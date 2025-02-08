@@ -1,10 +1,14 @@
+import './middleware/axiosInterceptor'; // ✅ 确保 Axios 拦截器生效
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import store from './components/store/store'; // 确保路径正确
+import store from './components/store/store'; // ✅ 确保正确导入 store
+import reportWebVitals from './reportWebVitals';
+
+// ✅ 在全局 window 上暴露 store，方便在 Console 里调试
+// (window as any).store = store;
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,14 +17,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      {' '}
-      {/* 将 Provider 包裹在 App 外 */}
       <App />
     </Provider>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

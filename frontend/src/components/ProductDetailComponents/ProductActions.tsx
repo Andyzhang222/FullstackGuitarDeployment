@@ -44,31 +44,30 @@ const ProductActions: React.FC<ProductActionsProps> = ({
           productId,
           quantity: 1,
         });
+
         await dispatch(addToCart({ productId, quantity: 1 })).unwrap();
         console.log('Item successfully added to cart.');
         dispatch(fetchCartItems()); // 更新购物车数据
         setShowCart(true); // 展示购物车抽屉
       } catch (error: unknown) {
-        // 打印出完整的错误对象，帮助调试
         console.error('Caught error:', error);
 
         if (axios.isAxiosError(error)) {
-          const errorData = error.response?.data;
+          const errorData = error.response?.data as {
+            error?: string;
+            availableQuantity?: number;
+          };
 
-          // 打印出 errorData，帮助确认数据结构
           console.log('Error data:', errorData);
 
-          // 处理库存不足的情况
           if (
             errorData?.error === 'Insufficient stock' &&
-            errorData?.availableQuantity
+            errorData?.availableQuantity !== undefined
           ) {
-            // 这里直接提示库存不足的消息
             setErrorMessage(
               `库存不足！当前仅剩 ${errorData.availableQuantity} 件商品。`
             );
           } else if (error.response) {
-            // 其他类型的错误处理
             setErrorMessage(
               `Error: ${error.response.status} - ${error.response.statusText}`
             );
@@ -77,7 +76,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({
           }
         } else {
           console.error('Non-Axios error:', error);
-          setErrorMessage('Insufficient stock, failed to add to cart.');
+          setErrorMessage('发生未知错误，请稍后重试。');
         }
       }
     } else {
