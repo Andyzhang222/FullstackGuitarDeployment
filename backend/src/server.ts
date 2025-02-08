@@ -21,12 +21,6 @@ import RefreshTokenController from "./controllers/refreshToken.controller"; // â
 
 dotenv.config();
 
-
-
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 const app = new App({
   port: 5001,
   controllers: [
