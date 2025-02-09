@@ -8,8 +8,11 @@ import cors from "cors";
 class AuthController {
   public path = "/auth";
   public router = express.Router();
+  private cognitoService: Cognito; 
+
 
   constructor() {
+    this.cognitoService = new Cognito(); 
     this.initRoutes();
   }
 
@@ -19,6 +22,7 @@ class AuthController {
     this.router.post("/signup", this.validateBody("signUp"), this.signUp);
     this.router.post("/signin", this.validateBody("signIn"), this.signIn);
     this.router.post("/verify", this.validateBody("verify"), this.verify);
+    this.router.post("/refresh-token", this.refreshToken); 
     this.router.post(
       "/forgot-password",
       this.validateBody("forgotPassword"),
@@ -32,6 +36,22 @@ class AuthController {
     // 新增的检查邮箱是否存在的路由
     this.router.post("/check-email", this.checkEmail); // 新增的路由
   }
+
+  refreshToken = async (req: Request, res: Response) => {
+    try {
+      const { username, refreshToken } = req.body;
+
+      if (!username || !refreshToken) {
+        return res.status(400).json({ message: "Missing username or refresh token" });
+      }
+
+      const newTokens = await this.cognitoService.refreshTokens(refreshToken);
+      return res.status(200).json(newTokens);
+    } catch (error) {
+      console.error("❌ Refresh token error:", error);
+      return res.status(401).json({ message: "Invalid refresh token" });
+    }
+  };
 
   // 新增的检查邮箱是否存在的方法
   checkEmail = async (req: Request, res: Response) => {

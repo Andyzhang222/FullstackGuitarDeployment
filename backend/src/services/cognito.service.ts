@@ -2,8 +2,11 @@ import AWS from "aws-sdk";
 import crypto from "crypto";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import { CognitoRefreshToken, CognitoUser } from "amazon-cognito-identity-js";
+import { getCognitoUser } from "../utils/cognitoUtils"; 
 dotenv.config();
 import { UserService } from "../services/user.service";
+
 
 export default class Cognito {
   private config = {
@@ -190,5 +193,28 @@ export default class Cognito {
       console.log("Error in verifyCode:", error);
       return false;
     }
+  }
+
+  public async refreshTokens(refreshToken: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const user = getCognitoUser();
+      if (!user) {
+        return reject(new Error("User not found"));
+      }
+
+      const refreshTokenObj = new CognitoRefreshToken({ RefreshToken: refreshToken });
+
+      user.refreshSession(refreshTokenObj, (err, session) => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve({
+          accessToken: session.getAccessToken().getJwtToken(),
+          idToken: session.getIdToken().getJwtToken(),
+          refreshToken: session.getRefreshToken().getToken(),
+        });
+      });
+    });
   }
 }
