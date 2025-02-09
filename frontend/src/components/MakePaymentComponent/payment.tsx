@@ -1,26 +1,26 @@
 import React from 'react';
 import { Box, Typography, Button, Divider } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { selectCartItems } from '../../components/store/cartSlice'; // ✅ 仅获取 items
-import AddressSelection from './AddressSelection';
-import CartItem from './CartItem';
+import { selectCartItems } from '../store/cartSlice';
+import AddressSelection from '../CheckoutPageComponent/AddressSelection'; // 引入 AddressSelection 组件
+import CartItem from '../CheckoutPageComponent/CartItem'; // 引入新的 CartItem 组件
+import { useNavigate } from 'react-router-dom'; // ✅ 引入路由跳转
 
 const CheckoutPageComponent: React.FC = () => {
-  const navigate = useNavigate();
   const items = useSelector(selectCartItems);
+  const navigate = useNavigate(); // ✅ 获取导航函数
 
-  // ✅ 直接在前端计算 subtotal
   const subtotal = items.reduce(
     (sum, item) => sum + parseFloat(item.price) * item.quantity,
     0
   );
   const tax = subtotal * 0.15;
-  const shipping = 30;
+  const shipping = 30; // 示例运费
   const total = subtotal + tax + shipping;
 
+  // ✅ 处理跳转到支付页面
   const handleProceedToCheckout = () => {
-    navigate('/payment');
+    navigate('/checkout/payment'); // 跳转到支付页面
   };
 
   return (
@@ -71,17 +71,18 @@ const CheckoutPageComponent: React.FC = () => {
           <Typography variant="h6">Total</Typography>
           <Typography variant="h6">${total.toFixed(2)}</Typography>
         </Box>
+        {/* ✅ 添加 onClick 处理跳转 */}
         <Button
           variant="contained"
           color="primary"
           fullWidth
           sx={{ backgroundColor: '#000000' }}
-          onClick={handleProceedToCheckout} // 绑定点击事件
+          onClick={handleProceedToCheckout} // 点击跳转
         >
           Proceed to Checkout
         </Button>
 
-        {/* 支付方式图标 */}
+        {/* 支付图标部分 */}
         <Box
           sx={{
             display: 'flex',

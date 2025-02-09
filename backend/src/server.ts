@@ -18,6 +18,8 @@ import ProtectedController from "./controllers/protected.controller";
 import ProductController from "./controllers/ProductController";
 import CartController from "./controllers/CartController";
 import RefreshTokenController from "./controllers/refreshToken.controller"; // ✅ 新增 Refresh Token 控制器
+import PaymentController from "./controllers/PaymentController"; // ✅ 引入 PaymentController
+
 
 dotenv.config();
 
@@ -29,7 +31,8 @@ const app = new App({
     new ProtectedController(),
     new ProductController(),
     new CartController(),
-    new RefreshTokenController(), // ✅ 添加 Refresh Token 控制器
+    new RefreshTokenController(), // 
+    new PaymentController(), // 
   ],
   middleWares: [
     cors(corsOptions), // 这里传入 corsOptions

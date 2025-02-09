@@ -8,6 +8,7 @@ import SearchPage from './pages/SearchPage';
 import ProductList from './components/productSearchComponents/ProductList';
 import CheckoutPage from './pages/CheckoutPage'; // 导入CheckoutPage组件
 import { CartProvider } from './context/CartContext';
+import PaymentPage from './pages/PaymentPage';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/payment" element={<PaymentPage />} />
         </Routes>
       </Router>
     </CartProvider>
