@@ -1,6 +1,5 @@
 import * as express from "express";
 import { Request, Response } from "express";
-import Cognito from "../services/cognito.service";
 
 class HomeController {
   public path = "/";
@@ -11,11 +10,17 @@ class HomeController {
   }
 
   public initRoutes() {
-    this.router.get("/", this.home);
+    this.router.get("/", this.healthCheck);
   }
 
-  home = (req: Request, res: Response) => {
-    res.send("success");
+  // 📌 健康检查 API
+  healthCheck = (req: Request, res: Response) => {
+    res.status(200).json({
+      status: "OK",
+      message: "API is running",
+      version: "1.0.0", // 📌 可修改为你的 API 版本号
+      timestamp: new Date().toISOString(),
+    });
   };
 }
 

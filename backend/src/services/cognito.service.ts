@@ -23,6 +23,33 @@ export default class Cognito {
     this.cognitoIdentity = new AWS.CognitoIdentityServiceProvider(this.config);
   }
 
+
+  public async refreshTokens(refreshToken: string, userSub: string): Promise<any> {
+    const params = {
+      AuthFlow: "REFRESH_TOKEN_AUTH",
+      ClientId: this.clientId,
+      AuthParameters: {
+        REFRESH_TOKEN: refreshToken,
+        SECRET_HASH: this.hashSecret(userSub), // ✅ 使用 sub 计算 secret_hash
+      },
+    };
+  
+    try {
+      console.log("🔄 正在使用 Cognito 刷新 token...");
+      const data = await this.cognitoIdentity.initiateAuth(params).promise();
+  
+      console.log("✅ 获取新的 accessToken:", data.AuthenticationResult?.AccessToken);
+      return {
+        accessToken: data.AuthenticationResult?.AccessToken,
+        idToken: data.AuthenticationResult?.IdToken,
+        refreshToken: refreshToken, // Cognito 不会返回新的 refreshToken
+      };
+    } catch (error) {
+      console.error("❌ Refresh Token 失败:", error);
+      throw error;
+    }
+  }
+
   public async signUpUser(
     username: string,
     password: string,
@@ -158,11 +185,16 @@ export default class Cognito {
     }
   }
 
+
   private hashSecret(username: string): string {
+    if (!this.secretHash || !this.clientId) {
+      throw new Error("Missing SECRET_HASH or CLIENT_ID in environment variables.");
+    }
+  
     return crypto
-      .createHmac("SHA256", this.secretHash)
-      .update(username + this.clientId)
-      .digest("base64");
+      .createHmac("SHA256", this.secretHash) // 🔥 用 SECRET_HASH 作为密钥
+      .update(username + this.clientId) // 🔥 Cognito 计算方法 = `username + clientId`
+      .digest("base64"); // 🔥 Base64 编码
   }
 
   getUserInfoFromToken(token: string): { sub: string; email: string } {
@@ -195,26 +227,5 @@ export default class Cognito {
     }
   }
 
-  public async refreshTokens(refreshToken: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const user = getCognitoUser();
-      if (!user) {
-        return reject(new Error("User not found"));
-      }
 
-      const refreshTokenObj = new CognitoRefreshToken({ RefreshToken: refreshToken });
-
-      user.refreshSession(refreshTokenObj, (err, session) => {
-        if (err) {
-          return reject(err);
-        }
-
-        resolve({
-          accessToken: session.getAccessToken().getJwtToken(),
-          idToken: session.getIdToken().getJwtToken(),
-          refreshToken: session.getRefreshToken().getToken(),
-        });
-      });
-    });
-  }
 }

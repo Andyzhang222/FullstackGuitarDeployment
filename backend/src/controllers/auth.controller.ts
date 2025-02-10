@@ -8,11 +8,10 @@ import cors from "cors";
 class AuthController {
   public path = "/auth";
   public router = express.Router();
-  private cognitoService: Cognito; 
-
+  private cognitoService: Cognito;
 
   constructor() {
-    this.cognitoService = new Cognito(); 
+    this.cognitoService = new Cognito();
     this.initRoutes();
   }
 
@@ -22,7 +21,7 @@ class AuthController {
     this.router.post("/signup", this.validateBody("signUp"), this.signUp);
     this.router.post("/signin", this.validateBody("signIn"), this.signIn);
     this.router.post("/verify", this.validateBody("verify"), this.verify);
-    this.router.post("/refresh-token", this.refreshToken); 
+    this.router.post("/refresh-token", this.refreshToken);
     this.router.post(
       "/forgot-password",
       this.validateBody("forgotPassword"),
@@ -39,16 +38,23 @@ class AuthController {
 
   refreshToken = async (req: Request, res: Response) => {
     try {
-      const { username, refreshToken } = req.body;
-
-      if (!username || !refreshToken) {
-        return res.status(400).json({ message: "Missing username or refresh token" });
+      const { userSub, refreshToken } = req.body;
+      console.log("🔄 收到 refreshToken:", refreshToken);
+  
+      if (!userSub || !refreshToken) {
+        return res.status(400).json({ message: "Missing userSub or refresh token" });
       }
-
-      const newTokens = await this.cognitoService.refreshTokens(refreshToken);
+  
+      const newTokens = await this.cognitoService.refreshTokens(refreshToken, userSub);
+  
+      if (!newTokens.accessToken) {
+        return res.status(401).json({ message: "Invalid refresh token" });
+      }
+  
+      console.log("✅ 成功刷新 token:", newTokens.accessToken);
       return res.status(200).json(newTokens);
     } catch (error) {
-      console.error("❌ Refresh token error:", error);
+      console.error("❌ Refresh Token 出错:", error);
       return res.status(401).json({ message: "Invalid refresh token" });
     }
   };

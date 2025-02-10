@@ -30,57 +30,42 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleAddToCart = async () => {
-    setErrorMessage(null); // 清除之前的错误消息
-    const idToken = localStorage.getItem('idToken');
+    setErrorMessage(null); // 清除错误消息
 
+    const idToken = localStorage.getItem('idToken');
     if (!idToken) {
-      setOpen(true); // 未登录时弹出登录对话框
+      console.warn('⚠️ 没有 idToken，跳转到登录页面');
+      setOpen(true);
       return;
     }
 
     if (productId) {
       try {
-        console.log('Sending request to add item to cart:', {
-          productId,
-          quantity: 1,
-        });
+        console.log('🛒 发送 Add to Cart 请求:', { productId, quantity: 1 });
 
         await dispatch(addToCart({ productId, quantity: 1 })).unwrap();
-        console.log('Item successfully added to cart.');
+        console.log('✅ 商品成功添加到购物车');
+
         dispatch(fetchCartItems()); // 更新购物车数据
         setShowCart(true); // 展示购物车抽屉
       } catch (error: unknown) {
-        console.error('Caught error:', error);
+        console.error('❌ Add to Cart 失败:', error);
 
+        // ✅ 这里不再手动处理 401，而是交给 `apiClient.ts` 拦截器
         if (axios.isAxiosError(error)) {
-          const errorData = error.response?.data as {
-            error?: string;
-            availableQuantity?: number;
-          };
+          const status = error.response?.status;
+          console.warn(`⚠️ HTTP 错误状态码: ${status}`);
 
-          console.log('Error data:', errorData);
-
-          if (
-            errorData?.error === 'Insufficient stock' &&
-            errorData?.availableQuantity !== undefined
-          ) {
-            setErrorMessage(
-              `库存不足！当前仅剩 ${errorData.availableQuantity} 件商品。`
-            );
-          } else if (error.response) {
-            setErrorMessage(
-              `Error: ${error.response.status} - ${error.response.statusText}`
-            );
-          } else {
-            setErrorMessage('Failed to add item to cart');
+          if (status === 401) {
+            console.warn('⚠️ 401 未授权，应该自动触发 refreshToken 逻辑');
+            return; // ❌ 避免二次跳转登录
           }
-        } else {
-          console.error('Non-Axios error:', error);
-          setErrorMessage('发生未知错误，请稍后重试。');
         }
+
+        setErrorMessage('添加购物车失败，请稍后重试');
       }
     } else {
-      console.error('Product ID is undefined');
+      console.error('❌ Product ID 为空，无法添加购物车');
     }
   };
 
